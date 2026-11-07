@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f1115">
+<title>مشاوير التوصيل</title>
+<style>
+:root{--bg:#f4f5f7;--card:#fff;--tx:#14181f;--mut:#6b7280;--pri:#0f766e;--bd:#e5e7eb;--ok:#16a34a;--red:#dc2626;--sheet:#26272d;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1115;--card:#1a1d24;--tx:#f1f3f6;--mut:#9aa3b2;--pri:#2dd4bf;--bd:#2a2f3a}}
+:root[data-theme="dark"]{--bg:#0f1115;--card:#1a1d24;--tx:#f1f3f6;--mut:#9aa3b2;--pri:#2dd4bf;--bd:#2a2f3a}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;padding:10px;max-width:560px;margin-inline:auto}
+.hd{position:sticky;top:0;z-index:5;background:var(--bg);padding:6px 0 2px}
+h1{font-size:19px;margin:0 0 8px}
+.st{font-size:13px;color:var(--mut);margin:6px 0 8px}
+.card{background:var(--card);border:2px solid var(--bd);border-radius:14px;padding:10px;margin-bottom:8px}
+.card.arr{border-color:var(--ok)}
+.card.late{border-style:dashed;opacity:.85}
+.top{display:flex;align-items:center;gap:8px}
+.n{background:var(--pri);color:#fff;border-radius:50%;width:26px;height:26px;display:inline-flex;align-items:center;justify-content:center;font-size:13px;flex:none}
+.empty .n{background:var(--bd);color:var(--mut)}
+.nm{flex:1;font-weight:700}
+.dist{font-weight:700;color:var(--pri);font-size:14px}
+.arr .dist{color:var(--ok)}
+input{width:100%;padding:11px;margin-top:8px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--tx);font-size:16px}
+button,a.b{border:0;border-radius:10px;padding:10px 8px;font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;color:#fff;background:var(--pri);display:inline-block;text-align:center}
+.g{background:#64748b}.r{background:var(--red)}.o{background:#d97706}.warn{color:#d97706;font-size:13px;font-weight:600;margin-top:6px}
+.row{display:flex;gap:6px;margin-top:8px}.row>*{flex:1}
+.top2{display:flex;gap:6px}.top2>*{flex:1;padding:13px 8px;font-size:15px}
+.ph{width:100%;margin-top:8px;padding:14px;font-size:20px;letter-spacing:1px;background:var(--bg);color:var(--tx);border:1px dashed var(--pri);border-radius:12px;direction:ltr;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.arr .ph{background:var(--ok);color:#fff;border:0;animation:p 1.2s infinite}
+@keyframes p{50%{opacity:.7}}
+#bk{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:flex-end;justify-content:center;z-index:9}
+#bk.on{display:flex}
+#sh{background:var(--sheet);color:#f1f3f6;width:100%;max-width:560px;border-radius:26px 26px 0 0;padding:14px 10px calc(14px + env(safe-area-inset-bottom,0px))}
+#sh .t{text-align:center;direction:ltr;color:#9aa3b2;margin-bottom:6px;font-size:15px}
+#sh a{display:flex;align-items:center;gap:16px;padding:18px 20px;color:#f1f3f6;text-decoration:none;font-size:19px}
+#sh a span{font-size:28px;width:34px;text-align:center}
+</style>
+</head>
+<body>
+<div class="hd"><h1>📍 مشاوير التوصيل</h1>
+<div class="top2"><button onclick="locate()">📍 حدّد موقعي</button><button class="o" onclick="refreshList()">🔄 تحديث</button></div>
+<div class="st" id="gps">اضغط «حدّد موقعي»، وبعد ما تضيف مواقع جديدة اضغط «تحديث» للترتيب</div></div>
+<div id="list"></div>
+<div id="bk"><div id="sh"><div class="t" id="shn"></div><a id="s1"><span>📞</span>اتصال</a><a id="s2" target="_blank" rel="noopener"><span>💬</span>رسالة واتساب</a><a id="s3"><span>✉️</span>رسالة نصية</a></div></div>
+<script>
+var pre={},focusI=null,warned={},N=60,KEY="slots_v2",slots=[],me=null,edit={},arrived={},order=[],watching=false;
+try{slots=JSON.parse(localStorage.getItem(KEY)||"[]")}catch(e){}
+if(!Array.isArray(slots))slots=[];
+while(slots.length<N)slots.push(null);
+function save(){try{localStorage.setItem(KEY,JSON.stringify(slots))}catch(e){}}
+function norm(t){return String(t||"").replace(/[\u0660-\u0669]/g,function(c){return c.charCodeAt(0)-1632}).replace(/[\u06F0-\u06F9]/g,function(c){return c.charCodeAt(0)-1776}).replace(/\u066B/g,".").replace(/[\u060C\u066C]/g,",").replace(/\u00A0/g," ")}
+function parse(t){t=t||"";try{t=decodeURIComponent(t)}catch(e){}t=norm(t);
+ var r=[/@(-?\d+\.\d+),(-?\d+\.\d+)/,/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/,/[?&](?:q|query|ll|destination|daddr)=\s*(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)/,/^\s*(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)\s*$/];
+ for(var i=0;i<r.length;i++){var m=t.match(r[i]);if(m)return{lat:+m[1],lng:+m[2]}}return null}
+function fix(p){var d=norm(p||"").replace(/[^\d]/g,"").replace(/^00/,"");if(d.length===8)d="968"+d;return d}
+function dist(a,b){var R=6371,t=Math.PI/180,x=Math.sin((b.lat-a.lat)*t/2)**2+Math.cos(a.lat*t)*Math.cos(b.lat*t)*Math.sin((b.lng-a.lng)*t/2)**2;return 2*R*Math.asin(Math.sqrt(x))}
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function fmt(d){return d<1?Math.round(d*1000)+" م":d.toFixed(1)+" كم"}
+function st(t){document.getElementById("gps").textContent=t}
+function typing(){var a=document.activeElement;return a&&a.tagName==="INPUT"}
+function dd(i){var s=slots[i];return(me&&s.lat!=null)?dist(me,s):1e9}
+function calc(){
+ var f=[],e=[];
+ slots.forEach(function(s,i){if(s)f.push(i);else e.push(i)});
+ f.sort(function(a,b){var A=slots[a],B=slots[b];if(!!A.late!==!!B.late)return A.late?1:-1;return dd(a)-dd(b)});
+ order=f.concat(e);
+}
+function render(){
+ if(order.length!==N)calc();
+ var h="";
+ order.forEach(function(i){
+  var s=slots[i];
+  if(!s||edit[i]){
+   var v=s||{};
+   h+='<div class="card empty"><div class="top"><span class="n">'+(i+1)+'</span><span class="nm">'+(s?"تعديل":"فاضي")+'</span></div>'+
+   '<input id="l'+i+'" placeholder="رابط قوقل ماب أو الإحداثيات" inputmode="url" value="'+esc(pre[i]||v.link||"")+'">'+
+   '<input id="p'+i+'" placeholder="رقم الزبون" inputmode="tel" value="'+esc(v.phone||"")+'">'+
+   '<div class="warn" id="w'+i+'"></div><div class="row"><button onclick="add('+i+')" id="sv'+i+'">حفظ</button>'+(s?'<button class="g" onclick="cancel('+i+')">إلغاء</button>':'')+'</div></div>';
+  }else{
+   var nav=s.lat!=null?"https://www.google.com/maps/dir/?api=1&destination="+s.lat+","+s.lng+"&travelmode=driving":s.link;
+   h+='<div class="card" id="c'+i+'"><div class="top"><span class="n">'+(i+1)+'</span><span class="nm" id="nm'+i+'"></span><span class="dist" id="d'+i+'"></span></div>'+
+   '<button class="ph" data-i="'+i+'">'+esc(s.phone||"بدون رقم")+'</button>'+
+   '<div class="row"><a class="b" target="_blank" rel="noopener" href="'+esc(nav)+'">🧭 وديني</a><button class="g" onclick="ed('+i+')">✏️</button><button class="g" onclick="lt('+i+')">'+(s.late?'⬆️ رجّعه':'⬇️ ما رد')+'</button><button class="r" onclick="done('+i+')">✔ تم</button></div></div>';
+  }
+ });
+ document.getElementById("list").innerHTML=h;
+ if(focusI!=null){var fe=document.getElementById("p"+focusI);if(fe){setTimeout(function(){fe.scrollIntoView({block:"center"});fe.focus()},50)}focusI=null}
+ paint();
+}
+function paint(){
+ slots.forEach(function(s,i){
+  if(!s||edit[i])return;
+  var c=document.getElementById("c"+i);if(!c)return;
+  var d=(me&&s.lat!=null)?dist(me,s):null,arr=d!=null&&d<0.1;
+  c.classList.toggle("arr",arr);c.classList.toggle("late",!!s.late&&!arr);
+  document.getElementById("nm"+i).textContent=arr?"🟢 وصلت":(s.late?"📵 ما رد":(s.lat==null?"⚠️ رابط قصير":"زبون"));
+  document.getElementById("d"+i).textContent=d!=null?fmt(d):"";
+  if(arr&&!arrived[i]){arrived[i]=1;try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}}
+  if(!arr)delete arrived[i];
+ });
+}
+function pkey(p){var d=fix(p);return d.length>=8?d.slice(-8):""}
+function dupMsg(i,l,p,c){var m=[],k=pkey(p);
+ slots.forEach(function(s,j){if(!s||j===i)return;
+  if(k&&s.phone&&pkey(s.phone)===k)m.push("نفس رقم التلفون في المشوار "+(j+1));
+  if(c&&s.lat!=null&&dist(c,s)<0.03)m.push("الموقع قريب جداً من المشوار "+(j+1));
+  else if(l&&s.link&&s.link.trim()===l.trim())m.push("نفس الرابط في المشوار "+(j+1));
+ });return m}
+function add(i){
+ var l=document.getElementById("l"+i).value.trim(),p=document.getElementById("p"+i).value.trim(),old=slots[i];
+ var c=parse(l);
+ if(l||p){var m=dupMsg(i,l,p,c),sig=m.join("|");if(m.length&&warned[i]!==sig){warned[i]=sig;document.getElementById("w"+i).textContent="⚠️ "+m.join(" • ");document.getElementById("sv"+i).textContent="حفظ رغم التكرار";return}}
+ delete warned[i];delete pre[i];
+ if(!l&&!p){slots[i]=null}else{slots[i]={link:l,phone:p,lat:c?c.lat:null,lng:c?c.lng:null,late:!!(old&&old.late)}}
+ delete edit[i];save();calc();render();
+}
+function ed(i){edit[i]=1;render()}
+function cancel(i){delete edit[i];render()}
+function done(i){slots[i]=null;delete arrived[i];save();calc();render()}
+function lt(i){slots[i].late=!slots[i].late;save();calc();render()}
+function openSheet(i){
+ var s=slots[i];if(!s||!s.phone)return;var p=fix(s.phone);
+ document.getElementById("shn").textContent=s.phone;
+ document.getElementById("s1").href="tel:+"+p;
+ document.getElementById("s2").href="https://wa.me/"+p;
+ document.getElementById("s3").href="sms:+"+p;
+ document.getElementById("bk").classList.add("on");
+}
+var L=document.getElementById("list");
+L.addEventListener("click",function(e){var b=e.target.closest(".ph");if(b)openSheet(+b.dataset.i)});
+L.addEventListener("contextmenu",function(e){var b=e.target.closest(".ph");if(b){e.preventDefault();openSheet(+b.dataset.i)}});
+document.getElementById("bk").addEventListener("click",function(e){if(e.target.id==="bk")this.classList.remove("on")});
+function startWatch(){
+ if(watching||!navigator.geolocation)return;watching=true;
+ navigator.geolocation.watchPosition(function(p){
+  var first=!me;
+  me={lat:p.coords.latitude,lng:p.coords.longitude};
+  if(first&&!typing()){calc();render();st("📡 تم تحديد موقعك وترتيب المشاوير")}else paint();
+ },function(){watching=false;st("⚠️ فعّل إذن الموقع للمتصفح")},{enableHighAccuracy:true,maximumAge:10000});
+}
+function locate(){
+ if(!navigator.geolocation){st("الجهاز ما يدعم الموقع");return}
+ st("⏳ أحدد موقعك بالضبط...");
+ navigator.geolocation.getCurrentPosition(function(p){
+  me={lat:p.coords.latitude,lng:p.coords.longitude};
+  calc();render();st("📍 تم تحديد موقعك (دقة "+Math.round(p.coords.accuracy)+" م) وتم الترتيب");startWatch();
+ },function(){st("⚠️ ما قدرت أحدد موقعك. اسمح بالموقع للمتصفح من الإعدادات")},{enableHighAccuracy:true,maximumAge:0,timeout:20000});
+}
+function refreshList(){
+ function go(){calc();render();st(me?"🔄 تم ترتيب المشاوير من الأقرب للأبعد":"⚠️ حدّد موقعك أول بزر «حدّد موقعي»")}
+ if(!navigator.geolocation){go();return}
+ st("⏳ أحدّث الترتيب...");
+ navigator.geolocation.getCurrentPosition(function(p){me={lat:p.coords.latitude,lng:p.coords.longitude};go();startWatch()},function(){go()},{enableHighAccuracy:true,maximumAge:15000,timeout:8000});
+}
+(function(){
+ try{
+  var q=new URLSearchParams(location.search),u=q.get("url")||"",t=((q.get("title")||"")+" "+(q.get("text")||"")).trim(),m=(u||t).match(/https?:\/\/\S+/),txt=m?m[0]:(u||t);
+  if(txt){var e=slots.indexOf(null);if(e>-1){pre[e]=txt;focusI=e}history.replaceState(null,"",location.pathname)}
+ }catch(x){}
+})();
+calc();render();startWatch();
+</script>
+</body>
+</html>
