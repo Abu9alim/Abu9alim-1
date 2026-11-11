@@ -4,16 +4,25 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0f1115">
-<title>مشاوير التوصيل</title>
+<title>Delivery Stops</title>
 <style>
 :root{--bg:#f4f5f7;--card:#fff;--tx:#14181f;--mut:#6b7280;--pri:#0f766e;--bd:#e5e7eb;--ok:#16a34a;--red:#dc2626;--sheet:#26272d;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1115;--card:#1a1d24;--tx:#f1f3f6;--mut:#9aa3b2;--pri:#2dd4bf;--bd:#2a2f3a}}
 :root[data-theme="dark"]{--bg:#0f1115;--card:#1a1d24;--tx:#f1f3f6;--mut:#9aa3b2;--pri:#2dd4bf;--bd:#2a2f3a}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;padding:10px;max-width:560px;margin-inline:auto}
-.hd{position:sticky;top:0;z-index:5;background:var(--bg);padding:6px 0 2px}
-h1{font-size:19px;margin:0 0 8px}
-.st{font-size:13px;color:var(--mut);margin:6px 0 8px}
+.hd{position:sticky;top:0;z-index:5;background:var(--bg);padding:6px 0 6px;border-bottom:1px solid var(--bd)}
+.tl{display:flex;align-items:baseline;gap:8px;margin-bottom:6px;padding-right:96px;min-height:28px}
+#lang{position:absolute;top:6px;right:0;width:90px;padding:6px 4px;font-size:14px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx)}
+#sh a b{font-weight:400}
+h1{font-size:18px;margin:0}
+.mut{color:var(--mut);font-size:13px}
+.st{font-size:12px;color:var(--mut);margin:4px 0}
+.add{background:var(--card);border:2px solid var(--pri);border-radius:14px;padding:8px;margin-top:4px}
+.add input{margin-top:0;padding:10px}
+.arow{display:flex;gap:6px;margin-top:6px}
+.arow input{flex:1;min-width:0;width:auto}
+.arow button{flex:none;padding:10px 12px}
 .card{background:var(--card);border:2px solid var(--bd);border-radius:14px;padding:10px;margin-bottom:8px}
 .card.arr{border-color:var(--ok)}
 .card.late{border-style:dashed;opacity:.85}
@@ -27,7 +36,7 @@ input{width:100%;padding:11px;margin-top:8px;border:1px solid var(--bd);border-r
 button,a.b{border:0;border-radius:10px;padding:10px 8px;font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;color:#fff;background:var(--pri);display:inline-block;text-align:center}
 .g{background:#64748b}.r{background:var(--red)}.o{background:#d97706}.warn{color:#d97706;font-size:13px;font-weight:600;margin-top:6px}
 .row{display:flex;gap:6px;margin-top:8px}.row>*{flex:1}
-.top2{display:flex;gap:6px}.top2>*{flex:1;padding:13px 8px;font-size:15px}
+.top2{display:flex;gap:6px}.top2>*{flex:1;padding:11px 8px;font-size:15px}
 .ph{width:100%;margin-top:8px;padding:14px;font-size:20px;letter-spacing:1px;background:var(--bg);color:var(--tx);border:1px dashed var(--pri);border-radius:12px;direction:ltr;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
 .arr .ph{background:var(--ok);color:#fff;border:0;animation:p 1.2s infinite}
 @keyframes p{50%{opacity:.7}}
@@ -40,13 +49,48 @@ button,a.b{border:0;border-radius:10px;padding:10px 8px;font-size:14px;font-weig
 </style>
 </head>
 <body>
-<div class="hd"><h1>📍 مشاوير التوصيل</h1>
-<div class="top2"><button onclick="locate()">📍 حدّد موقعي</button><button class="o" onclick="refreshList()">🔄 تحديث</button></div>
-<div class="st" id="gps">اضغط «حدّد موقعي»، وبعد ما تضيف مواقع جديدة اضغط «تحديث» للترتيب</div></div>
+<div class="hd">
+<select id="lang" onchange="setLang(this.value)" aria-label="Language"><option value="ar">العربية</option><option value="en">English</option></select>
+<div class="tl"><h1 data-t="title"></h1><span class="mut" id="cnt"></span></div>
+<div class="top2"><button onclick="locate()" data-t="loc"></button><button class="o" onclick="refreshList()" data-t="refresh"></button></div>
+<div class="st" id="gps"></div>
+<div class="add"><input id="al" data-ph="phLink" inputmode="url"><div class="arow"><input id="ap" data-ph="phPhone" inputmode="tel"><button id="asv" onclick="addTop()"></button><button id="acn" class="g" style="display:none" onclick="cancelTop()" data-t="cancel"></button></div><div class="warn" id="aw"></div></div>
+</div>
 <div id="list"></div>
-<div id="bk"><div id="sh"><div class="t" id="shn"></div><a id="s1"><span>📞</span>اتصال</a><a id="s2" target="_blank" rel="noopener"><span>💬</span>رسالة واتساب</a><a id="s3"><span>✉️</span>رسالة نصية</a></div></div>
+<div id="bk"><div id="sh"><div class="t" id="shn"></div><a id="s1"><span>📞</span><b data-t="call"></b></a><a id="s2" target="_blank" rel="noopener"><span>💬</span><b data-t="wa"></b></a><a id="s3"><span>✉️</span><b data-t="sms"></b></a></div></div>
 <script>
-var pre={},focusI=null,warned={},N=60,KEY="slots_v2",slots=[],me=null,edit={},arrived={},order=[],watching=false;
+var LANG="ar";try{LANG=localStorage.getItem("lang")||"ar"}catch(e){}
+var D={
+ar:{title:"📍 مشاوير التوصيل",loc:"📍 حدّد موقعي",refresh:"🔄 تحديث",hint:"اضغط «حدّد موقعي» أول، وبعدها «تحديث» لترتيب الطرق",phLink:"الصق رابط قوقل ماب أو الإحداثيات",phPhone:"رقم الزبون",save:"➕ حفظ",saveEdit:"💾 حفظ التعديل",saveAnyway:"حفظ رغم التكرار",cancel:"إلغاء",call:"اتصال",wa:"رسالة واتساب",sms:"رسالة نصية",
+ nonum:"بدون رقم",nav:"🧭 وديني",restore:"⬆️ رجّعه",noans2:"⬇️ ما رد",done:"✔ تم",empty:"ما فيه مشاوير. أضف أول واحد من الخانة فوق.",
+ arrived:"🟢 وصلت",noans:"📵 ما رد",short:"⚠️ رابط قصير",cust:"زبون",m:"م",km:"كم",min:"د",
+ dupPhone:"نفس رقم التلفون في المشوار ",dupLoc:"الموقع قريب جداً من المشوار ",dupLink:"نفس الرابط في المشوار ",
+ enter:"اكتب الرابط أو الرقم أول",reading:"⏳ أقرأ الموقع...",full1:"⚠️ القائمة ممتلئة (",full2:" مشوار). احذف مشوار بزر ✔ تم",
+ noread:"⚠️ ما قدرت أقرأ إحداثيات الرابط، انحفظ بدون ترتيب",saved:"✅ انحفظ، مشوار رقم ",
+ okRoad:"📡 تم الترتيب حسب مسافة الطريق",okLine:"📡 تم الترتيب (تقريبي بخط مستقيم)",permErr:"⚠️ فعّل إذن الموقع للمتصفح",nogeo:"الجهاز ما يدعم الموقع",
+ locating:"⏳ أحدد موقعك بالضبط...",roads:"⏳ أحسب مسافات الطرق...",acc1:"📍 دقة موقعك ",acc2:" م — ",byRoad:"الترتيب حسب مسافة الطريق",byLine:"الترتيب بخط مستقيم (تعذّر حساب الطريق)",
+ locErr:"⚠️ ما قدرت أحدد موقعك. اسمح بالموقع للمتصفح من الإعدادات",sortedRoad:"🛣 تم الترتيب حسب مسافة الطريق (الأقرب أول)",sortedLine:"⚠️ ما قدرت أحسب مسافة الطريق، الترتيب بخط مستقيم تقريبي",needLoc:"⚠️ حدّد موقعك أول بزر «حدّد موقعي»",updating:"⏳ أحدّث الترتيب..."},
+en:{title:"📍 Delivery Stops",loc:"📍 My location",refresh:"🔄 Refresh",hint:"Tap “My location” first, then “Refresh” to sort by road distance",phLink:"Paste Google Maps link or coordinates",phPhone:"Customer phone",save:"➕ Save",saveEdit:"💾 Save edit",saveAnyway:"Save anyway",cancel:"Cancel",call:"Call",wa:"WhatsApp message",sms:"Text message",
+ nonum:"No number",nav:"🧭 Navigate",restore:"⬆️ Restore",noans2:"⬇️ No answer",done:"✔ Done",empty:"No stops yet. Add the first one in the box above.",
+ arrived:"🟢 Arrived",noans:"📵 No answer",short:"⚠️ Short link",cust:"Customer",m:"m",km:"km",min:"min",
+ dupPhone:"Same phone number as stop ",dupLoc:"Location is very close to stop ",dupLink:"Same link as stop ",
+ enter:"Enter a link or a number first",reading:"⏳ Reading location...",full1:"⚠️ List is full (",full2:" stops). Remove one with ✔ Done",
+ noread:"⚠️ Couldn't read coordinates from the link; saved without sorting",saved:"✅ Saved as stop #",
+ okRoad:"📡 Sorted by road distance",okLine:"📡 Sorted (approximate, straight line)",permErr:"⚠️ Allow location access for the browser",nogeo:"This device doesn't support location",
+ locating:"⏳ Finding your exact location...",roads:"⏳ Calculating road distances...",acc1:"📍 Your location accuracy: ",acc2:" m — ",byRoad:"sorted by road distance",byLine:"sorted by straight line (road calculation failed)",
+ locErr:"⚠️ Couldn't get your location. Allow location in browser settings",sortedRoad:"🛣 Sorted by road distance (nearest first)",sortedLine:"⚠️ Couldn't calculate road distance, sorted by approximate straight line",needLoc:"⚠️ Tap “My location” first",updating:"⏳ Updating order..."}
+};
+function t(k){return (D[LANG]&&D[LANG][k])||D.ar[k]||k}
+function applyLang(){
+ var h=document.documentElement;h.lang=LANG;h.dir=LANG==="ar"?"rtl":"ltr";document.title=LANG==="ar"?"مشاوير التوصيل":"Delivery Stops";
+ document.querySelectorAll("[data-t]").forEach(function(e){e.textContent=t(e.getAttribute("data-t"))});
+ document.querySelectorAll("[data-ph]").forEach(function(e){e.placeholder=t(e.getAttribute("data-ph"))});
+ F("lang").value=LANG;
+ F("asv").textContent=editI!=null?t("saveEdit"):t("save");
+}
+function setLang(v){LANG=v==="en"?"en":"ar";try{localStorage.setItem("lang",LANG)}catch(e){}applyLang();F("aw").textContent="";warnedTop="";st(t("hint"));render()}
+var RESOLVER=""; // الصق هنا رابط قارئ الروابط بين علامتي التنصيص
+var ROUTER="https://router.project-osrm.org",road={},editI=null,warnedTop="",N=60,KEY="slots_v2",slots=[],me=null,arrived={},order=[],watching=false;
 try{slots=JSON.parse(localStorage.getItem(KEY)||"[]")}catch(e){}
 if(!Array.isArray(slots))slots=[];
 while(slots.length<N)slots.push(null);
@@ -58,68 +102,89 @@ function parse(t){t=t||"";try{t=decodeURIComponent(t)}catch(e){}t=norm(t);
 function fix(p){var d=norm(p||"").replace(/[^\d]/g,"").replace(/^00/,"");if(d.length===8)d="968"+d;return d}
 function dist(a,b){var R=6371,t=Math.PI/180,x=Math.sin((b.lat-a.lat)*t/2)**2+Math.cos(a.lat*t)*Math.cos(b.lat*t)*Math.sin((b.lng-a.lng)*t/2)**2;return 2*R*Math.asin(Math.sqrt(x))}
 function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
-function fmt(d){return d<1?Math.round(d*1000)+" م":d.toFixed(1)+" كم"}
+function fmt(d){return d<1?Math.round(d*1000)+" "+t("m"):d.toFixed(1)+" "+t("km")}
 function st(t){document.getElementById("gps").textContent=t}
 function typing(){var a=document.activeElement;return a&&a.tagName==="INPUT"}
-function dd(i){var s=slots[i];return(me&&s.lat!=null)?dist(me,s):1e9}
+function dd(i){var s=slots[i];if(!(me&&s.lat!=null))return 1e9;var r=road[i];return r?r.d:dist(me,s)*1400}
+function loadRoads(done){
+ if(!me||!ROUTER){road={};done(false);return}
+ var idx=[];slots.forEach(function(s,i){if(s&&s.lat!=null)idx.push(i)});
+ if(!idx.length){road={};done(true);return}
+ var co=[me.lng+","+me.lat].concat(idx.map(function(i){return slots[i].lng+","+slots[i].lat})).join(";");
+ fetch(ROUTER+"/table/v1/driving/"+co+"?sources=0&annotations=distance,duration").then(function(r){return r.json()}).then(function(j){
+  if(j.code!=="Ok"||!j.distances)throw 0;
+  var nr={};
+  idx.forEach(function(i,k){var d=j.distances[0][k+1],t=j.durations&&j.durations[0][k+1];if(d!=null)nr[i]={d:d,t:t}});
+  road=nr;done(Object.keys(nr).length>0);
+ }).catch(function(){road={};done(false)});
+}
 function calc(){
  var f=[],e=[];
  slots.forEach(function(s,i){if(s)f.push(i);else e.push(i)});
  f.sort(function(a,b){var A=slots[a],B=slots[b];if(!!A.late!==!!B.late)return A.late?1:-1;return dd(a)-dd(b)});
  order=f.concat(e);
 }
+function F(id){return document.getElementById(id)}
 function render(){
  if(order.length!==N)calc();
- var h="";
+ var h="",n=0;
  order.forEach(function(i){
-  var s=slots[i];
-  if(!s||edit[i]){
-   var v=s||{};
-   h+='<div class="card empty"><div class="top"><span class="n">'+(i+1)+'</span><span class="nm">'+(s?"تعديل":"فاضي")+'</span></div>'+
-   '<input id="l'+i+'" placeholder="رابط قوقل ماب أو الإحداثيات" inputmode="url" value="'+esc(pre[i]||v.link||"")+'">'+
-   '<input id="p'+i+'" placeholder="رقم الزبون" inputmode="tel" value="'+esc(v.phone||"")+'">'+
-   '<div class="warn" id="w'+i+'"></div><div class="row"><button onclick="add('+i+')" id="sv'+i+'">حفظ</button>'+(s?'<button class="g" onclick="cancel('+i+')">إلغاء</button>':'')+'</div></div>';
-  }else{
-   var nav=s.lat!=null?"https://www.google.com/maps/dir/?api=1&destination="+s.lat+","+s.lng+"&travelmode=driving":s.link;
-   h+='<div class="card" id="c'+i+'"><div class="top"><span class="n">'+(i+1)+'</span><span class="nm" id="nm'+i+'"></span><span class="dist" id="d'+i+'"></span></div>'+
-   '<button class="ph" data-i="'+i+'">'+esc(s.phone||"بدون رقم")+'</button>'+
-   '<div class="row"><a class="b" target="_blank" rel="noopener" href="'+esc(nav)+'">🧭 وديني</a><button class="g" onclick="ed('+i+')">✏️</button><button class="g" onclick="lt('+i+')">'+(s.late?'⬆️ رجّعه':'⬇️ ما رد')+'</button><button class="r" onclick="done('+i+')">✔ تم</button></div></div>';
-  }
+  var s=slots[i];if(!s)return;n++;
+  var nav=s.lat!=null?"https://www.google.com/maps/dir/?api=1&destination="+s.lat+","+s.lng+"&travelmode=driving":s.link;
+  h+='<div class="card" id="c'+i+'"><div class="top"><span class="n">'+n+'</span><span class="nm" id="nm'+i+'"></span><span class="dist" id="d'+i+'"></span></div>'+
+  '<button class="ph" data-i="'+i+'">'+esc(s.phone||t("nonum"))+'</button>'+
+  '<div class="row"><a class="b" target="_blank" rel="noopener" href="'+esc(nav)+'">'+t("nav")+'</a><button class="g" onclick="ed('+i+')">✏️</button><button class="g" onclick="lt('+i+')">'+(s.late?t("restore"):t("noans2"))+'</button><button class="r" onclick="done('+i+')">'+t("done")+'</button></div></div>';
  });
- document.getElementById("list").innerHTML=h;
- if(focusI!=null){var fe=document.getElementById("p"+focusI);if(fe){setTimeout(function(){fe.scrollIntoView({block:"center"});fe.focus()},50)}focusI=null}
+ F("list").innerHTML=h||'<div class="mut" style="text-align:center;padding:24px">'+t("empty")+'</div>';
+ F("cnt").textContent=n+"/"+N;
  paint();
 }
 function paint(){
  slots.forEach(function(s,i){
-  if(!s||edit[i])return;
+  if(!s)return;
   var c=document.getElementById("c"+i);if(!c)return;
   var d=(me&&s.lat!=null)?dist(me,s):null,arr=d!=null&&d<0.1;
   c.classList.toggle("arr",arr);c.classList.toggle("late",!!s.late&&!arr);
-  document.getElementById("nm"+i).textContent=arr?"🟢 وصلت":(s.late?"📵 ما رد":(s.lat==null?"⚠️ رابط قصير":"زبون"));
-  document.getElementById("d"+i).textContent=d!=null?fmt(d):"";
+  document.getElementById("nm"+i).textContent=arr?t("arrived"):(s.late?t("noans"):(s.lat==null?t("short"):t("cust")));
+  var r=road[i];document.getElementById("d"+i).textContent=r?(fmt(r.d/1000)+(r.t!=null?" • "+Math.max(1,Math.round(r.t/60))+" "+t("min"):"")):(d!=null?"~"+fmt(d):"");
   if(arr&&!arrived[i]){arrived[i]=1;try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}}
   if(!arr)delete arrived[i];
  });
 }
+function rk(j){var k=order.indexOf(j);return k<0?j+1:k+1}
 function pkey(p){var d=fix(p);return d.length>=8?d.slice(-8):""}
 function dupMsg(i,l,p,c){var m=[],k=pkey(p);
  slots.forEach(function(s,j){if(!s||j===i)return;
-  if(k&&s.phone&&pkey(s.phone)===k)m.push("نفس رقم التلفون في المشوار "+(j+1));
-  if(c&&s.lat!=null&&dist(c,s)<0.03)m.push("الموقع قريب جداً من المشوار "+(j+1));
-  else if(l&&s.link&&s.link.trim()===l.trim())m.push("نفس الرابط في المشوار "+(j+1));
+  if(k&&s.phone&&pkey(s.phone)===k)m.push(t("dupPhone")+rk(j));
+  if(c&&s.lat!=null&&dist(c,s)<0.03)m.push(t("dupLoc")+rk(j));
+  else if(l&&s.link&&s.link.trim()===l.trim())m.push(t("dupLink")+rk(j));
  });return m}
-function add(i){
- var l=document.getElementById("l"+i).value.trim(),p=document.getElementById("p"+i).value.trim(),old=slots[i];
+function resolve(l){return fetch(RESOLVER+"?u="+encodeURIComponent(l)).then(function(r){return r.json()}).then(function(j){return j&&j.lat!=null?{lat:j.lat,lng:j.lng}:null}).catch(function(){return null})}
+function resetTop(){F("al").value="";F("ap").value="";F("aw").textContent="";F("asv").textContent=t("save");F("acn").style.display="none";editI=null;warnedTop=""}
+function addTop(){
+ var l=F("al").value.trim(),p=F("ap").value.trim();
+ if(!l&&!p){F("aw").textContent=t("enter");return}
  var c=parse(l);
- if(l||p){var m=dupMsg(i,l,p,c),sig=m.join("|");if(m.length&&warned[i]!==sig){warned[i]=sig;document.getElementById("w"+i).textContent="⚠️ "+m.join(" • ");document.getElementById("sv"+i).textContent="حفظ رغم التكرار";return}}
- delete warned[i];delete pre[i];
- if(!l&&!p){slots[i]=null}else{slots[i]={link:l,phone:p,lat:c?c.lat:null,lng:c?c.lng:null,late:!!(old&&old.late)}}
- delete edit[i];save();calc();render();
+ if(!c&&RESOLVER&&/^https?:\/\//i.test(l)){
+  var b=F("asv");b.textContent=t("reading");b.disabled=true;
+  resolve(l).then(function(r){b.disabled=false;b.textContent=editI!=null?t("saveEdit"):t("save");saveTop(r,true)});return}
+ saveTop(c,false);
 }
-function ed(i){edit[i]=1;render()}
-function cancel(i){delete edit[i];render()}
-function done(i){slots[i]=null;delete arrived[i];save();calc();render()}
+function saveTop(c,tried){
+ var l=F("al").value.trim(),p=F("ap").value.trim();
+ var i=editI!=null?editI:slots.indexOf(null);
+ if(i<0){F("aw").textContent=t("full1")+N+t("full2");return}
+ var m=dupMsg(i,l,p,c),sig=m.join("|");
+ if(m.length&&warnedTop!==sig){warnedTop=sig;F("aw").textContent="⚠️ "+m.join(" • ");F("asv").textContent=t("saveAnyway");return}
+ var old=slots[i];
+ slots[i]={link:l,phone:p,lat:c?c.lat:null,lng:c?c.lng:null,late:!!(old&&old.late)};
+ delete road[i];save();resetTop();calc();render();
+ st(tried&&!c&&l?t("noread"):t("saved")+rk(i));
+ if(me&&c)loadRoads(function(){calc();render()});
+}
+function ed(i){var s=slots[i];if(!s)return;editI=i;warnedTop="";F("al").value=s.link||"";F("ap").value=s.phone||"";F("aw").textContent="";F("asv").textContent=t("saveEdit");F("acn").style.display="";F("al").focus();window.scrollTo(0,0)}
+function cancelTop(){resetTop()}
+function done(i){slots[i]=null;delete road[i];delete arrived[i];save();calc();render()}
 function lt(i){slots[i].late=!slots[i].late;save();calc();render()}
 function openSheet(i){
  var s=slots[i];if(!s||!s.phone)return;var p=fix(s.phone);
@@ -138,30 +203,24 @@ function startWatch(){
  navigator.geolocation.watchPosition(function(p){
   var first=!me;
   me={lat:p.coords.latitude,lng:p.coords.longitude};
-  if(first&&!typing()){calc();render();st("📡 تم تحديد موقعك وترتيب المشاوير")}else paint();
- },function(){watching=false;st("⚠️ فعّل إذن الموقع للمتصفح")},{enableHighAccuracy:true,maximumAge:10000});
+  if(first){loadRoads(function(ok){calc();render();st(ok?t("okRoad"):t("okLine"))})}else paint();
+ },function(){watching=false;st(t("permErr"))},{enableHighAccuracy:true,maximumAge:10000});
 }
 function locate(){
- if(!navigator.geolocation){st("الجهاز ما يدعم الموقع");return}
- st("⏳ أحدد موقعك بالضبط...");
+ if(!navigator.geolocation){st(t("nogeo"));return}
+ st(t("locating"));
  navigator.geolocation.getCurrentPosition(function(p){
   me={lat:p.coords.latitude,lng:p.coords.longitude};
-  calc();render();st("📍 تم تحديد موقعك (دقة "+Math.round(p.coords.accuracy)+" م) وتم الترتيب");startWatch();
- },function(){st("⚠️ ما قدرت أحدد موقعك. اسمح بالموقع للمتصفح من الإعدادات")},{enableHighAccuracy:true,maximumAge:0,timeout:20000});
+  var acc=Math.round(p.coords.accuracy);st(t("roads"));loadRoads(function(ok){calc();render();st(t("acc1")+acc+t("acc2")+(ok?t("byRoad"):t("byLine")))});startWatch();
+ },function(){st(t("locErr"))},{enableHighAccuracy:true,maximumAge:0,timeout:20000});
 }
 function refreshList(){
- function go(){calc();render();st(me?"🔄 تم ترتيب المشاوير من الأقرب للأبعد":"⚠️ حدّد موقعك أول بزر «حدّد موقعي»")}
+ function go(){st(t("roads"));loadRoads(function(ok){calc();render();st(me?(ok?t("sortedRoad"):t("sortedLine")):t("needLoc"))})}
  if(!navigator.geolocation){go();return}
- st("⏳ أحدّث الترتيب...");
+ st(t("updating"));
  navigator.geolocation.getCurrentPosition(function(p){me={lat:p.coords.latitude,lng:p.coords.longitude};go();startWatch()},function(){go()},{enableHighAccuracy:true,maximumAge:15000,timeout:8000});
 }
-(function(){
- try{
-  var q=new URLSearchParams(location.search),u=q.get("url")||"",t=((q.get("title")||"")+" "+(q.get("text")||"")).trim(),m=(u||t).match(/https?:\/\/\S+/),txt=m?m[0]:(u||t);
-  if(txt){var e=slots.indexOf(null);if(e>-1){pre[e]=txt;focusI=e}history.replaceState(null,"",location.pathname)}
- }catch(x){}
-})();
-calc();render();startWatch();
+applyLang();st(t("hint"));calc();render();startWatch();
 </script>
 </body>
 </html>
