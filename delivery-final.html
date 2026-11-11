@@ -89,7 +89,7 @@ function applyLang(){
  F("asv").textContent=editI!=null?t("saveEdit"):t("save");
 }
 function setLang(v){LANG=v==="en"?"en":"ar";try{localStorage.setItem("lang",LANG)}catch(e){}applyLang();F("aw").textContent="";warnedTop="";st(t("hint"));render()}
-var RESOLVER=""; // الصق هنا رابط قارئ الروابط بين علامتي التنصيص
+var RESOLVER="https://still-firefly-143f.sosona3011.workers.dev/"; // الصق هنا رابط قارئ الروابط بين علامتي التنصيص
 var ROUTER="https://router.project-osrm.org",road={},editI=null,warnedTop="",N=60,KEY="slots_v2",slots=[],me=null,arrived={},order=[],watching=false;
 try{slots=JSON.parse(localStorage.getItem(KEY)||"[]")}catch(e){}
 if(!Array.isArray(slots))slots=[];
