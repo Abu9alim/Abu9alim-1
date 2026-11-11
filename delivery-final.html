@@ -39,7 +39,7 @@ input{width:100%;padding:11px;margin-top:8px;border:1px solid var(--bd);border-r
 button,a.b{border:0;border-radius:10px;padding:10px 8px;font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;color:#fff;background:var(--pri);display:inline-block;text-align:center}
 .g{background:#64748b}.r{background:var(--red)}.o{background:#d97706}.warn{color:#d97706;font-size:13px;font-weight:600;margin-top:6px}
 .row{display:flex;gap:6px;margin-top:8px}.row>*{flex:1}
-.top2{display:flex;gap:6px}.top2>*{flex:1;padding:11px 8px;font-size:15px}
+.top2{display:flex;gap:6px}.top2>*{flex:1;padding:11px 8px;font-size:15px}.top2>.o2{flex:0 0 auto;background:#475569;color:#fff}
 .ph{width:100%;margin-top:8px;padding:14px;font-size:20px;letter-spacing:1px;background:var(--bg);color:var(--tx);border:1px dashed var(--pri);border-radius:12px;direction:ltr;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
 .arr .ph{background:var(--ok);color:#fff;border:0;animation:p 1.2s infinite}
 @keyframes p{50%{opacity:.7}}
@@ -55,7 +55,7 @@ button,a.b{border:0;border-radius:10px;padding:10px 8px;font-size:14px;font-weig
 <div class="hd">
 <select id="lang" onchange="setLang(this.value)" aria-label="Language"><option value="ar">العربية</option><option value="en">English</option></select>
 <div class="tl"><h1 data-t="title"></h1><span class="mut" id="cnt"></span></div>
-<div class="top2"><button onclick="locate()" data-t="loc"></button><button class="o" onclick="refreshList()" data-t="refresh"></button></div>
+<div class="top2"><button onclick="locate()" data-t="loc"></button><button class="o" onclick="refreshList()" data-t="refresh"></button><button class="o2" onclick="flipOrder()" data-t="flip"></button></div>
 <div class="st" id="gps"></div>
 <div class="add"><input id="al" data-ph="phLink" inputmode="url"><div class="arow"><input id="ap" data-ph="phPhone" inputmode="tel"><button id="asv" onclick="addTop()"></button><button id="acn" class="g" style="display:none" onclick="cancelTop()" data-t="cancel"></button></div><div class="warn" id="aw"></div></div>
 </div>
@@ -64,7 +64,7 @@ button,a.b{border:0;border-radius:10px;padding:10px 8px;font-size:14px;font-weig
 <script>
 var LANG="ar";try{LANG=localStorage.getItem("lang")||"ar"}catch(e){}
 var D={
-ar:{title:"📍 NextStop",loc:"📍 حدّد موقعي",refresh:"🔄 تحديث",hint:"اضغط «حدّد موقعي» أول، وبعدها «تحديث» لترتيب الطرق",phLink:"الصق رابط قوقل ماب أو الإحداثيات",phPhone:"رقم الزبون",save:"➕ حفظ",saveEdit:"💾 حفظ التعديل",saveAnyway:"حفظ رغم التكرار",cancel:"إلغاء",call:"اتصال",wa:"رسالة واتساب",sms:"رسالة نصية",
+ar:{title:"📍 NextStop",loc:"📍 حدّد موقعي",refresh:"🔄 تحديث",flip:"↕️ قلب",farFirst:"⬆️ الترتيب: من الأبعد للأقرب",nearFirst:"⬇️ الترتيب: من الأقرب للأبعد",hint:"اضغط «حدّد موقعي» أول، وبعدها «تحديث» لترتيب الطرق",phLink:"الصق رابط قوقل ماب أو الإحداثيات",phPhone:"رقم الزبون",save:"➕ حفظ",saveEdit:"💾 حفظ التعديل",saveAnyway:"حفظ رغم التكرار",cancel:"إلغاء",call:"اتصال",wa:"رسالة واتساب",sms:"رسالة نصية",
  nonum:"بدون رقم",nav:"🧭 وديني",restore:"⬆️ رجّعه",noans2:"⬇️ ما رد",done:"✔ تم",empty:"ما فيه مشاوير. أضف أول واحد من الخانة فوق.",
  arrived:"🟢 وصلت",noans:"📵 ما رد",short:"⚠️ رابط قصير",cust:"زبون",m:"م",km:"كم",min:"د",
  dupPhone:"نفس رقم التلفون في المشوار ",dupLoc:"الموقع قريب جداً من المشوار ",dupLink:"نفس الرابط في المشوار ",
@@ -73,7 +73,7 @@ ar:{title:"📍 NextStop",loc:"📍 حدّد موقعي",refresh:"🔄 تحدي�
  okRoad:"📡 تم الترتيب حسب مسافة الطريق",okLine:"📡 تم الترتيب (تقريبي بخط مستقيم)",permErr:"⚠️ فعّل إذن الموقع للمتصفح",nogeo:"الجهاز ما يدعم الموقع",
  locating:"⏳ أحدد موقعك بالضبط...",roads:"⏳ أحسب مسافات الطرق...",acc1:"📍 دقة موقعك ",acc2:" م — ",byRoad:"الترتيب حسب مسافة الطريق",byLine:"الترتيب بخط مستقيم (تعذّر حساب الطريق)",
  locErr:"⚠️ ما قدرت أحدد موقعك. اسمح بالموقع للمتصفح من الإعدادات",sortedRoad:"🛣 تم الترتيب حسب مسافة الطريق (الأقرب أول)",sortedLine:"⚠️ ما قدرت أحسب مسافة الطريق، الترتيب بخط مستقيم تقريبي",needLoc:"⚠️ حدّد موقعك أول بزر «حدّد موقعي»",updating:"⏳ أحدّث الترتيب..."},
-en:{title:"📍 NextStop",loc:"📍 My location",refresh:"🔄 Refresh",hint:"Tap “My location” first, then “Refresh” to sort by road distance",phLink:"Paste Google Maps link or coordinates",phPhone:"Customer phone",save:"➕ Save",saveEdit:"💾 Save edit",saveAnyway:"Save anyway",cancel:"Cancel",call:"Call",wa:"WhatsApp message",sms:"Text message",
+en:{title:"📍 NextStop",loc:"📍 My location",refresh:"🔄 Refresh",flip:"↕️ Flip",farFirst:"⬆️ Order: farthest first",nearFirst:"⬇️ Order: nearest first",hint:"Tap “My location” first, then “Refresh” to sort by road distance",phLink:"Paste Google Maps link or coordinates",phPhone:"Customer phone",save:"➕ Save",saveEdit:"💾 Save edit",saveAnyway:"Save anyway",cancel:"Cancel",call:"Call",wa:"WhatsApp message",sms:"Text message",
  nonum:"No number",nav:"🧭 Navigate",restore:"⬆️ Restore",noans2:"⬇️ No answer",done:"✔ Done",empty:"No stops yet. Add the first one in the box above.",
  arrived:"🟢 Arrived",noans:"📵 No answer",short:"⚠️ Short link",cust:"Customer",m:"m",km:"km",min:"min",
  dupPhone:"Same phone number as stop ",dupLoc:"Location is very close to stop ",dupLink:"Same link as stop ",
@@ -93,7 +93,7 @@ function applyLang(){
 }
 function setLang(v){LANG=v==="en"?"en":"ar";try{localStorage.setItem("lang",LANG)}catch(e){}applyLang();F("aw").textContent="";warnedTop="";st(t("hint"));render()}
 var RESOLVER="https://still-firefly-143f.sosona3011.workers.dev/"; // الصق هنا رابط قارئ الروابط بين علامتي التنصيص
-var ROUTER="https://router.project-osrm.org",road={},editI=null,warnedTop="",N=100,KEY="slots_v2",slots=[],me=null,arrived={},order=[],watching=false;
+var ROUTER="https://router.project-osrm.org",road={},editI=null,warnedTop="",N=100,rev=(function(){try{return localStorage.getItem("rev")==="1"}catch(e){return false}})(),KEY="slots_v2",slots=[],me=null,arrived={},order=[],watching=false;
 try{slots=JSON.parse(localStorage.getItem(KEY)||"[]")}catch(e){}
 if(!Array.isArray(slots))slots=[];
 while(slots.length<N)slots.push(null);
@@ -128,8 +128,10 @@ function calc(){
  var f=[],e=[];
  slots.forEach(function(s,i){if(s)f.push(i);else e.push(i)});
  f.sort(function(a,b){var A=slots[a],B=slots[b];if(!!A.late!==!!B.late)return A.late?1:-1;return dd(a)-dd(b)});
+ if(rev){var a=f.filter(function(i){return !slots[i].late}),b=f.filter(function(i){return slots[i].late});f=a.reverse().concat(b)}
  order=f.concat(e);
 }
+function flipOrder(){rev=!rev;try{localStorage.setItem("rev",rev?"1":"0")}catch(e){}calc();render();st(t(rev?"farFirst":"nearFirst"))}
 function F(id){return document.getElementById(id)}
 function render(){
  if(order.length!==N)calc();
