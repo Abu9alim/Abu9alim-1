@@ -4,7 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0f1115">
-<title>Delivery Stops</title>
+<title>NextStop</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
 <style>
 :root{--bg:#f4f5f7;--card:#fff;--tx:#14181f;--mut:#6b7280;--pri:#0f766e;--bd:#e5e7eb;--ok:#16a34a;--red:#dc2626;--sheet:#26272d;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1115;--card:#1a1d24;--tx:#f1f3f6;--mut:#9aa3b2;--pri:#2dd4bf;--bd:#2a2f3a}}
@@ -61,7 +64,7 @@ button,a.b{border:0;border-radius:10px;padding:10px 8px;font-size:14px;font-weig
 <script>
 var LANG="ar";try{LANG=localStorage.getItem("lang")||"ar"}catch(e){}
 var D={
-ar:{title:"📍 مشاوير التوصيل",loc:"📍 حدّد موقعي",refresh:"🔄 تحديث",hint:"اضغط «حدّد موقعي» أول، وبعدها «تحديث» لترتيب الطرق",phLink:"الصق رابط قوقل ماب أو الإحداثيات",phPhone:"رقم الزبون",save:"➕ حفظ",saveEdit:"💾 حفظ التعديل",saveAnyway:"حفظ رغم التكرار",cancel:"إلغاء",call:"اتصال",wa:"رسالة واتساب",sms:"رسالة نصية",
+ar:{title:"📍 NextStop",loc:"📍 حدّد موقعي",refresh:"🔄 تحديث",hint:"اضغط «حدّد موقعي» أول، وبعدها «تحديث» لترتيب الطرق",phLink:"الصق رابط قوقل ماب أو الإحداثيات",phPhone:"رقم الزبون",save:"➕ حفظ",saveEdit:"💾 حفظ التعديل",saveAnyway:"حفظ رغم التكرار",cancel:"إلغاء",call:"اتصال",wa:"رسالة واتساب",sms:"رسالة نصية",
  nonum:"بدون رقم",nav:"🧭 وديني",restore:"⬆️ رجّعه",noans2:"⬇️ ما رد",done:"✔ تم",empty:"ما فيه مشاوير. أضف أول واحد من الخانة فوق.",
  arrived:"🟢 وصلت",noans:"📵 ما رد",short:"⚠️ رابط قصير",cust:"زبون",m:"م",km:"كم",min:"د",
  dupPhone:"نفس رقم التلفون في المشوار ",dupLoc:"الموقع قريب جداً من المشوار ",dupLink:"نفس الرابط في المشوار ",
@@ -70,7 +73,7 @@ ar:{title:"📍 مشاوير التوصيل",loc:"📍 حدّد موقعي",refr
  okRoad:"📡 تم الترتيب حسب مسافة الطريق",okLine:"📡 تم الترتيب (تقريبي بخط مستقيم)",permErr:"⚠️ فعّل إذن الموقع للمتصفح",nogeo:"الجهاز ما يدعم الموقع",
  locating:"⏳ أحدد موقعك بالضبط...",roads:"⏳ أحسب مسافات الطرق...",acc1:"📍 دقة موقعك ",acc2:" م — ",byRoad:"الترتيب حسب مسافة الطريق",byLine:"الترتيب بخط مستقيم (تعذّر حساب الطريق)",
  locErr:"⚠️ ما قدرت أحدد موقعك. اسمح بالموقع للمتصفح من الإعدادات",sortedRoad:"🛣 تم الترتيب حسب مسافة الطريق (الأقرب أول)",sortedLine:"⚠️ ما قدرت أحسب مسافة الطريق، الترتيب بخط مستقيم تقريبي",needLoc:"⚠️ حدّد موقعك أول بزر «حدّد موقعي»",updating:"⏳ أحدّث الترتيب..."},
-en:{title:"📍 Delivery Stops",loc:"📍 My location",refresh:"🔄 Refresh",hint:"Tap “My location” first, then “Refresh” to sort by road distance",phLink:"Paste Google Maps link or coordinates",phPhone:"Customer phone",save:"➕ Save",saveEdit:"💾 Save edit",saveAnyway:"Save anyway",cancel:"Cancel",call:"Call",wa:"WhatsApp message",sms:"Text message",
+en:{title:"📍 NextStop",loc:"📍 My location",refresh:"🔄 Refresh",hint:"Tap “My location” first, then “Refresh” to sort by road distance",phLink:"Paste Google Maps link or coordinates",phPhone:"Customer phone",save:"➕ Save",saveEdit:"💾 Save edit",saveAnyway:"Save anyway",cancel:"Cancel",call:"Call",wa:"WhatsApp message",sms:"Text message",
  nonum:"No number",nav:"🧭 Navigate",restore:"⬆️ Restore",noans2:"⬇️ No answer",done:"✔ Done",empty:"No stops yet. Add the first one in the box above.",
  arrived:"🟢 Arrived",noans:"📵 No answer",short:"⚠️ Short link",cust:"Customer",m:"m",km:"km",min:"min",
  dupPhone:"Same phone number as stop ",dupLoc:"Location is very close to stop ",dupLink:"Same link as stop ",
@@ -82,7 +85,7 @@ en:{title:"📍 Delivery Stops",loc:"📍 My location",refresh:"🔄 Refresh",hi
 };
 function t(k){return (D[LANG]&&D[LANG][k])||D.ar[k]||k}
 function applyLang(){
- var h=document.documentElement;h.lang=LANG;h.dir=LANG==="ar"?"rtl":"ltr";document.title=LANG==="ar"?"مشاوير التوصيل":"Delivery Stops";
+ var h=document.documentElement;h.lang=LANG;h.dir=LANG==="ar"?"rtl":"ltr";document.title="NextStop";
  document.querySelectorAll("[data-t]").forEach(function(e){e.textContent=t(e.getAttribute("data-t"))});
  document.querySelectorAll("[data-ph]").forEach(function(e){e.placeholder=t(e.getAttribute("data-ph"))});
  F("lang").value=LANG;
@@ -90,7 +93,7 @@ function applyLang(){
 }
 function setLang(v){LANG=v==="en"?"en":"ar";try{localStorage.setItem("lang",LANG)}catch(e){}applyLang();F("aw").textContent="";warnedTop="";st(t("hint"));render()}
 var RESOLVER="https://still-firefly-143f.sosona3011.workers.dev/"; // الصق هنا رابط قارئ الروابط بين علامتي التنصيص
-var ROUTER="https://router.project-osrm.org",road={},editI=null,warnedTop="",N=60,KEY="slots_v2",slots=[],me=null,arrived={},order=[],watching=false;
+var ROUTER="https://router.project-osrm.org",road={},editI=null,warnedTop="",N=100,KEY="slots_v2",slots=[],me=null,arrived={},order=[],watching=false;
 try{slots=JSON.parse(localStorage.getItem(KEY)||"[]")}catch(e){}
 if(!Array.isArray(slots))slots=[];
 while(slots.length<N)slots.push(null);
@@ -110,11 +113,14 @@ function loadRoads(done){
  if(!me||!ROUTER){road={};done(false);return}
  var idx=[];slots.forEach(function(s,i){if(s&&s.lat!=null)idx.push(i)});
  if(!idx.length){road={};done(true);return}
- var co=[me.lng+","+me.lat].concat(idx.map(function(i){return slots[i].lng+","+slots[i].lat})).join(";");
- fetch(ROUTER+"/table/v1/driving/"+co+"?sources=0&annotations=distance,duration").then(function(r){return r.json()}).then(function(j){
-  if(j.code!=="Ok"||!j.distances)throw 0;
-  var nr={};
-  idx.forEach(function(i,k){var d=j.distances[0][k+1],t=j.durations&&j.durations[0][k+1];if(d!=null)nr[i]={d:d,t:t}});
+ var ch=[];for(var a=0;a<idx.length;a+=90)ch.push(idx.slice(a,a+90));
+ Promise.all(ch.map(function(ids){
+  var co=[me.lng+","+me.lat].concat(ids.map(function(i){return slots[i].lng+","+slots[i].lat})).join(";");
+  return fetch(ROUTER+"/table/v1/driving/"+co+"?sources=0&annotations=distance,duration").then(function(r){return r.json()}).then(function(j){
+   if(j.code!=="Ok"||!j.distances)throw 0;
+   var o={};ids.forEach(function(i,k){var d=j.distances[0][k+1],t=j.durations&&j.durations[0][k+1];if(d!=null)o[i]={d:d,t:t}});return o});
+ })).then(function(parts){
+  var nr={};parts.forEach(function(o){for(var k in o)nr[k]=o[k]});
   road=nr;done(Object.keys(nr).length>0);
  }).catch(function(){road={};done(false)});
 }
