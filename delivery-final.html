@@ -15,8 +15,8 @@
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;padding:10px;max-width:560px;margin-inline:auto}
 .hd{position:sticky;top:0;z-index:5;background:var(--bg);padding:6px 0 6px;border-bottom:1px solid var(--bd)}
-.tl{display:flex;align-items:baseline;gap:8px;margin-bottom:6px;padding-right:96px;min-height:28px}
-#lang{position:absolute;top:6px;right:0;width:90px;padding:6px 4px;font-size:14px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx)}
+.tl{display:flex;align-items:baseline;gap:8px;margin-bottom:6px;padding-right:52px;min-height:28px}
+#gear{position:absolute;top:4px;right:0;width:44px;height:38px;padding:0;font-size:22px;border:1px solid var(--bd);border-radius:12px;background:var(--card);color:var(--tx)}#ov{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:flex-end;justify-content:center;z-index:12}#ov.on{display:flex}#tz{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));width:calc(100% - 24px);max-width:520px;background:#1f2937;color:#f1f3f6;border-radius:16px;padding:12px 14px 15px;display:none;z-index:15;box-shadow:0 8px 24px rgba(0,0,0,.4);overflow:hidden}#tz.on{display:block}#tz .row{display:flex;align-items:center;gap:10px;justify-content:space-between}#tz span{font-size:16px}#tz button{flex:none;padding:10px 16px;font-size:16px;font-weight:700;border:0;border-radius:12px;background:var(--pri);color:#04201d}#tz i{position:absolute;left:0;bottom:0;height:4px;background:var(--pri);width:100%;transform-origin:left}@keyframes tzb{from{transform:scaleX(1)}to{transform:scaleX(0)}}#tz i.run{animation:tzb 10s linear forwards}#gate{position:fixed;inset:0;background:var(--bg);z-index:30;display:none;align-items:center;justify-content:center;padding:24px;text-align:center}#gate.on{display:flex}#gate .gb{max-width:380px}#gate .ic{font-size:64px}#gate h2{margin:10px 0 8px;font-size:22px}#gate p{color:var(--mut);line-height:1.7;margin:0 0 18px;font-size:16px}#gate button{width:100%;padding:16px;font-size:18px;font-weight:700;border:0;border-radius:14px;background:var(--pri);color:#04201d}#gate .dn{color:#f59e0b;font-weight:700;margin-top:14px;display:none}#pn{background:var(--card);color:var(--tx);width:100%;max-width:560px;max-height:90vh;overflow:auto;border-radius:24px 24px 0 0;padding:16px 16px calc(18px + env(safe-area-inset-bottom,0px))}#pn h2{margin:0 0 12px;font-size:20px}#pn .sec{margin:14px 0}#pn .sec>label,#pn .sec>.lb{display:block;font-weight:700;margin-bottom:6px;font-size:15px}#pn select{width:100%;padding:11px;font-size:16px;border:1px solid var(--bd);border-radius:12px;background:var(--bg);color:var(--tx)}#pn .seg{display:flex;gap:8px}#pn .seg button{flex:1;padding:12px 6px;font-size:15px;border:1px solid var(--bd);border-radius:12px;background:var(--bg);color:var(--tx)}#pn .seg button.on{background:var(--pri);color:#04201d;border-color:var(--pri);font-weight:700}#pn input[type=range]{width:100%;direction:ltr}#pn .zv{text-align:center;font-weight:700;margin-top:4px;direction:ltr}#pn .ab{font-size:14px;line-height:1.7;color:var(--mut)}#pn .ab b{color:var(--tx)}#pn .cl{width:100%;margin-top:6px;padding:13px;font-size:16px;border-radius:12px;border:0;background:var(--pri);color:#04201d;font-weight:700}
 #sh a b{font-weight:400}
 h1{font-size:18px;margin:0}
 .mut{color:var(--mut);font-size:13px}
@@ -53,29 +53,41 @@ button,a.b{border:0;border-radius:10px;padding:10px 8px;font-size:14px;font-weig
 </head>
 <body>
 <div class="hd">
-<select id="lang" onchange="setLang(this.value)" aria-label="Language"><option value="ar">العربية</option><option value="en">English</option></select>
+<button id="gear" onclick="openSet()" aria-label="Settings">⚙️</button>
 <div class="tl"><h1 data-t="title"></h1><span class="mut" id="cnt"></span></div>
-<div class="top2"><button onclick="locate()" data-t="loc"></button><button class="o" onclick="refreshList()" data-t="refresh"></button><button class="o2" onclick="flipOrder()" data-t="flip"></button></div>
+<div class="top2"><button onclick="locate()" data-t="loc"></button><button class="o" onclick="refreshList()" data-t="refresh"></button><button class="o2" id="fl" onclick="flipOrder()"></button></div>
 <div class="st" id="gps"></div>
-<div class="add"><input id="al" data-ph="phLink" inputmode="url"><div class="arow"><input id="ap" data-ph="phPhone" inputmode="tel"><button id="asv" onclick="addTop()"></button><button id="acn" class="g" style="display:none" onclick="cancelTop()" data-t="cancel"></button></div><div class="warn" id="aw"></div></div>
+<div class="add"><input id="al" data-ph="phLink" inputmode="url" oninput="updCancel()"><div class="arow"><input id="ap" data-ph="phPhone" inputmode="tel" oninput="updCancel()"><button id="asv" onclick="addTop()"></button><button id="acn" class="g" style="display:none" onclick="cancelTop()" data-t="cancel"></button></div><div class="warn" id="aw"></div></div>
 </div>
 <div id="list"></div>
+<div id="gate"><div class="gb"><div class="ic">🔔</div><h2 data-t="gateT"></h2><p data-t="gateP"></p><button onclick="askNotif()" data-t="gateB"></button><div class="dn" id="gdn" data-t="gateD"></div></div></div>
+<div id="tz"><div class="row"><span id="tzm"></span><button onclick="undoDone()" data-t="undo"></button></div><i id="tzi"></i></div>
+<div id="ov" onclick="if(event.target===this)closeSet()"><div id="pn">
+<h2 data-t="settings"></h2>
+<div class="sec"><label for="lang" data-t="language"></label><select id="lang" onchange="setLang(this.value)"><option value="ar">العربية</option><option value="en">English</option></select></div>
+<div class="sec"><div class="lb" data-t="units"></div><div class="seg"><button id="u1" onclick="setUnits('m')" data-t="metric"></button><button id="u2" onclick="setUnits('i')" data-t="imperial"></button></div></div>
+<div class="sec"><div class="lb" data-t="size"></div><input type="range" id="zr" min="80" max="150" step="10" oninput="setZoom(this.value)"><div class="zv" id="zv"></div></div>
+<div class="sec"><div class="lb" data-t="snd"></div><div class="seg"><button id="s1" onclick="setSnd(1)" data-t="sndOn"></button><button id="s2" onclick="setSnd(0)" data-t="sndOff"></button></div></div>
+<div class="sec"><div class="lb" data-t="wl"></div><div class="seg"><button id="w1" onclick="setWake(1)" data-t="wlOn"></button><button id="w2" onclick="setWake(0)" data-t="wlOff"></button></div></div>
+<div class="sec"><div class="lb" data-t="about"></div><div class="ab"><b>NextStop</b> · v1.0<br><span data-t="aboutTxt"></span><br><span data-t="credit"></span></div></div>
+<button class="cl" onclick="closeSet()" data-t="close"></button>
+</div></div>
 <div id="bk"><div id="sh"><div class="t" id="shn"></div><a id="s1"><span>📞</span><b data-t="call"></b></a><a id="s2" target="_blank" rel="noopener"><span>💬</span><b data-t="wa"></b></a><a id="s3"><span>✉️</span><b data-t="sms"></b></a></div></div>
 <script>
 var LANG="ar";try{LANG=localStorage.getItem("lang")||"ar"}catch(e){}
 var D={
-ar:{title:"📍 NextStop",loc:"📍 حدّد موقعي",refresh:"🔄 تحديث",flip:"↕️ قلب",farFirst:"⬆️ الترتيب: من الأبعد للأقرب",nearFirst:"⬇️ الترتيب: من الأقرب للأبعد",hint:"اضغط «حدّد موقعي» أول، وبعدها «تحديث» لترتيب الطرق",phLink:"الصق رابط قوقل ماب أو الإحداثيات",phPhone:"رقم الزبون",save:"➕ حفظ",saveEdit:"💾 حفظ التعديل",saveAnyway:"حفظ رغم التكرار",cancel:"إلغاء",call:"اتصال",wa:"رسالة واتساب",sms:"رسالة نصية",
+ar:{title:"📍 NextStop",loc:"📍 حدّد موقعي",refresh:"🔄 تحديث",nearBtn:"⬇️ الأقرب",farBtn:"⬆️ الأبعد",farFirst:"⬆️ الترتيب: من الأبعد للأقرب",nearFirst:"⬇️ الترتيب: من الأقرب للأبعد",hint:"اضغط «حدّد موقعي» أول، وبعدها «تحديث» لترتيب الطرق",phLink:"الصق رابط قوقل ماب أو الإحداثيات",phPhone:"رقم الزبون",save:"➕ حفظ",saveEdit:"💾 حفظ التعديل",saveAnyway:"حفظ رغم التكرار",cancel:"✖ إلغاء",call:"اتصال",wa:"رسالة واتساب",sms:"رسالة نصية",
  nonum:"بدون رقم",nav:"🧭 وديني",restore:"⬆️ رجّعه",noans2:"⬇️ ما رد",done:"✔ تم",empty:"ما فيه مشاوير. أضف أول واحد من الخانة فوق.",
- arrived:"🟢 وصلت",noans:"📵 ما رد",short:"⚠️ رابط قصير",cust:"زبون",m:"م",km:"كم",min:"د",
+ arrived:"🟢 وصلت",noans:"📵 ما رد",short:"⚠️ رابط قصير",cust:"زبون",m:"م",km:"كم",snd:"صوت الوصول",sndOn:"🔔 شغّال",sndOff:"🔕 مغلق",fixing:"📡 جاري تحديث موقعك…",hint2:"📡 تم تحديث موقعك",wl:"الشاشة",wlOn:"تبقى مضيئة",wlOff:"عادية",gateT:"الإشعارات مطلوبة",gateP:"NextStop يحتاج الإشعارات عشان ينبّهك لما توصل لموقع الزبون. فعّلها للمتابعة.",gateB:"🔔 تفعيل الإشعارات",gateD:"الإشعارات محظورة. افتح إعدادات المتصفح أو التطبيق ← الإشعارات ← سماح، ثم ارجع هنا.",undo:"↩ تراجع",doneMsg:"تم إنهاء المشوار",mi:"ميل",ft:"قدم",settings:"⚙️ الإعدادات",language:"اللغة",units:"وحدة المسافة",metric:"كم / متر",imperial:"ميل / قدم",size:"حجم التطبيق",about:"عن التطبيق",aboutTxt:"يرتّب مشاوير التوصيل من الأقرب للأبعد حسب مسافة الطريق. بياناتك تُحفظ على جهازك فقط.",credit:"الخرائط والطرق: © مساهمو OpenStreetMap",close:"تم",min:"د",
  dupPhone:"نفس رقم التلفون في المشوار ",dupLoc:"الموقع قريب جداً من المشوار ",dupLink:"نفس الرابط في المشوار ",
  enter:"اكتب الرابط أو الرقم أول",reading:"⏳ أقرأ الموقع...",full1:"⚠️ القائمة ممتلئة (",full2:" مشوار). احذف مشوار بزر ✔ تم",
  noread:"⚠️ ما قدرت أقرأ إحداثيات الرابط، انحفظ بدون ترتيب",saved:"✅ انحفظ، مشوار رقم ",
  okRoad:"📡 تم الترتيب حسب مسافة الطريق",okLine:"📡 تم الترتيب (تقريبي بخط مستقيم)",permErr:"⚠️ فعّل إذن الموقع للمتصفح",nogeo:"الجهاز ما يدعم الموقع",
  locating:"⏳ أحدد موقعك بالضبط...",roads:"⏳ أحسب مسافات الطرق...",acc1:"📍 دقة موقعك ",acc2:" م — ",byRoad:"الترتيب حسب مسافة الطريق",byLine:"الترتيب بخط مستقيم (تعذّر حساب الطريق)",
  locErr:"⚠️ ما قدرت أحدد موقعك. اسمح بالموقع للمتصفح من الإعدادات",sortedRoad:"🛣 تم الترتيب حسب مسافة الطريق (الأقرب أول)",sortedLine:"⚠️ ما قدرت أحسب مسافة الطريق، الترتيب بخط مستقيم تقريبي",needLoc:"⚠️ حدّد موقعك أول بزر «حدّد موقعي»",updating:"⏳ أحدّث الترتيب..."},
-en:{title:"📍 NextStop",loc:"📍 My location",refresh:"🔄 Refresh",flip:"↕️ Flip",farFirst:"⬆️ Order: farthest first",nearFirst:"⬇️ Order: nearest first",hint:"Tap “My location” first, then “Refresh” to sort by road distance",phLink:"Paste Google Maps link or coordinates",phPhone:"Customer phone",save:"➕ Save",saveEdit:"💾 Save edit",saveAnyway:"Save anyway",cancel:"Cancel",call:"Call",wa:"WhatsApp message",sms:"Text message",
+en:{title:"📍 NextStop",loc:"📍 My location",refresh:"🔄 Refresh",nearBtn:"⬇️ Nearest",farBtn:"⬆️ Farthest",farFirst:"⬆️ Order: farthest first",nearFirst:"⬇️ Order: nearest first",hint:"Tap “My location” first, then “Refresh” to sort by road distance",phLink:"Paste Google Maps link or coordinates",phPhone:"Customer phone",save:"➕ Save",saveEdit:"💾 Save edit",saveAnyway:"Save anyway",cancel:"✖ Cancel",call:"Call",wa:"WhatsApp message",sms:"Text message",
  nonum:"No number",nav:"🧭 Navigate",restore:"⬆️ Restore",noans2:"⬇️ No answer",done:"✔ Done",empty:"No stops yet. Add the first one in the box above.",
- arrived:"🟢 Arrived",noans:"📵 No answer",short:"⚠️ Short link",cust:"Customer",m:"m",km:"km",min:"min",
+ arrived:"🟢 Arrived",noans:"📵 No answer",short:"⚠️ Short link",cust:"Customer",m:"m",km:"km",snd:"Arrival sound",sndOn:"🔔 On",sndOff:"🔕 Off",fixing:"📡 Updating your location…",hint2:"📡 Location updated",wl:"Screen",wlOn:"Stay awake",wlOff:"Normal",gateT:"Notifications required",gateP:"NextStop needs notifications to alert you when you reach a customer. Enable them to continue.",gateB:"🔔 Enable notifications",gateD:"Notifications are blocked. Open browser/app settings → Notifications → Allow, then come back.",undo:"↩ Undo",doneMsg:"Stop completed",mi:"mi",ft:"ft",settings:"⚙️ Settings",language:"Language",units:"Distance unit",metric:"Kilometers / meters",imperial:"Miles / feet",size:"App size",about:"About",aboutTxt:"Sorts delivery stops from nearest to farthest by road distance. Your data stays on your device only.",credit:"Maps & routing: © OpenStreetMap contributors",close:"Done",min:"min",
  dupPhone:"Same phone number as stop ",dupLoc:"Location is very close to stop ",dupLink:"Same link as stop ",
  enter:"Enter a link or a number first",reading:"⏳ Reading location...",full1:"⚠️ List is full (",full2:" stops). Remove one with ✔ Done",
  noread:"⚠️ Couldn't read coordinates from the link; saved without sorting",saved:"✅ Saved as stop #",
@@ -90,6 +102,7 @@ function applyLang(){
  document.querySelectorAll("[data-ph]").forEach(function(e){e.placeholder=t(e.getAttribute("data-ph"))});
  F("lang").value=LANG;
  F("asv").textContent=editI!=null?t("saveEdit"):t("save");
+ F("fl").textContent=t(rev?"farBtn":"nearBtn");
 }
 function setLang(v){LANG=v==="en"?"en":"ar";try{localStorage.setItem("lang",LANG)}catch(e){}applyLang();F("aw").textContent="";warnedTop="";st(t("hint"));render()}
 var RESOLVER="https://still-firefly-143f.sosona3011.workers.dev/"; // الصق هنا رابط قارئ الروابط بين علامتي التنصيص
@@ -99,30 +112,83 @@ if(!Array.isArray(slots))slots=[];
 while(slots.length<N)slots.push(null);
 function save(){try{localStorage.setItem(KEY,JSON.stringify(slots))}catch(e){}}
 function norm(t){return String(t||"").replace(/[\u0660-\u0669]/g,function(c){return c.charCodeAt(0)-1632}).replace(/[\u06F0-\u06F9]/g,function(c){return c.charCodeAt(0)-1776}).replace(/\u066B/g,".").replace(/[\u060C\u066C]/g,",").replace(/\u00A0/g," ")}
+function dmsPart(m,o){var v=+m[o]+(m[o+1]?+m[o+1]/60:0)+(m[o+2]?+m[o+2]/3600:0),h=m[o+3].toUpperCase();return(h==="S"||h==="W")?-v:v}
+function parseDMS(t){
+ t=t.replace(/[\u2032\u2019\u2018`\u00B4]/g,"'").replace(/[\u2033\u201C\u201D]/g,'"').replace(/''/g,'"').replace(/[\u00BA\u02DA\u2218]/g,"\u00B0");
+ var P='(\\d{1,3}(?:\\.\\d+)?)\\s*\\u00B0?\\s*(?:(\\d{1,2}(?:\\.\\d+)?)\\s*\'\\s*(?:(\\d{1,2}(?:\\.\\d+)?)\\s*"?\\s*)?)?([NSEWnsew])';
+ var re=new RegExp(P+'[\\s,;/]*'+P),m=t.match(re);if(!m)return null;
+ var a=dmsPart(m,1),b=dmsPart(m,5),h1=m[4].toUpperCase(),h2=m[8].toUpperCase();
+ if((h1==="N"||h1==="S")&&(h2==="E"||h2==="W"))return{lat:a,lng:b};
+ if((h1==="E"||h1==="W")&&(h2==="N"||h2==="S"))return{lat:b,lng:a};
+ return null}
 function parse(t){t=t||"";try{t=decodeURIComponent(t)}catch(e){}t=norm(t);
+ var dm=parseDMS(t);if(dm&&Math.abs(dm.lat)<=90&&Math.abs(dm.lng)<=180)return dm;
  var r=[/@(-?\d+\.\d+),(-?\d+\.\d+)/,/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/,/[?&](?:q|query|ll|destination|daddr)=\s*(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)/,/^\s*(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)\s*$/];
  for(var i=0;i<r.length;i++){var m=t.match(r[i]);if(m)return{lat:+m[1],lng:+m[2]}}return null}
 function fix(p){var d=norm(p||"").replace(/[^\d]/g,"").replace(/^00/,"");if(d.length===8)d="968"+d;return d}
 function dist(a,b){var R=6371,t=Math.PI/180,x=Math.sin((b.lat-a.lat)*t/2)**2+Math.cos(a.lat*t)*Math.cos(b.lat*t)*Math.sin((b.lng-a.lng)*t/2)**2;return 2*R*Math.asin(Math.sqrt(x))}
 function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
-function fmt(d){return d<1?Math.round(d*1000)+" "+t("m"):d.toFixed(1)+" "+t("km")}
+var UN=(function(){try{return localStorage.getItem("units")==="i"?"i":"m"}catch(e){return "m"}})(),ZM=(function(){try{var z=parseInt(localStorage.getItem("zoom"),10);return z>=80&&z<=150?z:100}catch(e){return 100}})();
+function fmt(d){if(UN==="i"){var mi=d*0.621371;return mi<0.1?Math.round(d*3280.84)+" "+t("ft"):mi.toFixed(1)+" "+t("mi")}return d<1?Math.round(d*1000)+" "+t("m"):d.toFixed(1)+" "+t("km")}
+var SND=(function(){try{return localStorage.getItem("snd")!=="0"}catch(e){return true}})(),ac=null;
+function initAudio(){try{if(!ac){var C=window.AudioContext||window.webkitAudioContext;if(C)ac=new C()}if(ac&&ac.state==="suspended")ac.resume()}catch(e){}}
+function beep(){
+ if(!SND||!ac)return;initAudio();
+ try{var t0=ac.currentTime;[0,0.22,0.44].forEach(function(d,k){var o=ac.createOscillator(),g=ac.createGain();o.type="sine";o.frequency.value=k===2?1175:880;g.gain.setValueAtTime(0.0001,t0+d);g.gain.exponentialRampToValueAtTime(0.6,t0+d+0.02);g.gain.exponentialRampToValueAtTime(0.0001,t0+d+0.18);o.connect(g);g.connect(ac.destination);o.start(t0+d);o.stop(t0+d+0.2)})}catch(e){}
+}
+function setSnd(v){SND=!!v;try{localStorage.setItem("snd",v?"1":"0")}catch(e){}syncSet();if(SND){initAudio();beep()}}
+var swReg=null,WL=(function(){try{return localStorage.getItem("wl")!=="0"}catch(e){return true}})(),wlk=null;
+function notify(title,body,i){
+ if(!("Notification" in window)||Notification.permission!=="granted")return;
+ var o={body:body,icon:"icon-192.png",badge:"icon-192.png",vibrate:[200,100,200],silent:false,tag:"arr",renotify:true,data:{i:i}};
+ try{if(swReg)swReg.showNotification(title,o);else new Notification(title,o)}catch(e){}
+}
+function checkGate(){
+ var g=F("gate");
+ if(!("Notification" in window)||Notification.permission==="granted"){g.className="";return}
+ g.className="on";F("gdn").style.display=Notification.permission==="denied"?"block":"none";
+}
+function askNotif(){try{var r=Notification.requestPermission(function(){checkGate()});if(r&&r.then)r.then(checkGate)}catch(e){}setTimeout(checkGate,400)}
+function wake(){if(!WL||!navigator.wakeLock||document.visibilityState!=="visible"||wlk)return;try{navigator.wakeLock.request("screen").then(function(l){wlk=l;l.addEventListener("release",function(){if(wlk===l)wlk=null})}).catch(function(){})}catch(e){}}
+function unwake(){if(wlk){try{wlk.release()}catch(e){}wlk=null}}
+function setWake(v){WL=!!v;try{localStorage.setItem("wl",v?"1":"0")}catch(e){}if(WL)wake();else unwake();syncSet()}
+document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible"){wake();checkGate();wakeUp()}});window.addEventListener("pageshow",function(){wakeUp()});window.addEventListener("focus",function(){if(Date.now()-gpsAt>4000)wakeUp()});
+document.addEventListener("click",function(){wake();initAudio()});document.addEventListener("touchstart",function(){initAudio()},{passive:true});
+function openFromNotif(i){i=parseInt(i,10);if(!isNaN(i)&&slots[i]&&slots[i].phone)openSheet(i)}
+try{if("serviceWorker" in navigator)navigator.serviceWorker.addEventListener("message",function(e){if(e.data&&e.data.open!=null)openFromNotif(e.data.open)})}catch(e){}
+try{if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").then(function(){return navigator.serviceWorker.ready}).then(function(r){swReg=r}).catch(function(){})}catch(e){}
+function syncSet(){F("s1").className=SND?"on":"";F("s2").className=SND?"":"on";F("w1").className=WL?"on":"";F("w2").className=WL?"":"on";F("u1").className=UN==="m"?"on":"";F("u2").className=UN==="i"?"on":"";F("zr").value=ZM;F("zv").textContent=ZM+"%"}
+function setUnits(v){UN=v==="i"?"i":"m";try{localStorage.setItem("units",UN)}catch(e){}syncSet();render()}
+function setZoom(v){ZM=parseInt(v,10)||100;try{localStorage.setItem("zoom",ZM)}catch(e){}document.body.style.zoom=ZM/100;F("zv").textContent=ZM+"%"}
+function openSet(){syncSet();F("ov").className="on"}
+function closeSet(){F("ov").className=""}
 function st(t){document.getElementById("gps").textContent=t}
 function typing(){var a=document.activeElement;return a&&a.tagName==="INPUT"}
 function dd(i){var s=slots[i];if(!(me&&s.lat!=null))return 1e9;var r=road[i];return r?r.d:dist(me,s)*1400}
+var rq=0;
 function loadRoads(done){
  if(!me||!ROUTER){road={};done(false);return}
  var idx=[];slots.forEach(function(s,i){if(s&&s.lat!=null)idx.push(i)});
  if(!idx.length){road={};done(true);return}
- var ch=[];for(var a=0;a<idx.length;a+=90)ch.push(idx.slice(a,a+90));
- Promise.all(ch.map(function(ids){
+ var id=++rq,tries=0,ch=[];for(var a=0;a<idx.length;a+=90)ch.push(idx.slice(a,a+90));
+ function one(ids){
   var co=[me.lng+","+me.lat].concat(ids.map(function(i){return slots[i].lng+","+slots[i].lat})).join(";");
-  return fetch(ROUTER+"/table/v1/driving/"+co+"?sources=0&annotations=distance,duration").then(function(r){return r.json()}).then(function(j){
+  var ac=typeof AbortController!=="undefined"?new AbortController():null,tm=setTimeout(function(){if(ac)ac.abort()},12000);
+  return fetch(ROUTER+"/table/v1/driving/"+co+"?sources=0&annotations=distance,duration",ac?{signal:ac.signal}:undefined).then(function(r){clearTimeout(tm);return r.json()}).then(function(j){
    if(j.code!=="Ok"||!j.distances)throw 0;
    var o={};ids.forEach(function(i,k){var d=j.distances[0][k+1],t=j.durations&&j.durations[0][k+1];if(d!=null)o[i]={d:d,t:t}});return o});
- })).then(function(parts){
-  var nr={};parts.forEach(function(o){for(var k in o)nr[k]=o[k]});
-  road=nr;done(Object.keys(nr).length>0);
- }).catch(function(){road={};done(false)});
+ }
+ function attempt(){
+  Promise.all(ch.map(one)).then(function(parts){
+   if(id!==rq)return;
+   var nr={};parts.forEach(function(o){for(var k in o)nr[k]=o[k]});
+   road=nr;done(Object.keys(nr).length>0);
+  }).catch(function(){
+   if(id!==rq)return;
+   if(++tries<3){setTimeout(function(){if(id===rq)attempt()},tries*1500)}else{road={};done(false)}
+  });
+ }
+ attempt();
 }
 function calc(){
  var f=[],e=[];
@@ -131,7 +197,7 @@ function calc(){
  if(rev){var a=f.filter(function(i){return !slots[i].late}),b=f.filter(function(i){return slots[i].late});f=a.reverse().concat(b)}
  order=f.concat(e);
 }
-function flipOrder(){rev=!rev;try{localStorage.setItem("rev",rev?"1":"0")}catch(e){}calc();render();st(t(rev?"farFirst":"nearFirst"))}
+function flipOrder(){rev=!rev;try{localStorage.setItem("rev",rev?"1":"0")}catch(e){}calc();render();F("fl").textContent=t(rev?"farBtn":"nearBtn");st(t(rev?"farFirst":"nearFirst"))}
 function F(id){return document.getElementById(id)}
 function render(){
  if(order.length!==N)calc();
@@ -155,7 +221,7 @@ function paint(){
   c.classList.toggle("arr",arr);c.classList.toggle("late",!!s.late&&!arr);
   document.getElementById("nm"+i).textContent=arr?t("arrived"):(s.late?t("noans"):(s.lat==null?t("short"):t("cust")));
   var r=road[i];document.getElementById("d"+i).textContent=r?(fmt(r.d/1000)+(r.t!=null?" • "+Math.max(1,Math.round(r.t/60))+" "+t("min"):"")):(d!=null?"~"+fmt(d):"");
-  if(arr&&!arrived[i]){arrived[i]=1;try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}}
+  if(arr&&!arrived[i]){arrived[i]=1;try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}beep();notify(t("arrived")+" #"+rk(i),s.phone||"",i)}
   if(!arr)delete arrived[i];
  });
 }
@@ -168,9 +234,11 @@ function dupMsg(i,l,p,c){var m=[],k=pkey(p);
   else if(l&&s.link&&s.link.trim()===l.trim())m.push(t("dupLink")+rk(j));
  });return m}
 function resolve(l){return fetch(RESOLVER+"?u="+encodeURIComponent(l)).then(function(r){return r.json()}).then(function(j){return j&&j.lat!=null?{lat:j.lat,lng:j.lng}:null}).catch(function(){return null})}
-function resetTop(){F("al").value="";F("ap").value="";F("aw").textContent="";F("asv").textContent=t("save");F("acn").style.display="none";editI=null;warnedTop=""}
+function resetTop(){F("al").value="";F("ap").value="";F("aw").textContent="";F("asv").textContent=t("save");editI=null;warnedTop="";updCancel()}
+function updCancel(){F("acn").style.display=(editI!=null||F("al").value||F("ap").value||F("aw").textContent)?"":"none"}
+function cleanLink(x){var m=String(x||"").match(/https?:\/\/[^\s<>"']+/i);if(!m)return x;var u=m[0].replace(/[.,;)\]]+$/,"");var g=u.match(/^https?:\/\/(?:maps\.app\.goo\.gl|goo\.gl\/maps)\/[A-Za-z0-9_-]+/i);return g?g[0]:u}
 function addTop(){
- var l=F("al").value.trim(),p=F("ap").value.trim();
+ var l0=F("al").value.trim(),l=cleanLink(l0),p=F("ap").value.trim();if(l!==l0)F("al").value=l;
  if(!l&&!p){F("aw").textContent=t("enter");return}
  var c=parse(l);
  if(!c&&RESOLVER&&/^https?:\/\//i.test(l)){
@@ -192,7 +260,12 @@ function saveTop(c,tried){
 }
 function ed(i){var s=slots[i];if(!s)return;editI=i;warnedTop="";F("al").value=s.link||"";F("ap").value=s.phone||"";F("aw").textContent="";F("asv").textContent=t("saveEdit");F("acn").style.display="";F("al").focus();window.scrollTo(0,0)}
 function cancelTop(){resetTop()}
-function done(i){slots[i]=null;delete road[i];delete arrived[i];save();calc();render()}
+var undoS=null,undoT=null;
+function hideToast(){F("tz").className="";F("tzi").className="";if(undoT){clearTimeout(undoT);undoT=null}}
+function done(i){var s=slots[i];if(!s)return;var n=rk(i);undoS={i:i,s:s,a:arrived[i]};slots[i]=null;delete road[i];delete arrived[i];save();calc();render();
+ F("tzm").textContent=t("doneMsg")+" #"+n;F("tz").className="on";var b=F("tzi");b.className="";void b.offsetWidth;b.className="run";
+ if(undoT)clearTimeout(undoT);undoT=setTimeout(function(){undoS=null;hideToast()},10000)}
+function undoDone(){var u=undoS;hideToast();undoS=null;if(!u)return;var i=slots[u.i]===null||slots[u.i]===undefined?u.i:slots.indexOf(null);if(i<0)return;slots[i]=u.s;if(u.a)arrived[i]=u.a;save();calc();render();st(t("saved")+rk(i));if(me&&u.s.lat!=null)loadRoads(function(){calc();render()})}
 function lt(i){slots[i].late=!slots[i].late;save();calc();render()}
 function openSheet(i){
  var s=slots[i];if(!s||!s.phone)return;var p=fix(s.phone);
@@ -206,13 +279,22 @@ var L=document.getElementById("list");
 L.addEventListener("click",function(e){var b=e.target.closest(".ph");if(b)openSheet(+b.dataset.i)});
 L.addEventListener("contextmenu",function(e){var b=e.target.closest(".ph");if(b){e.preventDefault();openSheet(+b.dataset.i)}});
 document.getElementById("bk").addEventListener("click",function(e){if(e.target.id==="bk")this.classList.remove("on")});
+var wid=null,gpsAt=0;
+function onPos(p){
+ var first=!me;
+ me={lat:p.coords.latitude,lng:p.coords.longitude};gpsAt=Date.now();
+ if(first){loadRoads(function(ok){calc();render();st(ok?t("okRoad"):t("okLine"))})}else{paint()}
+}
 function startWatch(){
  if(watching||!navigator.geolocation)return;watching=true;
- navigator.geolocation.watchPosition(function(p){
-  var first=!me;
-  me={lat:p.coords.latitude,lng:p.coords.longitude};
-  if(first){loadRoads(function(ok){calc();render();st(ok?t("okRoad"):t("okLine"))})}else paint();
- },function(){watching=false;st(t("permErr"))},{enableHighAccuracy:true,maximumAge:10000});
+ wid=navigator.geolocation.watchPosition(onPos,function(e){if(e&&e.code===1){watching=false;wid=null;st(t("permErr"))}else{st(t("fixing"));setTimeout(restartWatch,3000)}},{enableHighAccuracy:true,maximumAge:2000,timeout:30000});
+}
+function restartWatch(){try{if(wid!=null)navigator.geolocation.clearWatch(wid)}catch(e){}wid=null;watching=false;startWatch()}
+function wakeUp(){
+ if(!navigator.geolocation||!me)return;
+ if(Date.now()-gpsAt>4000)st(t("fixing"));
+ restartWatch();
+ navigator.geolocation.getCurrentPosition(function(p){onPos(p);st(t("hint2"))},function(){},{enableHighAccuracy:true,maximumAge:0,timeout:10000});
 }
 function locate(){
  if(!navigator.geolocation){st(t("nogeo"));return}
@@ -228,7 +310,7 @@ function refreshList(){
  st(t("updating"));
  navigator.geolocation.getCurrentPosition(function(p){me={lat:p.coords.latitude,lng:p.coords.longitude};go();startWatch()},function(){go()},{enableHighAccuracy:true,maximumAge:15000,timeout:8000});
 }
-applyLang();st(t("hint"));calc();render();startWatch();
+document.body.style.zoom=ZM/100;applyLang();syncSet();checkGate();wake();try{var qo=new URLSearchParams(location.search).get("open");if(qo!=null){openFromNotif(qo);history.replaceState(null,"",location.pathname)}}catch(e){}st(t("hint"));calc();render();startWatch();
 </script>
 </body>
 </html>
