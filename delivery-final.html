@@ -43,7 +43,7 @@ button,a.b{border:0;border-radius:10px;padding:10px 8px;font-size:14px;font-weig
 .ph{width:100%;margin-top:8px;padding:14px;font-size:20px;letter-spacing:1px;background:var(--bg);color:var(--tx);border:1px dashed var(--pri);border-radius:12px;direction:ltr;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
 .arr .ph{background:var(--ok);color:#fff;border:0;animation:p 1.2s infinite}
 @keyframes p{50%{opacity:.7}}
-#bk{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:flex-end;justify-content:center;z-index:9}
+#bk{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:flex-end;justify-content:center;z-index:20}
 #bk.on{display:flex}
 #sh{background:var(--sheet);color:#f1f3f6;width:100%;max-width:560px;border-radius:26px 26px 0 0;padding:14px 10px calc(14px + env(safe-area-inset-bottom,0px))}
 #sh .t{text-align:center;direction:ltr;color:#9aa3b2;margin-bottom:6px;font-size:15px}
@@ -267,14 +267,15 @@ function done(i){var s=slots[i];if(!s)return;var n=rk(i);undoS={i:i,s:s,a:arrive
  if(undoT)clearTimeout(undoT);undoT=setTimeout(function(){undoS=null;hideToast()},10000)}
 function undoDone(){var u=undoS;hideToast();undoS=null;if(!u)return;var i=slots[u.i]===null||slots[u.i]===undefined?u.i:slots.indexOf(null);if(i<0)return;slots[i]=u.s;if(u.a)arrived[i]=u.a;save();calc();render();st(t("saved")+rk(i));if(me&&u.s.lat!=null)loadRoads(function(){calc();render()})}
 function lt(i){slots[i].late=!slots[i].late;save();calc();render()}
+var shP="";
+function shGo(u){document.getElementById("bk").classList.remove("on");setTimeout(function(){try{window.location.href=u}catch(e){}},60)}
 function openSheet(i){
  var s=slots[i];if(!s||!s.phone)return;var p=fix(s.phone);
  document.getElementById("shn").textContent=s.phone;
- document.getElementById("s1").href="tel:+"+p;
- document.getElementById("s2").href="https://wa.me/"+p;
- document.getElementById("s3").href="sms:+"+p;
+ shP=p;
  document.getElementById("bk").classList.add("on");
 }
+["s1","s2","s3"].forEach(function(id){var a=document.getElementById(id);a.removeAttribute("target");a.setAttribute("href","#");a.addEventListener("click",function(e){e.preventDefault();e.stopPropagation();if(!shP)return;shGo(id==="s1"?"tel:+"+shP:id==="s2"?"https://wa.me/"+shP:"sms:+"+shP)})});
 var L=document.getElementById("list");
 L.addEventListener("click",function(e){var b=e.target.closest(".ph");if(b)openSheet(+b.dataset.i)});
 L.addEventListener("contextmenu",function(e){var b=e.target.closest(".ph");if(b){e.preventDefault();openSheet(+b.dataset.i)}});
