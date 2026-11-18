@@ -73,25 +73,25 @@ button,a.b{border:0;border-radius:10px;padding:10px 8px;font-size:14px;font-weig
 <div class="sec"><div class="lb" data-t="about"></div><div class="ab"><b>NextStop</b> · v1.0<br><span data-t="aboutTxt"></span><br><span data-t="credit"></span></div></div>
 <button class="cl" onclick="closeSet()" data-t="close"></button>
 </div></div>
-<div id="bk"><div id="sh"><div class="t" id="shn"></div><a id="sh1"><span>📞</span><b data-t="call"></b></a><a id="sh2"><span><svg width="30" height="30" viewBox="0 0 24 24"><path d="M12 3C7 3 3 6.8 3 11.5c0 2 .8 3.8 2 5.2L4 21l4.5-1.4c1 .3 2.2.5 3.5.5 5 0 9-3.8 9-8.5S17 3 12 3z" fill="#25d366"/><circle cx="8.5" cy="11.5" r="1.2" fill="#fff"/><circle cx="12" cy="11.5" r="1.2" fill="#fff"/><circle cx="15.5" cy="11.5" r="1.2" fill="#fff"/></svg></span><b data-t="wa"></b></a><a id="sh3"><span>✉️</span><b data-t="sms"></b></a></div></div>
+<div id="bk"><div id="sh"><div class="t" id="shn"></div><a id="sh1"><span>📞</span><b data-t="call"></b></a><a id="sh2"><span><svg width="30" height="30" viewBox="0 0 24 24"><path d="M12 3C7 3 3 6.8 3 11.5c0 2 .8 3.8 2 5.2L4 21l4.5-1.4c1 .3 2.2.5 3.5.5 5 0 9-3.8 9-8.5S17 3 12 3z" fill="#25d366"/><circle cx="8.5" cy="11.5" r="1.2" fill="#fff"/><circle cx="12" cy="11.5" r="1.2" fill="#fff"/><circle cx="15.5" cy="11.5" r="1.2" fill="#fff"/></svg></span><b data-t="wa"></b></a><a id="sh3"><span>✉️</span><b data-t="sms"></b></a><a id="sh4"><span><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="3"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg></span><b id="cpl" data-t="copy"></b></a></div></div>
 <script>
 var LANG="ar";try{LANG=localStorage.getItem("lang")||"ar"}catch(e){}
 var D={
-ar:{title:"📍 NextStop",loc:"📍 حدّد موقعي",refresh:"🔄 تحديث",nearBtn:"⬇️ الأقرب",farBtn:"⬆️ الأبعد",farFirst:"⬆️ الترتيب: من الأبعد للأقرب",nearFirst:"⬇️ الترتيب: من الأقرب للأبعد",hint:"اضغط «حدّد موقعي» أول، وبعدها «تحديث» لترتيب الطرق",phLink:"الصق رابط قوقل ماب أو الإحداثيات",phPhone:"رقم الزبون",save:"➕ حفظ",saveEdit:"💾 حفظ التعديل",saveAnyway:"حفظ رغم التكرار",cancel:"✖ إلغاء",call:"اتصال",wa:"رسالة واتساب",wapp:"تطبيق الواتساب",waA:"تلقائي",waR:"واتساب",waB:"واتساب بزنس",sms:"رسالة نصية",
+ar:{title:"📍 NextStop",loc:"📍 حدّد موقعي",refresh:"🔄 تحديث",nearBtn:"⬇️ الأقرب",farBtn:"⬆️ الأبعد",farFirst:"⬆️ الترتيب: من الأبعد للأقرب",nearFirst:"⬇️ الترتيب: من الأقرب للأبعد",hint:"اضغط «حدّد موقعي» أول، وبعدها «تحديث» لترتيب الطرق",phLink:"الصق رابط قوقل ماب أو الإحداثيات",phPhone:"رقم الزبون",save:"➕ حفظ",saveEdit:"💾 حفظ التعديل",saveAnyway:"حفظ رغم التكرار",cancel:"✖ إلغاء",call:"اتصال",wa:"رسالة واتساب",wapp:"تطبيق الواتساب",waA:"تلقائي",waR:"واتساب",waB:"واتساب بزنس",sms:"رسالة نصية",copy:"نسخ الرقم",copied:"تم النسخ ✓",
  nonum:"بدون رقم",nav:"🧭 وديني",restore:"⬆️ رجّعه",noans2:"⬇️ ما رد",done:"✔ تم",empty:"ما فيه مشاوير. أضف أول واحد من الخانة فوق.",
- arrived:"🟢 وصلت",noans:"📵 ما رد",short:"⚠️ رابط قصير",cust:"زبون",m:"م",km:"كم",snd:"صوت الوصول",sndOn:"🔔 شغّال",sndOff:"🔕 مغلق",fixing:"📡 جاري تحديث موقعك…",hint2:"📡 تم تحديث موقعك",wl:"الشاشة",wlOn:"تبقى مضيئة",wlOff:"عادية",gateT:"الإشعارات مطلوبة",gateP:"NextStop يحتاج الإشعارات عشان ينبّهك لما توصل لموقع الزبون. فعّلها للمتابعة.",gateB:"🔔 تفعيل الإشعارات",gateD:"الإشعارات محظورة. افتح إعدادات المتصفح أو التطبيق ← الإشعارات ← سماح، ثم ارجع هنا.",undo:"↩ تراجع",doneMsg:"تم إنهاء المشوار",mi:"ميل",ft:"قدم",settings:"⚙️ الإعدادات",language:"اللغة",units:"وحدة المسافة",metric:"كم / متر",imperial:"ميل / قدم",size:"حجم التطبيق",about:"عن التطبيق",aboutTxt:"يرتّب مشاوير التوصيل من الأقرب للأبعد حسب مسافة الطريق. بياناتك تُحفظ على جهازك فقط.",credit:"الخرائط والطرق: © مساهمو OpenStreetMap",close:"تم",min:"د",
+ arrived:"🟢 وصلت",noans:"📵 ما رد",short:"⚠️ رابط قصير",cust:"زبون",m:"m",km:"km",snd:"صوت الوصول",sndOn:"🔔 شغّال",sndOff:"🔕 مغلق",fixing:"📡 جاري تحديث موقعك…",hint2:"📡 تم تحديث موقعك",wl:"الشاشة",wlOn:"تبقى مضيئة",wlOff:"عادية",gateT:"الإشعارات مطلوبة",gateP:"NextStop يحتاج الإشعارات عشان ينبّهك لما توصل لموقع الزبون. فعّلها للمتابعة.",gateB:"🔔 تفعيل الإشعارات",gateD:"الإشعارات محظورة. افتح إعدادات المتصفح أو التطبيق ← الإشعارات ← سماح، ثم ارجع هنا.",undo:"↩ تراجع",doneMsg:"تم إنهاء المشوار",mi:"mi",ft:"ft",settings:"⚙️ الإعدادات",language:"اللغة",units:"وحدة المسافة",metric:"km / m",imperial:"mi / ft",size:"حجم التطبيق",about:"عن التطبيق",aboutTxt:"يرتّب مشاوير التوصيل من الأقرب للأبعد حسب مسافة الطريق. بياناتك تُحفظ على جهازك فقط.",credit:"الخرائط والطرق: © مساهمو OpenStreetMap",close:"تم",min:"د",hr:"س",
  dupPhone:"نفس رقم التلفون في المشوار ",dupLoc:"الموقع قريب جداً من المشوار ",dupLink:"نفس الرابط في المشوار ",
  enter:"اكتب الرابط أو الرقم أول",reading:"⏳ أقرأ الموقع...",full1:"⚠️ القائمة ممتلئة (",full2:" مشوار). احذف مشوار بزر ✔ تم",
- noread:"⚠️ ما قدرت أقرأ إحداثيات الرابط، انحفظ بدون ترتيب",saved:"✅ انحفظ، مشوار رقم ",
+ noread:"⚠️ ما قدرت أقرأ إحداثيات الرابط، انحفظ بدون ترتيب",saved:"✅ تمت الإضافة",
  okRoad:"📡 تم الترتيب حسب مسافة الطريق",okLine:"📡 تم الترتيب (تقريبي بخط مستقيم)",permErr:"⚠️ فعّل إذن الموقع للمتصفح",nogeo:"الجهاز ما يدعم الموقع",
  locating:"⏳ أحدد موقعك بالضبط...",roads:"⏳ أحسب مسافات الطرق...",acc1:"📍 دقة موقعك ",acc2:" م — ",byRoad:"الترتيب حسب مسافة الطريق",byLine:"الترتيب بخط مستقيم (تعذّر حساب الطريق)",
  locErr:"⚠️ ما قدرت أحدد موقعك. اسمح بالموقع للمتصفح من الإعدادات",sortedRoad:"🛣 تم الترتيب حسب مسافة الطريق (الأقرب أول)",sortedLine:"⚠️ ما قدرت أحسب مسافة الطريق، الترتيب بخط مستقيم تقريبي",needLoc:"⚠️ حدّد موقعك أول بزر «حدّد موقعي»",updating:"⏳ أحدّث الترتيب..."},
-en:{title:"📍 NextStop",loc:"📍 My location",refresh:"🔄 Refresh",nearBtn:"⬇️ Nearest",farBtn:"⬆️ Farthest",farFirst:"⬆️ Order: farthest first",nearFirst:"⬇️ Order: nearest first",hint:"Tap “My location” first, then “Refresh” to sort by road distance",phLink:"Paste Google Maps link or coordinates",phPhone:"Customer phone",save:"➕ Save",saveEdit:"💾 Save edit",saveAnyway:"Save anyway",cancel:"✖ Cancel",call:"Call",wa:"WhatsApp",wapp:"WhatsApp app",waA:"Auto",waR:"WhatsApp",waB:"WhatsApp Business",sms:"Text message",
+en:{title:"📍 NextStop",loc:"📍 My location",refresh:"🔄 Refresh",nearBtn:"⬇️ Nearest",farBtn:"⬆️ Farthest",farFirst:"⬆️ Order: farthest first",nearFirst:"⬇️ Order: nearest first",hint:"Tap “My location” first, then “Refresh” to sort by road distance",phLink:"Paste Google Maps link or coordinates",phPhone:"Customer phone",save:"➕ Save",saveEdit:"💾 Save edit",saveAnyway:"Save anyway",cancel:"✖ Cancel",call:"Call",wa:"WhatsApp",wapp:"WhatsApp app",waA:"Auto",waR:"WhatsApp",waB:"WhatsApp Business",sms:"Text message",copy:"Copy number",copied:"Copied ✓",
  nonum:"No number",nav:"🧭 Navigate",restore:"⬆️ Restore",noans2:"⬇️ No answer",done:"✔ Done",empty:"No stops yet. Add the first one in the box above.",
- arrived:"🟢 Arrived",noans:"📵 No answer",short:"⚠️ Short link",cust:"Customer",m:"m",km:"km",snd:"Arrival sound",sndOn:"🔔 On",sndOff:"🔕 Off",fixing:"📡 Updating your location…",hint2:"📡 Location updated",wl:"Screen",wlOn:"Stay awake",wlOff:"Normal",gateT:"Notifications required",gateP:"NextStop needs notifications to alert you when you reach a customer. Enable them to continue.",gateB:"🔔 Enable notifications",gateD:"Notifications are blocked. Open browser/app settings → Notifications → Allow, then come back.",undo:"↩ Undo",doneMsg:"Stop completed",mi:"mi",ft:"ft",settings:"⚙️ Settings",language:"Language",units:"Distance unit",metric:"Kilometers / meters",imperial:"Miles / feet",size:"App size",about:"About",aboutTxt:"Sorts delivery stops from nearest to farthest by road distance. Your data stays on your device only.",credit:"Maps & routing: © OpenStreetMap contributors",close:"Done",min:"min",
+ arrived:"🟢 Arrived",noans:"📵 No answer",short:"⚠️ Short link",cust:"Customer",m:"m",km:"km",snd:"Arrival sound",sndOn:"🔔 On",sndOff:"🔕 Off",fixing:"📡 Updating your location…",hint2:"📡 Location updated",wl:"Screen",wlOn:"Stay awake",wlOff:"Normal",gateT:"Notifications required",gateP:"NextStop needs notifications to alert you when you reach a customer. Enable them to continue.",gateB:"🔔 Enable notifications",gateD:"Notifications are blocked. Open browser/app settings → Notifications → Allow, then come back.",undo:"↩ Undo",doneMsg:"Stop completed",mi:"mi",ft:"ft",settings:"⚙️ Settings",language:"Language",units:"Distance unit",metric:"Kilometers / meters",imperial:"Miles / feet",size:"App size",about:"About",aboutTxt:"Sorts delivery stops from nearest to farthest by road distance. Your data stays on your device only.",credit:"Maps & routing: © OpenStreetMap contributors",close:"Done",min:"min",hr:"h",
  dupPhone:"Same phone number as stop ",dupLoc:"Location is very close to stop ",dupLink:"Same link as stop ",
  enter:"Enter a link or a number first",reading:"⏳ Reading location...",full1:"⚠️ List is full (",full2:" stops). Remove one with ✔ Done",
- noread:"⚠️ Couldn't read coordinates from the link; saved without sorting",saved:"✅ Saved as stop #",
+ noread:"⚠️ Couldn't read coordinates from the link; saved without sorting",saved:"✅ Added",
  okRoad:"📡 Sorted by road distance",okLine:"📡 Sorted (approximate, straight line)",permErr:"⚠️ Allow location access for the browser",nogeo:"This device doesn't support location",
  locating:"⏳ Finding your exact location...",roads:"⏳ Calculating road distances...",acc1:"📍 Your location accuracy: ",acc2:" m — ",byRoad:"sorted by road distance",byLine:"sorted by straight line (road calculation failed)",
  locErr:"⚠️ Couldn't get your location. Allow location in browser settings",sortedRoad:"🛣 Sorted by road distance (nearest first)",sortedLine:"⚠️ Couldn't calculate road distance, sorted by approximate straight line",needLoc:"⚠️ Tap “My location” first",updating:"⏳ Updating order..."}
@@ -130,6 +130,7 @@ function fix(p){var d=norm(p||"").replace(/[^\d]/g,"").replace(/^00/,"");if(d.le
 function dist(a,b){var R=6371,t=Math.PI/180,x=Math.sin((b.lat-a.lat)*t/2)**2+Math.cos(a.lat*t)*Math.cos(b.lat*t)*Math.sin((b.lng-a.lng)*t/2)**2;return 2*R*Math.asin(Math.sqrt(x))}
 function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
 var UN=(function(){try{return localStorage.getItem("units")==="i"?"i":"m"}catch(e){return "m"}})(),ZM=(function(){try{var z=parseInt(localStorage.getItem("zoom"),10);return z>=80&&z<=150?z:100}catch(e){return 100}})();
+function fmtT(sec){var m=Math.max(1,Math.round(sec/60));if(m<60)return m+" "+t("min");var h=Math.floor(m/60),r=m%60;return h+" "+t("hr")+(r?" "+r+" "+t("min"):"")}
 function fmt(d){if(UN==="i"){var mi=d*0.621371;return mi<0.1?Math.round(d*3280.84)+" "+t("ft"):mi.toFixed(1)+" "+t("mi")}return d<1?Math.round(d*1000)+" "+t("m"):d.toFixed(1)+" "+t("km")}
 var SND=(function(){try{return localStorage.getItem("snd")!=="0"}catch(e){return true}})(),ac=null;
 function initAudio(){try{if(!ac){var C=window.AudioContext||window.webkitAudioContext;if(C)ac=new C()}if(ac&&ac.state==="suspended")ac.resume()}catch(e){}}
@@ -195,14 +196,28 @@ function loadRoads(done){
  }
  attempt();
 }
-function calc(){
+var ordF=[];try{ordF=JSON.parse(localStorage.getItem("ord")||"[]")}catch(x){ordF=[]}
+function calc(force){
  var f=[],e=[];
  slots.forEach(function(s,i){if(s)f.push(i);else e.push(i)});
- f.sort(function(a,b){var A=slots[a],B=slots[b];if(!!A.late!==!!B.late)return A.late?1:-1;return dd(a)-dd(b)});
- if(rev){var a=f.filter(function(i){return !slots[i].late}),b=f.filter(function(i){return slots[i].late});f=a.reverse().concat(b)}
- order=f.concat(e);
+ var prev=ordF.filter(function(i){return slots[i]});
+ if(force||!prev.length){
+  f.sort(function(a,b){var A=slots[a],B=slots[b];if(!!A.late!==!!B.late)return A.late?1:-1;return dd(a)-dd(b)});
+  if(rev){var a=f.filter(function(i){return !slots[i].late}),b=f.filter(function(i){return slots[i].late});f=a.reverse().concat(b)}
+ }else{
+  var inP={};prev.forEach(function(i){inP[i]=1});
+  var nl=prev.filter(function(i){return !slots[i].late}),lt=prev.filter(function(i){return slots[i].late});
+  f.filter(function(i){return !inP[i]}).sort(function(a,b){return dd(a)-dd(b)}).forEach(function(n){
+   var L=slots[n].late?lt:nl,pos=L.length;
+   for(var k=0;k<L.length;k++){if(rev?dd(L[k])<dd(n):dd(L[k])>dd(n)){pos=k;break}}
+   L.splice(pos,0,n);
+  });
+  f=nl.concat(lt);
+ }
+ ordF=f.slice();order=f.concat(e);
+ try{localStorage.setItem("ord",JSON.stringify(ordF))}catch(x){}
 }
-function flipOrder(){rev=!rev;try{localStorage.setItem("rev",rev?"1":"0")}catch(e){}calc();render();F("fl").textContent=t(rev?"farBtn":"nearBtn");st(t(rev?"farFirst":"nearFirst"))}
+function flipOrder(){rev=!rev;try{localStorage.setItem("rev",rev?"1":"0")}catch(e){}calc(true);render();F("fl").textContent=t(rev?"farBtn":"nearBtn");st(t(rev?"farFirst":"nearFirst"))}
 function F(id){return document.getElementById(id)}
 function render(){
  if(order.length!==N)calc();
@@ -222,10 +237,10 @@ function paint(){
  slots.forEach(function(s,i){
   if(!s)return;
   var c=document.getElementById("c"+i);if(!c)return;
-  var d=(me&&s.lat!=null)?dist(me,s):null,arr=d!=null&&d<0.1;
+  var d=(me&&s.lat!=null)?dist(me,s):null,arr=d!=null&&d<0.1&&(!gpsAcc||gpsAcc<=60);
   c.classList.toggle("arr",arr);c.classList.toggle("late",!!s.late&&!arr);
   document.getElementById("nm"+i).textContent=arr?t("arrived"):(s.late?t("noans"):(s.lat==null?t("short"):t("cust")));
-  var r=road[i];document.getElementById("d"+i).textContent=r?(fmt(r.d/1000)+(r.t!=null?" • "+Math.max(1,Math.round(r.t/60))+" "+t("min"):"")):(d!=null?"~"+fmt(d):"");
+  var r=road[i];document.getElementById("d"+i).textContent=r?(fmt(r.d/1000)+(r.t!=null?" • "+fmtT(r.t):"")):(d!=null?"~"+fmt(d):"");
   if(arr&&!arrived[i]){arrived[i]=1;try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}beep();notify(t("arrived")+" #"+rk(i),s.phone||"",i)}
   if(!arr)delete arrived[i];
  });
@@ -260,8 +275,7 @@ function saveTop(c,tried){
  var old=slots[i];
  slots[i]={link:l,phone:p,lat:c?c.lat:null,lng:c?c.lng:null,late:!!(old&&old.late)};
  delete road[i];save();resetTop();calc();render();
- st(tried&&!c&&l?t("noread"):t("saved")+rk(i));
- if(me&&c)loadRoads(function(){calc();render()});
+ st(tried&&!c&&l?t("noread"):t("saved"));
 }
 function ed(i){var s=slots[i];if(!s)return;editI=i;warnedTop="";F("al").value=s.link||"";F("ap").value=s.phone||"";F("aw").textContent="";F("asv").textContent=t("saveEdit");F("acn").style.display="";F("al").focus();window.scrollTo(0,0)}
 function cancelTop(){resetTop()}
@@ -270,27 +284,32 @@ function hideToast(){F("tz").className="";F("tzi").className="";if(undoT){clearT
 function done(i){var s=slots[i];if(!s)return;var n=rk(i);undoS={i:i,s:s,a:arrived[i]};slots[i]=null;delete road[i];delete arrived[i];save();calc();render();
  F("tzm").textContent=t("doneMsg")+" #"+n;F("tz").className="on";var b=F("tzi");b.className="";void b.offsetWidth;b.className="run";
  if(undoT)clearTimeout(undoT);undoT=setTimeout(function(){undoS=null;hideToast()},10000)}
-function undoDone(){var u=undoS;hideToast();undoS=null;if(!u)return;var i=slots[u.i]===null||slots[u.i]===undefined?u.i:slots.indexOf(null);if(i<0)return;slots[i]=u.s;if(u.a)arrived[i]=u.a;save();calc();render();st(t("saved")+rk(i));if(me&&u.s.lat!=null)loadRoads(function(){calc();render()})}
+function undoDone(){var u=undoS;hideToast();undoS=null;if(!u)return;var i=slots[u.i]===null||slots[u.i]===undefined?u.i:slots.indexOf(null);if(i<0)return;slots[i]=u.s;if(u.a)arrived[i]=u.a;save();calc();render();st(t("saved"));}
 function lt(i){slots[i].late=!slots[i].late;save();calc();render()}
-var shP="";
+var CPI='<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="3"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>';
+var shP="",shR="";
 function shGo(u){document.getElementById("bk").classList.remove("on");setTimeout(function(){try{window.location.href=u}catch(e){}},60)}
 function waIntent(pkg){return "intent://send/?phone="+shP+"#Intent;scheme=whatsapp;package="+pkg+";end"}
 function openSheet(i){
  var s=slots[i];if(!s||!s.phone)return;var p=fix(s.phone);
  document.getElementById("shn").textContent=s.phone;
- shP=p;
+ shP=p;shR=s.phone;
  document.getElementById("bk").classList.add("on");
 }
 ["sh1","sh2","sh3"].forEach(function(id){var a=document.getElementById(id);a.setAttribute("href","#");a.addEventListener("click",function(e){e.preventDefault();e.stopPropagation();if(!shP)return;shGo(id==="sh1"?"tel:+"+shP:id==="sh2"?(WAPP==="a"?"whatsapp://send?phone="+shP:waIntent(WAPP==="b"?"com.whatsapp.w4b":"com.whatsapp")):"sms:+"+shP)})});
+(function(){var a=document.getElementById("sh4");a.setAttribute("href","#");a.addEventListener("click",function(e){e.preventDefault();e.stopPropagation();if(!shR)return;var b=document.getElementById("cpl");
+ copyTxt(String(shR),function(){b.textContent=t("copied");setTimeout(function(){document.getElementById("bk").classList.remove("on");b.textContent=t("copy")},900)})})})();
 var L=document.getElementById("list");
+function copyTxt(tx,done){function fb(){try{var x=document.createElement("textarea");x.value=tx;x.style.position="fixed";x.style.opacity="0";document.body.appendChild(x);x.select();document.execCommand("copy");document.body.removeChild(x);done()}catch(err){}}
+ try{if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(tx).then(done,fb)}else fb()}catch(err){fb()}}
 L.addEventListener("click",function(e){var b=e.target.closest(".ph");if(b)openSheet(+b.dataset.i)});
 L.addEventListener("contextmenu",function(e){var b=e.target.closest(".ph");if(b){e.preventDefault();openSheet(+b.dataset.i)}});
 document.getElementById("bk").addEventListener("click",function(e){if(e.target.id==="bk")this.classList.remove("on")});
-var wid=null,gpsAt=0;
+var wid=null,gpsAt=0,gpsAcc=0;
 function onPos(p){
  var first=!me;
- me={lat:p.coords.latitude,lng:p.coords.longitude};gpsAt=Date.now();
- if(first){loadRoads(function(ok){calc();render();st(ok?t("okRoad"):t("okLine"))})}else{paint()}
+ me={lat:p.coords.latitude,lng:p.coords.longitude};gpsAt=Date.now();gpsAcc=p.coords.accuracy||0;
+ if(first){st(t("hint"))}paint()
 }
 function startWatch(){
  if(watching||!navigator.geolocation)return;watching=true;
@@ -312,7 +331,7 @@ function locate(){
  },function(){st(t("locErr"))},{enableHighAccuracy:true,maximumAge:0,timeout:20000});
 }
 function refreshList(){
- function go(){st(t("roads"));loadRoads(function(ok){calc();render();st(me?(ok?t("sortedRoad"):t("sortedLine")):t("needLoc"))})}
+ function go(){st(t("roads"));loadRoads(function(ok){calc(true);render();st(me?(ok?t("sortedRoad"):t("sortedLine")):t("needLoc"))})}
  if(!navigator.geolocation){go();return}
  st(t("updating"));
  navigator.geolocation.getCurrentPosition(function(p){me={lat:p.coords.latitude,lng:p.coords.longitude};go();startWatch()},function(){go()},{enableHighAccuracy:true,maximumAge:15000,timeout:8000});
