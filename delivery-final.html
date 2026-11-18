@@ -21,7 +21,7 @@ body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-
 h1{font-size:18px;margin:0}
 .mut{color:var(--mut);font-size:13px}
 .st{font-size:12px;color:var(--mut);margin:4px 0}
-.add{background:var(--card);border:2px solid var(--pri);border-radius:14px;padding:8px;margin-top:4px}
+#sb{position:relative;margin:8px 0 6px}#sb input{margin:0;padding:11px 40px 11px 12px;border:1px solid var(--bd)}#sb .sbi{position:absolute;inset-inline-end:12px;top:50%;transform:translateY(-50%);font-size:18px;pointer-events:none}.add{background:var(--card);border:2px solid var(--pri);border-radius:14px;padding:8px;margin-top:4px}
 .add input{margin-top:0;padding:10px}
 .arow{display:flex;gap:6px;margin-top:6px}
 .arow input{flex:1;min-width:0;width:auto}
@@ -33,7 +33,7 @@ h1{font-size:18px;margin:0}
 .n{background:var(--pri);color:#fff;border-radius:50%;width:26px;height:26px;display:inline-flex;align-items:center;justify-content:center;font-size:13px;flex:none}
 .empty .n{background:var(--bd);color:var(--mut)}
 .nm{flex:1;font-weight:700}
-.dist{font-weight:700;color:var(--pri);font-size:14px}
+.dist{direction:ltr;unicode-bidi:isolate;font-weight:700;color:var(--pri);font-size:14px}
 .arr .dist{color:var(--ok)}
 input{width:100%;padding:11px;margin-top:8px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--tx);font-size:16px}
 button,a.b{border:0;border-radius:10px;padding:10px 8px;font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;color:#fff;background:var(--pri);display:inline-block;text-align:center}
@@ -59,6 +59,7 @@ button,a.b{border:0;border-radius:10px;padding:10px 8px;font-size:14px;font-weig
 <div class="st" id="gps"></div>
 <div class="add"><input id="al" data-ph="phLink" inputmode="url" oninput="updCancel()"><div class="arow"><input id="ap" data-ph="phPhone" inputmode="tel" oninput="updCancel()"><button id="asv" onclick="addTop()"></button><button id="acn" class="g" style="display:none" onclick="cancelTop()" data-t="cancel"></button></div><div class="warn" id="aw"></div></div>
 </div>
+<div id="sb"><span class="sbi">&#128269;</span><input id="sq" type="search" inputmode="search" autocomplete="off" data-ph="phSearch" oninput="applySearch()"></div>
 <div id="list"></div>
 <div id="gate"><div class="gb"><div class="ic">🔔</div><h2 data-t="gateT"></h2><p data-t="gateP"></p><button onclick="askNotif()" data-t="gateB"></button><div class="dn" id="gdn" data-t="gateD"></div></div></div>
 <div id="tz"><div class="row"><span id="tzm"></span><button onclick="undoDone()" data-t="undo"></button></div><i id="tzi"></i></div>
@@ -77,16 +78,16 @@ button,a.b{border:0;border-radius:10px;padding:10px 8px;font-size:14px;font-weig
 <script>
 var LANG="ar";try{LANG=localStorage.getItem("lang")||"ar"}catch(e){}
 var D={
-ar:{title:"📍 NextStop",loc:"📍 حدّد موقعي",refresh:"🔄 تحديث",nearBtn:"⬇️ الأقرب",farBtn:"⬆️ الأبعد",farFirst:"⬆️ الترتيب: من الأبعد للأقرب",nearFirst:"⬇️ الترتيب: من الأقرب للأبعد",hint:"اضغط «حدّد موقعي» أول، وبعدها «تحديث» لترتيب الطرق",phLink:"الصق رابط قوقل ماب أو الإحداثيات",phPhone:"رقم الزبون",save:"➕ حفظ",saveEdit:"💾 حفظ التعديل",saveAnyway:"حفظ رغم التكرار",cancel:"✖ إلغاء",call:"اتصال",wa:"رسالة واتساب",wapp:"تطبيق الواتساب",waA:"تلقائي",waR:"واتساب",waB:"واتساب بزنس",sms:"رسالة نصية",copy:"نسخ الرقم",copied:"تم النسخ ✓",
+ar:{title:"📍 NextStop",loc:"📍 حدّد موقعي",refresh:"🔄 تحديث",nearBtn:"⬇️ الأقرب",farBtn:"⬆️ الأبعد",farFirst:"⬆️ الترتيب: من الأبعد للأقرب",nearFirst:"⬇️ الترتيب: من الأقرب للأبعد",hint:"اضغط «حدّد موقعي» أول، وبعدها «تحديث» لترتيب الطرق",phLink:"الصق رابط قوقل ماب أو الإحداثيات",phPhone:"رقم الزبون",nofound:"ما فيه نتيجة",phSearch:"ابحث بأي أرقام من رقم الزبون",save:"➕ حفظ",saveEdit:"💾 حفظ التعديل",saveAnyway:"حفظ رغم التكرار",cancel:"✖ إلغاء",call:"اتصال",wa:"رسالة واتساب",wapp:"تطبيق الواتساب",waA:"تلقائي",waR:"واتساب",waB:"واتساب بزنس",sms:"رسالة نصية",copy:"نسخ الرقم",copied:"تم النسخ ✓",
  nonum:"بدون رقم",nav:"🧭 وديني",restore:"⬆️ رجّعه",noans2:"⬇️ ما رد",done:"✔ تم",empty:"ما فيه مشاوير. أضف أول واحد من الخانة فوق.",
- arrived:"🟢 وصلت",noans:"📵 ما رد",short:"⚠️ رابط قصير",cust:"زبون",m:"m",km:"km",snd:"صوت الوصول",sndOn:"🔔 شغّال",sndOff:"🔕 مغلق",fixing:"📡 جاري تحديث موقعك…",hint2:"📡 تم تحديث موقعك",wl:"الشاشة",wlOn:"تبقى مضيئة",wlOff:"عادية",gateT:"الإشعارات مطلوبة",gateP:"NextStop يحتاج الإشعارات عشان ينبّهك لما توصل لموقع الزبون. فعّلها للمتابعة.",gateB:"🔔 تفعيل الإشعارات",gateD:"الإشعارات محظورة. افتح إعدادات المتصفح أو التطبيق ← الإشعارات ← سماح، ثم ارجع هنا.",undo:"↩ تراجع",doneMsg:"تم إنهاء المشوار",mi:"mi",ft:"ft",settings:"⚙️ الإعدادات",language:"اللغة",units:"وحدة المسافة",metric:"km / m",imperial:"mi / ft",size:"حجم التطبيق",about:"عن التطبيق",aboutTxt:"يرتّب مشاوير التوصيل من الأقرب للأبعد حسب مسافة الطريق. بياناتك تُحفظ على جهازك فقط.",credit:"الخرائط والطرق: © مساهمو OpenStreetMap",close:"تم",min:"د",hr:"س",
+ arrived:"🟢 وصلت",noans:"📵 ما رد",short:"⚠️ رابط قصير",cust:"زبون",m:"m",km:"km",snd:"صوت الوصول",sndOn:"🔔 شغّال",sndOff:"🔕 مغلق",fixing:"📡 جاري تحديث موقعك…",hint2:"📡 تم تحديث موقعك",wl:"الشاشة",wlOn:"تبقى مضيئة",wlOff:"عادية",gateT:"الإشعارات مطلوبة",gateP:"NextStop يحتاج الإشعارات عشان ينبّهك لما توصل لموقع الزبون. فعّلها للمتابعة.",gateB:"🔔 تفعيل الإشعارات",gateD:"الإشعارات محظورة. افتح إعدادات المتصفح أو التطبيق ← الإشعارات ← سماح، ثم ارجع هنا.",undo:"↩ تراجع",doneMsg:"تم إنهاء المشوار",mi:"mi",ft:"ft",settings:"⚙️ الإعدادات",language:"اللغة",units:"وحدة المسافة",metric:"km / m",imperial:"mi / ft",size:"حجم التطبيق",about:"عن التطبيق",aboutTxt:"يرتّب مشاوير التوصيل من الأقرب للأبعد حسب مسافة الطريق. بياناتك تُحفظ على جهازك فقط.",credit:"الخرائط والطرق: © مساهمو OpenStreetMap",close:"تم",min:"min",hr:"h",
  dupPhone:"نفس رقم التلفون في المشوار ",dupLoc:"الموقع قريب جداً من المشوار ",dupLink:"نفس الرابط في المشوار ",
  enter:"اكتب الرابط أو الرقم أول",reading:"⏳ أقرأ الموقع...",full1:"⚠️ القائمة ممتلئة (",full2:" مشوار). احذف مشوار بزر ✔ تم",
  noread:"⚠️ ما قدرت أقرأ إحداثيات الرابط، انحفظ بدون ترتيب",saved:"✅ تمت الإضافة",
  okRoad:"📡 تم الترتيب حسب مسافة الطريق",okLine:"📡 تم الترتيب (تقريبي بخط مستقيم)",permErr:"⚠️ فعّل إذن الموقع للمتصفح",nogeo:"الجهاز ما يدعم الموقع",
  locating:"⏳ أحدد موقعك بالضبط...",roads:"⏳ أحسب مسافات الطرق...",acc1:"📍 دقة موقعك ",acc2:" م — ",byRoad:"الترتيب حسب مسافة الطريق",byLine:"الترتيب بخط مستقيم (تعذّر حساب الطريق)",
  locErr:"⚠️ ما قدرت أحدد موقعك. اسمح بالموقع للمتصفح من الإعدادات",sortedRoad:"🛣 تم الترتيب حسب مسافة الطريق (الأقرب أول)",sortedLine:"⚠️ ما قدرت أحسب مسافة الطريق، الترتيب بخط مستقيم تقريبي",needLoc:"⚠️ حدّد موقعك أول بزر «حدّد موقعي»",updating:"⏳ أحدّث الترتيب..."},
-en:{title:"📍 NextStop",loc:"📍 My location",refresh:"🔄 Refresh",nearBtn:"⬇️ Nearest",farBtn:"⬆️ Farthest",farFirst:"⬆️ Order: farthest first",nearFirst:"⬇️ Order: nearest first",hint:"Tap “My location” first, then “Refresh” to sort by road distance",phLink:"Paste Google Maps link or coordinates",phPhone:"Customer phone",save:"➕ Save",saveEdit:"💾 Save edit",saveAnyway:"Save anyway",cancel:"✖ Cancel",call:"Call",wa:"WhatsApp",wapp:"WhatsApp app",waA:"Auto",waR:"WhatsApp",waB:"WhatsApp Business",sms:"Text message",copy:"Copy number",copied:"Copied ✓",
+en:{title:"📍 NextStop",loc:"📍 My location",refresh:"🔄 Refresh",nearBtn:"⬇️ Nearest",farBtn:"⬆️ Farthest",farFirst:"⬆️ Order: farthest first",nearFirst:"⬇️ Order: nearest first",hint:"Tap “My location” first, then “Refresh” to sort by road distance",phLink:"Paste Google Maps link or coordinates",phPhone:"Customer phone",nofound:"No match",phSearch:"Search by any digits of the phone",save:"➕ Save",saveEdit:"💾 Save edit",saveAnyway:"Save anyway",cancel:"✖ Cancel",call:"Call",wa:"WhatsApp",wapp:"WhatsApp app",waA:"Auto",waR:"WhatsApp",waB:"WhatsApp Business",sms:"Text message",copy:"Copy number",copied:"Copied ✓",
  nonum:"No number",nav:"🧭 Navigate",restore:"⬆️ Restore",noans2:"⬇️ No answer",done:"✔ Done",empty:"No stops yet. Add the first one in the box above.",
  arrived:"🟢 Arrived",noans:"📵 No answer",short:"⚠️ Short link",cust:"Customer",m:"m",km:"km",snd:"Arrival sound",sndOn:"🔔 On",sndOff:"🔕 Off",fixing:"📡 Updating your location…",hint2:"📡 Location updated",wl:"Screen",wlOn:"Stay awake",wlOff:"Normal",gateT:"Notifications required",gateP:"NextStop needs notifications to alert you when you reach a customer. Enable them to continue.",gateB:"🔔 Enable notifications",gateD:"Notifications are blocked. Open browser/app settings → Notifications → Allow, then come back.",undo:"↩ Undo",doneMsg:"Stop completed",mi:"mi",ft:"ft",settings:"⚙️ Settings",language:"Language",units:"Distance unit",metric:"Kilometers / meters",imperial:"Miles / feet",size:"App size",about:"About",aboutTxt:"Sorts delivery stops from nearest to farthest by road distance. Your data stays on your device only.",credit:"Maps & routing: © OpenStreetMap contributors",close:"Done",min:"min",hr:"h",
  dupPhone:"Same phone number as stop ",dupLoc:"Location is very close to stop ",dupLink:"Same link as stop ",
@@ -219,6 +220,17 @@ function calc(force){
 }
 function flipOrder(){rev=!rev;try{localStorage.setItem("rev",rev?"1":"0")}catch(e){}calc(true);render();F("fl").textContent=t(rev?"farBtn":"nearBtn");st(t(rev?"farFirst":"nearFirst"))}
 function F(id){return document.getElementById(id)}
+function applySearch(){
+ var q=(F("sq").value||"").replace(/[\u0660-\u0669]/g,function(c){return c.charCodeAt(0)-1632}).replace(/\D/g,"");
+ var qs=[];if(q){qs.push(q);var r=q.replace(/^00/,"").replace(/^968/,"").replace(/^0+/,"");if(r&&r!==q)qs.push(r)}
+ var any=false;
+ slots.forEach(function(s,i){if(!s)return;var c=F("c"+i);if(!c)return;
+  var p=String(s.phone||"").replace(/[\u0660-\u0669]/g,function(x){return x.charCodeAt(0)-1632}).replace(/\D/g,"");
+  var ok=!qs.length||qs.some(function(x){return p.indexOf(x)>-1});
+  c.style.display=ok?"":"none";if(ok)any=true});
+ var nf=F("nf");if(nf)nf.remove();
+ if(q&&!any){var d=document.createElement("div");d.id="nf";d.className="mut";d.style.cssText="text-align:center;padding:24px";d.textContent=t("nofound");F("list").appendChild(d)}
+}
 function render(){
  if(order.length!==N)calc();
  var h="",n=0;
@@ -231,6 +243,7 @@ function render(){
  });
  F("list").innerHTML=h||'<div class="mut" style="text-align:center;padding:24px">'+t("empty")+'</div>';
  F("cnt").textContent=n+"/"+N;
+ applySearch();
  paint();
 }
 function paint(){
