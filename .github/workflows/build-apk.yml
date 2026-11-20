@@ -164,6 +164,18 @@ jobs:
             rm -f $R/mipmap-$d/ic_launcher_foreground.png
           done
 
+      - name: Use the fixed signing key
+        env:
+          KS: ${{ secrets.NS_KEYSTORE_B64 }}
+        run: |
+          if [ -n "$KS" ]; then
+            mkdir -p ~/.android
+            echo "$KS" | base64 -d > ~/.android/debug.keystore
+            echo "Fixed key installed"
+          else
+            echo "No fixed key found - a random one will be used"
+          fi
+
       - name: Build the APK
         working-directory: app/android
         run: |
