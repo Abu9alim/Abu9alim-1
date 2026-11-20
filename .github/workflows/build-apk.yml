@@ -1,0 +1,177 @@
+name: Build NextStop APK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get the files from the repo
+        uses: actions/checkout@v4
+
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Prepare the app project
+        run: |
+          mkdir -p app/www
+          cd app
+          cat > package.json <<'EOF'
+          {
+            "name": "nextstop",
+            "version": "1.0.0",
+            "private": true,
+            "dependencies": {
+              "@capacitor/android": "^6.2.0",
+              "@capacitor/cli": "^6.2.0",
+              "@capacitor/core": "^6.2.0",
+              "@capacitor/local-notifications": "^6.1.0",
+              "@capacitor-community/background-geolocation": "^1.2.20"
+            }
+          }
+          EOF
+          cat > capacitor.config.json <<'EOF'
+          {
+            "appId": "com.abu9alim.nextstop",
+            "appName": "NextStop",
+            "webDir": "www",
+            "server": { "androidScheme": "https" }
+          }
+          EOF
+          cp ../delivery-final.html www/index.html
+          cp ../manifest.json www/manifest.json || true
+          cp ../sw.js www/sw.js || true
+          cp ../icon-192.png www/ || true
+          cp ../icon-512.png www/ || true
+          cat > www/native.js <<'EOF'
+          /* NextStop - native Android layer. Runs only inside the Android app, never in the browser. */
+          (function(){
+          var C=window.Capacitor;
+          if(!C||!C.isNativePlatform||!C.isNativePlatform())return;
+          var BG=C.registerPlugin("BackgroundGeolocation");
+          var LN=C.registerPlugin("LocalNotifications");
+          var bgId=null;
+
+          /* 1) no browser-notification gate inside the app */
+          window.checkGate=function(){var g=document.getElementById("gate");if(g)g.className=""};
+          try{window.checkGate()}catch(e){}
+
+          /* 2) background location: keeps running with the screen off or another app open */
+          window.startWatch=function(){
+           if(bgId!==null)return;
+           bgId="pending";
+           try{
+            BG.addWatcher({
+             backgroundTitle:"NextStop",
+             backgroundMessage:"\u064a\u062a\u0627\u0628\u0639 \u0645\u0648\u0642\u0639\u0643 \u0644\u062a\u0646\u0628\u064a\u0647 \u0627\u0644\u0648\u0635\u0648\u0644",
+             requestPermissions:true,
+             stale:false,
+             distanceFilter:5
+            },function(loc,err){
+             if(err){
+              if(err.code==="NOT_AUTHORIZED"){try{st(t("permErr"))}catch(e){}try{BG.openSettings()}catch(e){}}
+              return;
+             }
+             if(loc)onPos({coords:{latitude:loc.latitude,longitude:loc.longitude}});
+            }).then(function(id){bgId=id}).catch(function(){bgId=null});
+           }catch(e){bgId=null}
+          };
+          window.restartWatch=function(){};
+          window.wakeUp=function(){};
+
+          /* 3) arrival notification with Call / WhatsApp / SMS buttons */
+          try{LN.requestPermissions()}catch(e){}
+          try{LN.createChannel({id:"arrive",name:"Arrival",description:"Arrival alerts",importance:5,visibility:1,vibration:true})}catch(e){}
+          try{LN.registerActionTypes({types:[{id:"ARRIVE",actions:[
+           {id:"call",title:"\u0627\u062a\u0635\u0627\u0644",foreground:true},
+           {id:"wa",title:"\u0648\u0627\u062a\u0633\u0627\u0628",foreground:true},
+           {id:"sms",title:"\u0631\u0633\u0627\u0644\u0629",foreground:true}
+          ]}]})}catch(e){}
+          window.notify=function(title,body,i){
+           try{
+            LN.schedule({notifications:[{
+             id:Math.floor(Date.now()%2000000000),
+             title:title,body:body||"",
+             channelId:"arrive",
+             actionTypeId:"ARRIVE",
+             extra:{i:i}
+            }]});
+           }catch(e){}
+          };
+          try{
+           LN.addListener("localNotificationActionPerformed",function(ev){
+            var i=ev&&ev.notification&&ev.notification.extra?ev.notification.extra.i:null;
+            var s=(i!=null)?slots[i]:null;
+            if(!s)return;
+            var p="";try{p=fix(s.phone||"")}catch(e){}
+            var a=ev.actionId;
+            if(p&&a==="call"){window.location.href="tel:+"+p}
+            else if(p&&a==="sms"){window.location.href="sms:+"+p}
+            else if(p&&a==="wa"){window.location.href="whatsapp://send?phone="+p}
+            else{openFromNotif(i)}
+           });
+          }catch(e){}
+
+          /* 4) inside the app WhatsApp opens through the system (Android decides which app) */
+          window.waIntent=function(){return "whatsapp://send?phone="+shP};
+          })();
+
+          EOF
+          sed -i 's#</body>#<script src="native.js"></script></body>#' www/index.html
+          grep -c 'native.js' www/index.html
+
+      - name: Install and create the Android project
+        working-directory: app
+        run: |
+          npm install
+          npx cap add android
+          npx cap sync android
+
+      - name: Add permissions and app icon
+        working-directory: app
+        run: |
+          python3 - <<'EOF'
+          import re
+          p = "android/app/src/main/AndroidManifest.xml"
+          s = open(p, encoding="utf-8").read()
+          perms = [
+            "ACCESS_FINE_LOCATION","ACCESS_COARSE_LOCATION","ACCESS_BACKGROUND_LOCATION",
+            "FOREGROUND_SERVICE","FOREGROUND_SERVICE_LOCATION","POST_NOTIFICATIONS",
+            "WAKE_LOCK","VIBRATE","INTERNET"
+          ]
+          add = ""
+          for x in perms:
+              line = '<uses-permission android:name="android.permission.' + x + '" />'
+              if line not in s:
+                  add += "    " + line + "\n"
+          s = s.replace("<application", add + "    <application", 1)
+          open(p, "w", encoding="utf-8").write(s)
+          EOF
+          R=android/app/src/main/res
+          rm -rf $R/mipmap-anydpi-v26
+          for d in mdpi hdpi xhdpi xxhdpi xxxhdpi; do
+            cp ../icon-512.png $R/mipmap-$d/ic_launcher.png
+            cp ../icon-512.png $R/mipmap-$d/ic_launcher_round.png
+            rm -f $R/mipmap-$d/ic_launcher_foreground.png
+          done
+
+      - name: Build the APK
+        working-directory: app/android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug
+
+      - name: Save the APK so you can download it
+        uses: actions/upload-artifact@v4
+        with:
+          name: NextStop-APK
+          path: app/android/app/build/outputs/apk/debug/app-debug.apk
