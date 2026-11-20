@@ -34,6 +34,7 @@ jobs:
               "@capacitor/android": "^6.2.0",
               "@capacitor/cli": "^6.2.0",
               "@capacitor/core": "^6.2.0",
+              "@capacitor/clipboard": "^6.0.0",
               "@capacitor/local-notifications": "^6.1.0",
               "@capacitor-community/background-geolocation": "^1.2.20"
             }
@@ -123,6 +124,34 @@ jobs:
 
           /* 4) inside the app WhatsApp opens through the system (Android decides which app) */
           window.waIntent=function(){return "whatsapp://send?phone="+shP};
+
+          /* 5) location shared from Google Maps: fill the link, then the phone (from clipboard) */
+          window.nsCheckShare=function(){
+           var T="";
+           try{T=window.NSShare?window.NSShare.getShare():""}catch(e){}
+           if(!T)return;
+           var al=document.getElementById("al"),ap=document.getElementById("ap");
+           if(!al||!ap)return;
+           var m=T.match(/https?:\/\/\S+/);
+           al.value=m?m[0]:T.trim();
+           try{updCancel()}catch(e){}
+           var CB=null;try{CB=C.registerPlugin("Clipboard")}catch(e){}
+           var focusPhone=function(){try{ap.focus()}catch(e){}};
+           setTimeout(function(){
+            if(!CB){focusPhone();return}
+            CB.read().then(function(r){
+             var v=((r&&r.value)||"").trim();
+             var n=v.replace(/\D/g,"");
+             if(n.length>=7&&n.length<=15&&!/https?:|[a-zA-Z]/.test(v)){ap.value=v;try{updCancel()}catch(e){}}
+             else{focusPhone()}
+            }).catch(focusPhone);
+           },400);
+           try{window.scrollTo(0,0)}catch(e){}
+          };
+          setTimeout(window.nsCheckShare,700);
+          setTimeout(window.nsCheckShare,1800);
+          setTimeout(window.nsCheckShare,3500);
+          document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")setTimeout(window.nsCheckShare,300)});
           })();
 
           EOF
@@ -154,6 +183,13 @@ jobs:
               if line not in s:
                   add += "    " + line + "\n"
           s = s.replace("<application", add + "    <application", 1)
+          share = ("        <intent-filter>\n"
+                   "            <action android:name=\"android.intent.action.SEND\" />\n"
+                   "            <category android:name=\"android.intent.category.DEFAULT\" />\n"
+                   "            <data android:mimeType=\"text/plain\" />\n"
+                   "        </intent-filter>\n")
+          if "android.intent.action.SEND" not in s:
+              s = s.replace("</activity>", share + "    </activity>", 1)
           open(p, "w", encoding="utf-8").write(s)
           EOF
           R=android/app/src/main/res
@@ -163,6 +199,62 @@ jobs:
             cp ../icon-512.png $R/mipmap-$d/ic_launcher_round.png
             rm -f $R/mipmap-$d/ic_launcher_foreground.png
           done
+
+      - name: Add the share receiver
+        working-directory: app
+        run: |
+          D=android/app/src/main/java/com/abu9alim/nextstop
+          mkdir -p $D
+          cat > $D/MainActivity.java <<'EOF'
+          package com.abu9alim.nextstop;
+
+          import android.content.Intent;
+          import android.os.Bundle;
+          import android.webkit.JavascriptInterface;
+          import com.getcapacitor.BridgeActivity;
+
+          public class MainActivity extends BridgeActivity {
+              private String pendingShare = null;
+
+              public class ShareBridge {
+                  @JavascriptInterface
+                  public String getShare() {
+                      String s = pendingShare;
+                      pendingShare = null;
+                      return s == null ? "" : s;
+                  }
+              }
+
+              @Override
+              public void onCreate(Bundle savedInstanceState) {
+                  super.onCreate(savedInstanceState);
+                  getBridge().getWebView().addJavascriptInterface(new ShareBridge(), "NSShare");
+                  grabShare(getIntent());
+              }
+
+              @Override
+              protected void onNewIntent(Intent intent) {
+                  super.onNewIntent(intent);
+                  setIntent(intent);
+                  grabShare(intent);
+                  getBridge().getWebView().post(new Runnable() {
+                      @Override
+                      public void run() {
+                          getBridge().getWebView().evaluateJavascript("window.nsCheckShare&&window.nsCheckShare()", null);
+                      }
+                  });
+              }
+
+              private void grabShare(Intent intent) {
+                  if (intent == null) return;
+                  if (Intent.ACTION_SEND.equals(intent.getAction())) {
+                      String t = intent.getStringExtra(Intent.EXTRA_TEXT);
+                      if (t != null && t.length() > 0) pendingShare = t;
+                  }
+              }
+          }
+          EOF
+          echo "share receiver written"
 
       - name: Use the fixed signing key
         env:
