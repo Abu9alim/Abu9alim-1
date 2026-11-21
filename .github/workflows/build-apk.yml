@@ -131,36 +131,54 @@ jobs:
           cat > www/share.js <<'EOF'
           (function(){
           var C=window.Capacitor;
-          /* 5) location shared from Google Maps: fill the link, then the phone (from clipboard) */
+          /* location shared from Google Maps: fill the link once, then the phone from the clipboard */
           window.__nsLast=0;
           window.nsShareSet=function(id,T){
-           if(!T)return "noT";
+           if(!T||id<=window.__nsLast)return "skip";
            var al=document.getElementById("al"),ap=document.getElementById("ap");
            if(!al||!ap)return "noInputs";
+           window.__nsLast=id;
            var m=T.match(/https?:\/\/\S+/);
-           var link=m?m[0]:T.trim();
-           var first=id>window.__nsLast;
-           if(first){window.__nsLast=id}
-           if(first||al.value.trim()===""){
-            al.value=link;
-            try{al.dispatchEvent(new Event("input",{bubbles:true}))}catch(e){}
-            try{updCancel()}catch(e){}
-           }
-           if(!first)return "again:"+al.value.length;
-           var __r="set:"+al.value.length;
+           al.value=m?m[0]:T.trim();
+           try{al.dispatchEvent(new Event("input",{bubbles:true}))}catch(e){}
+           try{updCancel()}catch(e){}
            var CB=null;try{CB=C.registerPlugin("Clipboard")}catch(e){}
-           var focusPhone=function(){try{ap.focus()}catch(e){}};
-           setTimeout(function(){
-            if(!CB){focusPhone();return}
-            CB.read().then(function(r){
-             var v=((r&&r.value)||"").trim();
-             var n=v.replace(/\D/g,"");
-             if(n.length>=7&&n.length<=15&&!/https?:|[a-zA-Z]/.test(v)){ap.value=v;try{ap.dispatchEvent(new Event("input",{bubbles:true}))}catch(e){}try{updCancel()}catch(e){}}
-             else{focusPhone()}
-            }).catch(focusPhone);
-           },400);
+           var tries=0;
+           var phoneOk=function(v){var n=(v||"").replace(/\D/g,"");return n.length>=7&&n.length<=15&&!/https?:|[a-zA-Z]/.test(v)};
+           var isOld=function(v){
+            try{var fv=fix(v);for(var q=0;q<slots.length;q++){var sx=slots[q];if(sx&&sx.phone&&fix(sx.phone)===fv)return true}}catch(e){}
+            return false;
+           };
+           var delays=[500,1200,2200,3500,5000,7000];
+           var next=function(){
+            if(tries<delays.length){setTimeout(tryClip,delays[tries]-(tries?delays[tries-1]:0))}
+            else{try{ap.focus()}catch(e){}}
+           };
+           var tryClip=function(){
+            tries++;
+            if(ap.value.trim()!==""){return}
+            var done=function(v){
+             v=(v||"").trim();
+             if(phoneOk(v)){
+              if(isOld(v)){try{ap.focus()}catch(e){}return}
+              ap.value=v;
+              try{ap.dispatchEvent(new Event("input",{bubbles:true}))}catch(e){}
+              try{updCancel()}catch(e){}
+              return;
+             }
+             next();
+            };
+            var fail=function(){next()};
+            try{
+             if(CB){CB.read().then(function(r){done(r&&r.value)}).catch(fail)}
+             else if(navigator.clipboard&&navigator.clipboard.readText){navigator.clipboard.readText().then(done).catch(fail)}
+             else{next()}
+            }catch(e){fail()}
+           };
+           try{ap.focus()}catch(e){}
+           setTimeout(tryClip,delays[0]);
            try{window.scrollTo(0,0)}catch(e){}
-           return __r;
+           return "ok";
           };
           })();
           EOF
@@ -222,7 +240,6 @@ jobs:
           import android.os.Bundle;
           import android.os.Handler;
           import android.os.Looper;
-          import android.widget.Toast;
           import com.getcapacitor.BridgeActivity;
           import org.json.JSONObject;
 
@@ -232,14 +249,19 @@ jobs:
               @Override
               public void onCreate(Bundle savedInstanceState) {
                   super.onCreate(savedInstanceState);
-                  sendShare(getIntent());
+                  Intent in = getIntent();
+                  boolean fromHistory = in != null && (in.getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) != 0;
+                  if (savedInstanceState == null && !fromHistory) {
+                      sendShare(in);
+                  }
+                  setIntent(new Intent(Intent.ACTION_MAIN));
               }
 
               @Override
               protected void onNewIntent(Intent intent) {
                   super.onNewIntent(intent);
-                  setIntent(intent);
                   sendShare(intent);
+                  setIntent(new Intent(Intent.ACTION_MAIN));
               }
 
               private void sendShare(Intent intent) {
@@ -247,39 +269,16 @@ jobs:
                   if (!Intent.ACTION_SEND.equals(intent.getAction())) return;
                   String t = intent.getStringExtra(Intent.EXTRA_TEXT);
                   if (t == null || t.length() == 0) return;
-                  Toast.makeText(this, "NS6: وصل الرابط للتطبيق", Toast.LENGTH_LONG).show();
                   shareId++;
                   final String js = "(window.nsShareSet?window.nsShareSet(" + shareId + "," + JSONObject.quote(t) + "):\"NOFUNC\")";
-                  new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                      @Override
-                      public void run() {
-                          try {
-                              getBridge().getWebView().evaluateJavascript("JSON.stringify({cap:typeof window.Capacitor,nat:(window.Capacitor&&window.Capacitor.isNativePlatform)?window.Capacitor.isNativePlatform():null,tag:!!document.querySelector('script[src*=native]'),tag2:!!document.querySelector('script[src*=share]'),fn:typeof window.nsShareSet,err:window.__nsErr||''})", new android.webkit.ValueCallback<String>() {
-                                  @Override
-                                  public void onReceiveValue(String v) {
-                                      Toast.makeText(MainActivity.this, "NS6 diag: " + v, Toast.LENGTH_LONG).show();
-                                  }
-                              });
-                          } catch (Exception e) {}
-                      }
-                  }, 3000);
                   int[] delays = {300, 800, 1500, 2500, 4000, 6000, 9000};
-                  for (final int d : delays) {
+                  for (int d : delays) {
                       new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                           @Override
                           public void run() {
                               try {
-                                  getBridge().getWebView().evaluateJavascript(js, new android.webkit.ValueCallback<String>() {
-                                  @Override
-                                  public void onReceiveValue(String v) {
-                                      if (d == 1500 || d == 9000) {
-                                          Toast.makeText(MainActivity.this, "NS6 [" + d + "]: " + v, Toast.LENGTH_LONG).show();
-                                      }
-                                  }
-                              });
-                              } catch (Exception e) {
-                                  Toast.makeText(MainActivity.this, "NS6 خطأ: " + e, Toast.LENGTH_LONG).show();
-                              }
+                                  getBridge().getWebView().evaluateJavascript(js, null);
+                              } catch (Exception e) {}
                           }
                       }, d);
                   }
