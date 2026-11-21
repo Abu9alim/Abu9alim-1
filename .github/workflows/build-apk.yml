@@ -254,19 +254,44 @@ jobs:
         env:
           KS: ${{ secrets.NS_KEYSTORE_B64 }}
         run: |
-          if [ -n "$KS" ]; then
-            mkdir -p ~/.android
-            echo "$KS" | base64 -d > ~/.android/debug.keystore
-            echo "Fixed key installed"
-          else
-            echo "No fixed key found - a random one will be used"
+          if [ -z "$KS" ]; then
+            echo "ERROR: secret NS_KEYSTORE_B64 is empty or missing"
+            exit 1
           fi
+          mkdir -p ~/.android
+          echo "$KS" | base64 -d > "$GITHUB_WORKSPACE/ns.keystore"
+          cp "$GITHUB_WORKSPACE/ns.keystore" ~/.android/debug.keystore
+          keytool -list -keystore "$GITHUB_WORKSPACE/ns.keystore" -storepass android | grep -i "fingerprint"
+          cd app/android/app
+          python3 - <<'EOF'
+          import os
+          p = "build.gradle"
+          s = open(p, encoding="utf-8").read()
+          ks = os.environ["GITHUB_WORKSPACE"] + "/ns.keystore"
+          block = ("    signingConfigs {\n"
+                   "        debug {\n"
+                   "            storeFile file('" + ks + "')\n"
+                   "            storePassword 'android'\n"
+                   "            keyAlias 'androiddebugkey'\n"
+                   "            keyPassword 'android'\n"
+                   "        }\n"
+                   "    }\n")
+          if "signingConfigs" not in s:
+              s = s.replace("    buildTypes {", block + "    buildTypes {", 1)
+          open(p, "w", encoding="utf-8").write(s)
+          print("signing config added:", "signingConfigs" in s)
+          EOF
 
       - name: Build the APK
         working-directory: app/android
         run: |
           chmod +x gradlew
           ./gradlew assembleDebug
+
+      - name: Show the APK signature
+        run: |
+          keytool -printcert -jarfile app/android/app/build/outputs/apk/debug/app-debug.apk | grep -i "SHA256"
+          echo "Expected: DB:89:B7:4D:06:C5:EC:B7:6E:51:29:73:7B:46:5E:19:6B:1D:1D:DA:6D:4F:FE:47:1D:36:95:ED:A5:80:76:10"
 
       - name: Save the APK so you can download it
         uses: actions/upload-artifact@v4
