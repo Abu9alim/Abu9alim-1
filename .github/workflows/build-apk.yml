@@ -132,6 +132,7 @@ jobs:
            var al=document.getElementById("al"),ap=document.getElementById("ap");
            if(!al||!ap)return;
            window.__nsLast=id;
+           try{st("NS3: وصل الرابط للصفحة")}catch(e){}
            var m=T.match(/https?:\/\/\S+/);
            al.value=m?m[0]:T.trim();
            try{updCancel()}catch(e){}
@@ -208,6 +209,7 @@ jobs:
           import android.os.Bundle;
           import android.os.Handler;
           import android.os.Looper;
+          import android.widget.Toast;
           import com.getcapacitor.BridgeActivity;
           import org.json.JSONObject;
 
@@ -232,6 +234,7 @@ jobs:
                   if (!Intent.ACTION_SEND.equals(intent.getAction())) return;
                   String t = intent.getStringExtra(Intent.EXTRA_TEXT);
                   if (t == null || t.length() == 0) return;
+                  Toast.makeText(this, "NS3: وصل الرابط للتطبيق", Toast.LENGTH_LONG).show();
                   shareId++;
                   final String js = "window.nsShareSet&&window.nsShareSet(" + shareId + "," + JSONObject.quote(t) + ")";
                   int[] delays = {300, 1000, 2000, 3500, 6000};
@@ -241,7 +244,9 @@ jobs:
                           public void run() {
                               try {
                                   getBridge().getWebView().evaluateJavascript(js, null);
-                              } catch (Exception e) {}
+                              } catch (Exception e) {
+                                  Toast.makeText(MainActivity.this, "NS3 خطأ: " + e, Toast.LENGTH_LONG).show();
+                              }
                           }
                       }, d);
                   }
