@@ -128,9 +128,9 @@ jobs:
           /* 5) location shared from Google Maps: fill the link, then the phone (from clipboard) */
           window.__nsLast=0;
           window.nsShareSet=function(id,T){
-           if(!T)return;
+           if(!T)return "noT";
            var al=document.getElementById("al"),ap=document.getElementById("ap");
-           if(!al||!ap)return;
+           if(!al||!ap)return "noInputs";
            var m=T.match(/https?:\/\/\S+/);
            var link=m?m[0]:T.trim();
            var first=id>window.__nsLast;
@@ -140,8 +140,8 @@ jobs:
             try{al.dispatchEvent(new Event("input",{bubbles:true}))}catch(e){}
             try{updCancel()}catch(e){}
            }
-           if(!first)return;
-           try{st("NS4: الرابط انكتب ✓")}catch(e){}
+           if(!first)return "again:"+al.value.length;
+           var __r="set:"+al.value.length;
            var CB=null;try{CB=C.registerPlugin("Clipboard")}catch(e){}
            var focusPhone=function(){try{ap.focus()}catch(e){}};
            setTimeout(function(){
@@ -154,6 +154,7 @@ jobs:
             }).catch(focusPhone);
            },400);
            try{window.scrollTo(0,0)}catch(e){}
+           return __r;
           };
           })();
 
@@ -240,18 +241,25 @@ jobs:
                   if (!Intent.ACTION_SEND.equals(intent.getAction())) return;
                   String t = intent.getStringExtra(Intent.EXTRA_TEXT);
                   if (t == null || t.length() == 0) return;
-                  Toast.makeText(this, "NS4: وصل الرابط للتطبيق", Toast.LENGTH_LONG).show();
+                  Toast.makeText(this, "NS5: وصل الرابط للتطبيق", Toast.LENGTH_LONG).show();
                   shareId++;
-                  final String js = "window.nsShareSet&&window.nsShareSet(" + shareId + "," + JSONObject.quote(t) + ")";
+                  final String js = "(window.nsShareSet?window.nsShareSet(" + shareId + "," + JSONObject.quote(t) + "):\"NOFUNC\")";
                   int[] delays = {300, 800, 1500, 2500, 4000, 6000, 9000};
-                  for (int d : delays) {
+                  for (final int d : delays) {
                       new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                           @Override
                           public void run() {
                               try {
-                                  getBridge().getWebView().evaluateJavascript(js, null);
+                                  getBridge().getWebView().evaluateJavascript(js, new android.webkit.ValueCallback<String>() {
+                                  @Override
+                                  public void onReceiveValue(String v) {
+                                      if (d == 1500 || d == 9000) {
+                                          Toast.makeText(MainActivity.this, "NS5 [" + d + "]: " + v, Toast.LENGTH_LONG).show();
+                                      }
+                                  }
+                              });
                               } catch (Exception e) {
-                                  Toast.makeText(MainActivity.this, "NS4 خطأ: " + e, Toast.LENGTH_LONG).show();
+                                  Toast.makeText(MainActivity.this, "NS5 خطأ: " + e, Toast.LENGTH_LONG).show();
                               }
                           }
                       }, d);
