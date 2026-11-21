@@ -128,14 +128,20 @@ jobs:
           /* 5) location shared from Google Maps: fill the link, then the phone (from clipboard) */
           window.__nsLast=0;
           window.nsShareSet=function(id,T){
-           if(!T||id<=window.__nsLast)return;
+           if(!T)return;
            var al=document.getElementById("al"),ap=document.getElementById("ap");
            if(!al||!ap)return;
-           window.__nsLast=id;
-           try{st("NS3: وصل الرابط للصفحة")}catch(e){}
            var m=T.match(/https?:\/\/\S+/);
-           al.value=m?m[0]:T.trim();
-           try{updCancel()}catch(e){}
+           var link=m?m[0]:T.trim();
+           var first=id>window.__nsLast;
+           if(first){window.__nsLast=id}
+           if(first||al.value.trim()===""){
+            al.value=link;
+            try{al.dispatchEvent(new Event("input",{bubbles:true}))}catch(e){}
+            try{updCancel()}catch(e){}
+           }
+           if(!first)return;
+           try{st("NS4: الرابط انكتب ✓")}catch(e){}
            var CB=null;try{CB=C.registerPlugin("Clipboard")}catch(e){}
            var focusPhone=function(){try{ap.focus()}catch(e){}};
            setTimeout(function(){
@@ -143,7 +149,7 @@ jobs:
             CB.read().then(function(r){
              var v=((r&&r.value)||"").trim();
              var n=v.replace(/\D/g,"");
-             if(n.length>=7&&n.length<=15&&!/https?:|[a-zA-Z]/.test(v)){ap.value=v;try{updCancel()}catch(e){}}
+             if(n.length>=7&&n.length<=15&&!/https?:|[a-zA-Z]/.test(v)){ap.value=v;try{ap.dispatchEvent(new Event("input",{bubbles:true}))}catch(e){}try{updCancel()}catch(e){}}
              else{focusPhone()}
             }).catch(focusPhone);
            },400);
@@ -234,10 +240,10 @@ jobs:
                   if (!Intent.ACTION_SEND.equals(intent.getAction())) return;
                   String t = intent.getStringExtra(Intent.EXTRA_TEXT);
                   if (t == null || t.length() == 0) return;
-                  Toast.makeText(this, "NS3: وصل الرابط للتطبيق", Toast.LENGTH_LONG).show();
+                  Toast.makeText(this, "NS4: وصل الرابط للتطبيق", Toast.LENGTH_LONG).show();
                   shareId++;
                   final String js = "window.nsShareSet&&window.nsShareSet(" + shareId + "," + JSONObject.quote(t) + ")";
-                  int[] delays = {300, 1000, 2000, 3500, 6000};
+                  int[] delays = {300, 800, 1500, 2500, 4000, 6000, 9000};
                   for (int d : delays) {
                       new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                           @Override
@@ -245,7 +251,7 @@ jobs:
                               try {
                                   getBridge().getWebView().evaluateJavascript(js, null);
                               } catch (Exception e) {
-                                  Toast.makeText(MainActivity.this, "NS3 خطأ: " + e, Toast.LENGTH_LONG).show();
+                                  Toast.makeText(MainActivity.this, "NS4 خطأ: " + e, Toast.LENGTH_LONG).show();
                               }
                           }
                       }, d);
