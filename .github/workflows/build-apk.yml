@@ -180,6 +180,22 @@ jobs:
            try{window.scrollTo(0,0)}catch(e){}
            return "ok";
           };
+          window.nsClip=function(id,v){
+           try{
+            if(id!==window.__nsLast)return "old";
+            var ap=document.getElementById("ap");
+            if(!ap||ap.value.trim()!=="")return "full";
+            v=(v||"").trim();
+            var n=v.replace(/\D/g,"");
+            if(!(n.length>=7&&n.length<=15&&!/https?:|[a-zA-Z]/.test(v)))return "notphone";
+            var fv=fix(v);
+            for(var q=0;q<slots.length;q++){var sx=slots[q];if(sx&&sx.phone&&fix(sx.phone)===fv)return "same"}
+            ap.value=v;
+            try{ap.dispatchEvent(new Event("input",{bubbles:true}))}catch(e){}
+            try{updCancel()}catch(e){}
+            return "ok";
+           }catch(e){return "err"}
+          };
           })();
           EOF
           sed -i 's#</body>#<script>window.addEventListener("error",function(e){window.__nsErr=(window.__nsErr||"")+e.message+"@"+e.filename+":"+e.lineno+"|"})</script><script src="native.js"></script><script src="share.js"></script></body>#' www/index.html
@@ -236,6 +252,9 @@ jobs:
           cat > $D/MainActivity.java <<'EOF'
           package com.abu9alim.nextstop;
 
+          import android.content.ClipData;
+          import android.content.ClipboardManager;
+          import android.content.Context;
           import android.content.Intent;
           import android.os.Bundle;
           import android.os.Handler;
@@ -271,6 +290,25 @@ jobs:
                   if (t == null || t.length() == 0) return;
                   shareId++;
                   final String js = "(window.nsShareSet?window.nsShareSet(" + shareId + "," + JSONObject.quote(t) + "):\"NOFUNC\")";
+                  final int sid = shareId;
+                  int[] cd = {600, 1500, 2800, 4500, 7000, 10000};
+                  for (int d : cd) {
+                      new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                          @Override
+                          public void run() {
+                              try {
+                                  if (!hasWindowFocus()) return;
+                                  ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                                  ClipData cl = cm.getPrimaryClip();
+                                  if (cl == null || cl.getItemCount() == 0) return;
+                                  CharSequence cs = cl.getItemAt(0).coerceToText(MainActivity.this);
+                                  if (cs == null) return;
+                                  String c = cs.toString();
+                                  getBridge().getWebView().evaluateJavascript("(window.nsClip?window.nsClip(" + sid + "," + JSONObject.quote(c) + "):\"NOFUNC\")", null);
+                              } catch (Exception e) {}
+                          }
+                      }, d);
+                  }
                   int[] delays = {300, 800, 1500, 2500, 4000, 6000, 9000};
                   for (int d : delays) {
                       new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
