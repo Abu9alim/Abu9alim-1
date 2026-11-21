@@ -125,6 +125,12 @@ jobs:
           /* 4) inside the app WhatsApp opens through the system (Android decides which app) */
           window.waIntent=function(){return "whatsapp://send?phone="+shP};
 
+          })();
+
+          EOF
+          cat > www/share.js <<'EOF'
+          (function(){
+          var C=window.Capacitor;
           /* 5) location shared from Google Maps: fill the link, then the phone (from clipboard) */
           window.__nsLast=0;
           window.nsShareSet=function(id,T){
@@ -157,9 +163,9 @@ jobs:
            return __r;
           };
           })();
-
           EOF
-          sed -i 's#</body>#<script src="native.js"></script></body>#' www/index.html
+          sed -i 's#</body>#<script>window.addEventListener("error",function(e){window.__nsErr=(window.__nsErr||"")+e.message+"@"+e.filename+":"+e.lineno+"|"})</script><script src="native.js"></script><script src="share.js"></script></body>#' www/index.html
+          tail -c 400 www/index.html
           grep -c 'native.js' www/index.html
 
       - name: Install and create the Android project
@@ -241,9 +247,22 @@ jobs:
                   if (!Intent.ACTION_SEND.equals(intent.getAction())) return;
                   String t = intent.getStringExtra(Intent.EXTRA_TEXT);
                   if (t == null || t.length() == 0) return;
-                  Toast.makeText(this, "NS5: وصل الرابط للتطبيق", Toast.LENGTH_LONG).show();
+                  Toast.makeText(this, "NS6: وصل الرابط للتطبيق", Toast.LENGTH_LONG).show();
                   shareId++;
                   final String js = "(window.nsShareSet?window.nsShareSet(" + shareId + "," + JSONObject.quote(t) + "):\"NOFUNC\")";
+                  new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                      @Override
+                      public void run() {
+                          try {
+                              getBridge().getWebView().evaluateJavascript("JSON.stringify({cap:typeof window.Capacitor,nat:(window.Capacitor&&window.Capacitor.isNativePlatform)?window.Capacitor.isNativePlatform():null,tag:!!document.querySelector('script[src*=native]'),tag2:!!document.querySelector('script[src*=share]'),fn:typeof window.nsShareSet,err:window.__nsErr||''})", new android.webkit.ValueCallback<String>() {
+                                  @Override
+                                  public void onReceiveValue(String v) {
+                                      Toast.makeText(MainActivity.this, "NS6 diag: " + v, Toast.LENGTH_LONG).show();
+                                  }
+                              });
+                          } catch (Exception e) {}
+                      }
+                  }, 3000);
                   int[] delays = {300, 800, 1500, 2500, 4000, 6000, 9000};
                   for (final int d : delays) {
                       new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
@@ -254,12 +273,12 @@ jobs:
                                   @Override
                                   public void onReceiveValue(String v) {
                                       if (d == 1500 || d == 9000) {
-                                          Toast.makeText(MainActivity.this, "NS5 [" + d + "]: " + v, Toast.LENGTH_LONG).show();
+                                          Toast.makeText(MainActivity.this, "NS6 [" + d + "]: " + v, Toast.LENGTH_LONG).show();
                                       }
                                   }
                               });
                               } catch (Exception e) {
-                                  Toast.makeText(MainActivity.this, "NS5 خطأ: " + e, Toast.LENGTH_LONG).show();
+                                  Toast.makeText(MainActivity.this, "NS6 خطأ: " + e, Toast.LENGTH_LONG).show();
                               }
                           }
                       }, d);
