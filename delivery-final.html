@@ -28,7 +28,7 @@ h1{font-size:18px;margin:0}
 .arow button{flex:none;padding:10px 12px}
 .card{background:var(--card);border:2px solid var(--bd);border-radius:14px;padding:10px;margin-bottom:8px}
 .card.arr{border-color:var(--ok)}
-.card.late{border-style:dashed;opacity:.85}
+.card.late{border-style:dashed;opacity:.85}.card.uns{border-color:#ef4444}.card.uns .nm{color:#ef4444;font-weight:700}.rt{width:100%;margin-top:6px;background:#ef4444;color:#fff;padding:11px;font-size:15px}.ei{margin-top:8px}.ei input{display:block;width:100%;margin-bottom:6px;padding:10px}.ew{color:#ef4444;font-size:13px;margin-top:6px}
 .top{display:flex;align-items:center;gap:8px}
 .n{background:var(--pri);color:#fff;border-radius:50%;width:26px;height:26px;display:inline-flex;align-items:center;justify-content:center;font-size:13px;flex:none}
 .empty .n{background:var(--bd);color:var(--mut)}
@@ -75,7 +75,7 @@ button,a.b{border:0;border-radius:10px;padding:10px 8px;font-size:14px;font-weig
 <div class="sec"><div class="lb"><span data-t="snd"></span><i class="inf" onclick="tgI('snd')">i</i></div><div class="ih" id="ih_snd" data-t="info_snd"></div><div class="seg"><button id="s1" onclick="setSnd(1)" data-t="sndOn"></button><button id="s2" onclick="setSnd(0)" data-t="sndOff"></button></div></div>
 <div class="sec"><div class="lb"><span data-t="wapp"></span><i class="inf" onclick="tgI('wapp')">i</i></div><div class="ih" id="ih_wapp" data-t="info_wapp"></div><div class="seg"><button id="wa3" onclick="setWapp('a')" data-t="waA"></button><button id="wa1" onclick="setWapp('r')" data-t="waR"></button><button id="wa2" onclick="setWapp('b')" data-t="waB"></button></div></div>
 <div class="sec"><div class="lb"><span data-t="wl"></span><i class="inf" onclick="tgI('wl')">i</i></div><div class="ih" id="ih_wl" data-t="info_wl"></div><div class="seg"><button id="w1" onclick="setWake(1)" data-t="wlOn"></button><button id="w2" onclick="setWake(0)" data-t="wlOff"></button></div></div>
-<div class="sec"><div class="lb" data-t="about"></div><div class="ab"><b>NextStop</b> · v1.0 BETA (build 39)<br><span data-t="aboutTxt"></span><br><span data-t="credit"></span></div></div>
+<div class="sec"><div class="lb" data-t="about"></div><div class="ab"><b>NextStop</b> · v1.1 BETA<br><span data-t="aboutTxt"></span><br><span data-t="credit"></span></div></div>
 <div class="sec" id="statsec"><div class="ab" style="font-size:12px;opacity:.75" data-t="statNote"></div></div>
 <button class="cl" onclick="closeSet()" data-t="close"></button>
 </div></div>
@@ -88,7 +88,7 @@ ar:{title:"📍 NextStop",loc:"📍 حدّد موقعي",refresh:"🔄 تحدي�
  arrived:"🟢 وصلت",noans:"📵 ما رد",short:"⚠️ رابط قصير",cust:"زبون",m:"m",km:"km",snd:"صوت الوصول",sndOn:"🔔 شغّال",sndOff:"🔕 مغلق",fixing:"📡 جاري تحديث موقعك…",hint2:"📡 تم تحديث موقعك",wl:"الشاشة",wlOn:"تبقى مضيئة",wlOff:"عادية",gateT:"الإشعارات مطلوبة",gateP:"NextStop يحتاج الإشعارات عشان ينبّهك لما توصل لموقع الزبون. فعّلها للمتابعة.",gateB:"🔔 تفعيل الإشعارات",gateD:"الإشعارات محظورة. افتح إعدادات المتصفح أو التطبيق ← الإشعارات ← سماح، ثم ارجع هنا.",undo:"↩ تراجع",doneMsg:"تم إنهاء المشوار",mi:"mi",ft:"ft",settings:"⚙️ الإعدادات",language:"اللغة",units:"وحدة المسافة",metric:"km / m",imperial:"mi / ft",size:"حجم التطبيق",about:"عن التطبيق",aboutTxt:"يرتّب مشاوير التوصيل من الأقرب للأبعد حسب مسافة الطريق. بياناتك تُحفظ على جهازك فقط.",credit:"الخرائط والطرق: © مساهمو OpenStreetMap",close:"تم",min:"min",hr:"h",
  dupPhone:"نفس رقم التلفون في المشوار ",dupLoc:"الموقع قريب جداً من المشوار ",dupLink:"نفس الرابط في المشوار ",
  enter:"اكتب الرابط أو الرقم أول",badLink:"هذا رقم تليفون، حطه في خانة الرقم تحت",badPhone:"خانة الرقم لازم فيها رقم تليفون فقط",reading:"⏳ أقرأ الموقع...",full1:"⚠️ القائمة ممتلئة (",full2:" مشوار). احذف مشوار بزر ✔ تم",
- noread:"⚠️ ما قدرت أقرأ إحداثيات الرابط، انحفظ بدون ترتيب",saved:"✅ تمت الإضافة",
+ noread:"⚠️ ما قدرت أقرأ إحداثيات الرابط، انحفظ بدون ترتيب",retry:"🔄 حاول مرة ثانية",retryOk:"✅ انقرأ الموقع وترتّب",retryNo:"⚠️ لسا ما انقرأ الرابط، جرّب بعد شوي",saved:"✅ تمت الإضافة",
  okRoad:"📡 تم الترتيب حسب مسافة الطريق",okLine:"📡 تم الترتيب (تقريبي بخط مستقيم)",permErr:"⚠️ فعّل إذن الموقع للمتصفح",nogeo:"الجهاز ما يدعم الموقع",
  locating:"⏳ أحدد موقعك بالضبط...",roads:"⏳ أحسب مسافات الطرق...",acc1:"📍 دقة موقعك ",acc2:" م — ",byRoad:"الترتيب حسب مسافة الطريق",byLine:"الترتيب بخط مستقيم (تعذّر حساب الطريق)",
  locErr:"⚠️ ما قدرت أحدد موقعك. اسمح بالموقع للمتصفح من الإعدادات",sortedRoad:"🛣 تم الترتيب حسب مسافة الطريق (الأقرب أول)",sortedLine:"⚠️ ما قدرت أحسب مسافة الطريق، الترتيب بخط مستقيم تقريبي",needLoc:"⚠️ حدّد موقعك أول بزر «حدّد موقعي»",updating:"⏳ أحدّث الترتيب..."},
@@ -97,7 +97,7 @@ en:{title:"📍 NextStop",loc:"📍 My location",refresh:"🔄 Refresh",nearBtn:
  arrived:"🟢 Arrived",noans:"📵 No answer",short:"⚠️ Short link",cust:"Customer",m:"m",km:"km",snd:"Arrival sound",sndOn:"🔔 On",sndOff:"🔕 Off",fixing:"📡 Updating your location…",hint2:"📡 Location updated",wl:"Screen",wlOn:"Stay awake",wlOff:"Normal",gateT:"Notifications required",gateP:"NextStop needs notifications to alert you when you reach a customer. Enable them to continue.",gateB:"🔔 Enable notifications",gateD:"Notifications are blocked. Open browser/app settings → Notifications → Allow, then come back.",undo:"↩ Undo",doneMsg:"Stop completed",mi:"mi",ft:"ft",settings:"⚙️ Settings",language:"Language",units:"Distance unit",metric:"Kilometers / meters",imperial:"Miles / feet",size:"App size",about:"About",aboutTxt:"Sorts delivery stops from nearest to farthest by road distance. Your data stays on your device only.",credit:"Maps & routing: © OpenStreetMap contributors",close:"Done",min:"min",hr:"h",
  dupPhone:"Same phone number as stop ",dupLoc:"Location is very close to stop ",dupLink:"Same link as stop ",
  enter:"Enter a link or a number first",badLink:"That looks like a phone number. Put it in the phone box below",badPhone:"The phone box must contain a phone number only",reading:"⏳ Reading location...",full1:"⚠️ List is full (",full2:" stops). Remove one with ✔ Done",
- noread:"⚠️ Couldn't read coordinates from the link; saved without sorting",saved:"✅ Added",
+ noread:"⚠️ Couldn't read coordinates from the link; saved without sorting",retry:"🔄 Try again",retryOk:"✅ Location read and sorted",retryNo:"⚠️ Link still can't be read, try again shortly",saved:"✅ Added",
  okRoad:"📡 Sorted by road distance",okLine:"📡 Sorted (approximate, straight line)",permErr:"⚠️ Allow location access for the browser",nogeo:"This device doesn't support location",
  locating:"⏳ Finding your exact location...",roads:"⏳ Calculating road distances...",acc1:"📍 Your location accuracy: ",acc2:" m — ",byRoad:"sorted by road distance",byLine:"sorted by straight line (road calculation failed)",
  locErr:"⚠️ Couldn't get your location. Allow location in browser settings",sortedRoad:"🛣 Sorted by road distance (nearest first)",sortedLine:"⚠️ Couldn't calculate road distance, sorted by approximate straight line",needLoc:"⚠️ Tap “My location” first",updating:"⏳ Updating order..."}
@@ -236,15 +236,18 @@ function applySearch(){
  var nf=F("nf");if(nf)nf.remove();
  if(q&&!any){var d=document.createElement("div");d.id="nf";d.className="mut";d.style.cssText="text-align:center;padding:24px";d.textContent=t("nofound");F("list").appendChild(d)}
 }
+var editInl=null;
 function render(){
+ if(editInl!=null){try{paint()}catch(e){}return}
  if(order.length!==N)calc();
  var h="",n=0;
  order.forEach(function(i){
   var s=slots[i];if(!s)return;n++;
   var nav=s.lat!=null?"https://www.google.com/maps/dir/?api=1&destination="+s.lat+","+s.lng+"&travelmode=driving":s.link;
-  h+='<div class="card" id="c'+i+'"><div class="top"><span class="n">'+n+'</span><span class="nm" id="nm'+i+'"></span><span class="dist" id="d'+i+'"></span></div>'+
+  var uns=s.lat==null&&/^https?:/i.test(s.link||"");
+  h+='<div class="card'+(uns?' uns':'')+'" id="c'+i+'"><div class="top"><span class="n">'+n+'</span><span class="nm" id="nm'+i+'"></span><span class="dist" id="d'+i+'"></span></div>'+
   '<button class="ph" data-i="'+i+'">'+esc(s.phone||t("nonum"))+'</button>'+
-  '<div class="row"><a class="b" target="_blank" rel="noopener" href="'+esc(nav)+'">'+t("nav")+'</a><button class="g" onclick="ed('+i+')">✏️</button><button class="g" onclick="lt('+i+')">'+(s.late?t("restore"):t("noans2"))+'</button><button class="r" onclick="done('+i+')">'+t("done")+'</button></div></div>';
+  '<div class="row"><a class="b" target="_blank" rel="noopener" href="'+esc(nav)+'">'+t("nav")+'</a><button class="g" onclick="ed('+i+')">✏️</button><button class="g" onclick="lt('+i+')">'+(s.late?t("restore"):t("noans2"))+'</button><button class="r" onclick="done('+i+')">'+t("done")+'</button></div>'+(uns?'<button class="r rt" onclick="retry('+i+')">'+t("retry")+'</button>':'')+'</div>';
  });
  F("list").innerHTML=h||'<div class="mut" style="text-align:center;padding:24px">'+t("empty")+'</div>';
  F("cnt").textContent=n+"/"+N;
@@ -259,7 +262,7 @@ function paint(){
   c.classList.toggle("arr",arr);c.classList.toggle("late",!!s.late&&!arr);
   document.getElementById("nm"+i).textContent=arr?t("arrived"):(s.late?t("noans"):(s.lat==null?t("short"):t("cust")));
   var r=road[i];document.getElementById("d"+i).textContent=r?(fmt(r.d/1000)+(r.t!=null?" • "+fmtT(r.t):"")):(d!=null?"~"+fmt(d):"");
-  if(arr&&!arrived[i]){arrived[i]=1;try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}beep();notify(t("arrived")+" #"+rk(i),s.phone||"",i)}
+  if(arr&&!arrived[i]){arrived[i]=1;try{navigator.vibrate&&navigator.vibrate([700,150,700,150,700,150,1200])}catch(e){}beep();notify(t("arrived")+" #"+rk(i),s.phone||"",i)}
   if(!arr)delete arrived[i];
  });
 }
@@ -298,19 +301,39 @@ function saveTop(c,tried){
  if(m.length&&warnedTop!==sig){warnedTop=sig;F("aw").textContent="⚠️ "+m.join(" • ");F("asv").textContent=t("saveAnyway");return}
  var old=slots[i];
  slots[i]={link:l,phone:p,lat:c?c.lat:null,lng:c?c.lng:null,late:!!(old&&old.late)};
- delete road[i];save();resetTop();calc();render();
+ delete road[i];save();editInl=null;resetTop();calc();render();
+ if(!c&&/^https?:/i.test(l)){try{navigator.vibrate&&navigator.vibrate(80)}catch(e){}}
  st(tried&&!c&&l?t("noread"):t("saved"));
  if(me&&c)loadRoads(function(){calc();render()});
 }
-function ed(i){var s=slots[i];if(!s)return;editI=i;warnedTop="";F("al").value=s.link||"";F("ap").value=s.phone||"";F("aw").textContent="";F("asv").textContent=t("saveEdit");F("acn").style.display="";F("al").focus();window.scrollTo(0,0)}
+function ed(i){var s=slots[i];if(!s)return;if(editInl!=null){editInl=null;render()}var c=F("c"+i);if(!c)return;editInl=i;
+ ["ph","row","rt"].forEach(function(k){var e=c.querySelector("."+k);if(e)e.style.display="none"});
+ var d=document.createElement("div");d.className="ei";d.id="ei"+i;
+ d.innerHTML='<input id="eil" inputmode="url" placeholder="'+esc(t("phLink"))+'"><input id="eip" inputmode="tel" placeholder="'+esc(t("phPhone"))+'"><div class="arow"><button class="g" id="eis" style="flex:1" onclick="saveIn('+i+')">'+t("saveEdit")+'</button><button class="g" onclick="cancelIn()">'+t("cancel")+'</button></div><div class="ew" id="eiw"></div>';
+ c.appendChild(d);F("eil").value=s.link||"";F("eip").value=s.phone||"";F("eil").focus()}
+function cancelIn(){editInl=null;render()}
+function saveIn(i){var s=slots[i];if(!s)return;var l0=F("eil").value.trim(),l=cleanLink(l0),p=F("eip").value.trim(),w=F("eiw");
+ if(!l&&!p){w.textContent=t("enter");return}
+ if(l&&phoneLike(l)&&!parse(l)){w.textContent="⚠️ "+t("badLink");return}
+ if(p&&!phoneLike(p)){w.textContent="⚠️ "+t("badPhone");return}
+ if(p)p=normPhone(p);
+ var changed=l!==(s.link||"");
+ var fin=function(c){slots[i]={link:l,phone:p,lat:c?c.lat:(changed?null:s.lat),lng:c?c.lng:(changed?null:s.lng),late:!!s.late};delete road[i];save();editInl=null;render();
+  if(!slots[i].lat&&/^https?:/i.test(l)){try{navigator.vibrate&&navigator.vibrate(80)}catch(e){}st(t("noread"))}else st(t("saved"));
+  if(me&&slots[i]&&slots[i].lat!=null)loadRoads(function(){render()})};
+ var c=parse(l);
+ if(c||!l||!RESOLVER||!/^https?:\/\//i.test(l)){fin(c)}else{var b=F("eis");b.disabled=true;b.textContent=t("reading");resolve(l).then(function(r){fin(r)})}}
+function retry(i){var s=slots[i];if(!s)return;editInl=null;
+ var fin=function(r){if(r&&r.lat!=null){s.lat=r.lat;s.lng=r.lng;delete road[i];save();calc();render();st(t("retryOk"));try{navigator.vibrate&&navigator.vibrate(60)}catch(e){}if(me)loadRoads(function(){calc();render()})}else{st(t("retryNo"));try{navigator.vibrate&&navigator.vibrate([80,60,80])}catch(e){}}};
+ var c=parse(s.link);if(c)fin(c);else if(RESOLVER)resolve(s.link).then(fin);else fin(null)}
 function cancelTop(){resetTop()}
 var undoS=null,undoT=null;
 function hideToast(){F("tz").className="";F("tzi").className="";if(undoT){clearTimeout(undoT);undoT=null}}
-function done(i){var s=slots[i];if(!s)return;var n=rk(i);undoS={i:i,s:s,a:arrived[i]};slots[i]=null;delete road[i];delete arrived[i];save();calc();render();
+function done(i){var s=slots[i];if(!s)return;editInl=null;var n=rk(i);undoS={i:i,s:s,a:arrived[i]};slots[i]=null;delete road[i];delete arrived[i];save();calc();render();
  F("tzm").textContent=t("doneMsg")+" #"+n;F("tz").className="on";var b=F("tzi");b.className="";void b.offsetWidth;b.className="run";
  if(undoT)clearTimeout(undoT);undoT=setTimeout(function(){undoS=null;hideToast()},10000)}
-function undoDone(){var u=undoS;hideToast();undoS=null;if(!u)return;var i=slots[u.i]===null||slots[u.i]===undefined?u.i:slots.indexOf(null);if(i<0)return;slots[i]=u.s;if(u.a)arrived[i]=u.a;save();calc();render();st(t("saved"));if(me&&u.s.lat!=null)loadRoads(function(){calc();render()});}
-function lt(i){slots[i].late=!slots[i].late;save();calc();render()}
+function undoDone(){editInl=null;var u=undoS;hideToast();undoS=null;if(!u)return;var i=slots[u.i]===null||slots[u.i]===undefined?u.i:slots.indexOf(null);if(i<0)return;slots[i]=u.s;if(u.a)arrived[i]=u.a;save();calc();render();st(t("saved"));if(me&&u.s.lat!=null)loadRoads(function(){calc();render()});}
+function lt(i){editInl=null;slots[i].late=!slots[i].late;save();calc();render()}
 var CPI='<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="3"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>';
 var shP="",shR="";
 function shGo(u){document.getElementById("bk").classList.remove("on");setTimeout(function(){try{window.location.href=u}catch(e){}},60)}
@@ -419,6 +442,14 @@ var PANEL_URL="https://nextstop-panel.sosona3011.workers.dev/ping";
  if(!asked)askName();else ping(true);
  setInterval(function(){if(document.visibilityState==="visible"&&asked)ping(true)},300000);
  document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible"&&asked)ping(false)});
+})();
+</script>
+<script>
+(function(){var K="ns_scr",tm=null;function sv(){try{localStorage.setItem(K,String(Math.round(window.scrollY)))}catch(e){}}
+ window.addEventListener("scroll",function(){clearTimeout(tm);tm=setTimeout(sv,250)},{passive:true});
+ document.addEventListener("visibilitychange",function(){if(document.hidden)sv()});window.addEventListener("pagehide",sv);
+ var y=0;try{y=+localStorage.getItem(K)||0}catch(e){}
+ if(y>0){var n=0,iv=setInterval(function(){n++;if(document.documentElement.scrollHeight>y+window.innerHeight||n>20){window.scrollTo(0,y);clearInterval(iv)}},150)}
 })();
 </script>
 </body>
