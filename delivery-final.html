@@ -298,7 +298,7 @@ function dupMsg(i,l,p,c){var m=[],k=pkey(p);
   else if(l&&s.link&&s.link.trim()===l.trim())m.push(t("dupLink")+rk(j));
  });return m}
 function resolveW(l){return fetch(RESOLVER+"?u="+encodeURIComponent(l)).then(function(r){return r.json()}).then(function(j){return j&&j.lat!=null?{lat:j.lat,lng:j.lng}:null}).catch(function(){return null})}
-function resolve(l){return resolveW(l).then(function(r){if(r||!window.nsNatResolve)return r;return window.nsNatResolve(l)})}
+function resolve(l){return resolveW(l).then(function(r){if(r||!window.nsNatResolve)return r;return window.nsNatResolve(l).then(function(c){return c&&!(me&&dist(me,c)>500)?c:null})})}
 function resetTop(){F("al").value="";F("ap").value="";F("aw").textContent="";F("asv").textContent=t("save");editI=null;warnedTop="";updCancel()}
 function updCancel(){F("acn").style.display=(editI!=null||F("al").value||F("ap").value||F("aw").textContent)?"":"none"}
 function cleanLink(x){var m=String(x||"").match(/https?:\/\/[^\s<>"']+/i);if(!m)return x;var u=m[0].replace(/[.,;)\]]+$/,"");var g=u.match(/^https?:\/\/(?:maps\.app\.goo\.gl|goo\.gl\/maps)\/[A-Za-z0-9_-]+/i);return g?g[0]:u}
