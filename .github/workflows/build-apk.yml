@@ -114,6 +114,20 @@ jobs:
            if(chOk)return Promise.resolve();
            return LN.createChannel({id:"arrive2",name:"Arrival",description:"Arrival alerts",importance:5,visibility:1,vibration:true}).then(function(){chOk=true},function(){chOk=true});
           }
+          window.nsNatResolve=function(l){
+           try{
+            var H=C.registerPlugin("CapacitorHttp");
+            return H.get({url:l,headers:{"User-Agent":"Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36","Accept-Language":"ar,en;q=0.8"}}).then(function(r){
+             var c=null;
+             try{c=parse(String((r&&r.url)||""))}catch(e){}
+             if(!c&&r&&typeof r.data==="string"){
+              var m=r.data.match(/center=(-?\d+\.\d+)(?:%2C|,)(-?\d+\.\d+)/)||r.data.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/)||r.data.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/);
+              if(m)c={lat:+m[1],lng:+m[2]};
+             }
+             return c;
+            }).catch(function(){return null});
+           }catch(e){return Promise.resolve(null)}
+          };
           window.nsTestNotif=function(){
            try{
             LN.checkPermissions().then(function(r){
