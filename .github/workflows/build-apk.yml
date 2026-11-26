@@ -121,7 +121,11 @@ jobs:
              var c=null;
              try{c=parse(String((r&&r.url)||""))}catch(e){}
              if(!c&&r&&typeof r.data==="string"){
-              var m=r.data.match(/center=(-?\d+\.\d+)(?:%2C|,)(-?\d+\.\d+)/)||r.data.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/)||r.data.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/);
+              var tm=r.data.match(/<title>([^<]*)<\/title>/i)||r.data.match(/property="og:title" content="([^"]*)"/i);
+              if(tm){try{c=parse(tm[1])}catch(e){}}
+             }
+             if(!c&&r&&typeof r.data==="string"){
+              var m=r.data.match(/center=(-?\d+\.\d+)(?:%2C|,)(-?\d+\.\d+)/)||r.data.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/);
               if(m)c={lat:+m[1],lng:+m[2]};
              }
              return c;
