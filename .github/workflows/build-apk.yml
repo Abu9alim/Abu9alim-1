@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 env:
-  NS_VERSION: "1.1"   # change this number for every update: 1.1, 1.2, 1.3 ...
+  NS_VERSION: "1.2"   # change this number for every update: 1.1, 1.2, 1.3 ...
 
 jobs:
   build:
@@ -55,6 +55,8 @@ jobs:
           EOF
           cp ../delivery-final.html www/index.html
           sed -i "s/v[0-9.]* BETA/v${NS_VERSION} BETA/" www/index.html
+          sed -i "s/var APPV=\"[0-9.]*\"/var APPV=\"${NS_VERSION}\"/" www/index.html
+          grep -c "APPV=\"${NS_VERSION}\"" www/index.html
           cp ../manifest.json www/manifest.json || true
           cp ../sw.js www/sw.js || true
           cp ../icon-192.png www/ || true
@@ -88,7 +90,11 @@ jobs:
               if(err.code==="NOT_AUTHORIZED"){try{st(t("permErr"))}catch(e){}try{BG.openSettings()}catch(e){}}
               return;
              }
-             if(loc)onPos({coords:{latitude:loc.latitude,longitude:loc.longitude}});
+             if(loc){
+              window.__nsBgAt=Date.now();
+              if(document.hidden){try{localStorage.setItem("ns_bgh",String(Date.now()))}catch(e){}}
+              onPos({coords:{latitude:loc.latitude,longitude:loc.longitude}});
+             }
             }).then(function(id){bgId=id}).catch(function(){bgId=null});
            }catch(e){bgId=null}
           };
@@ -97,7 +103,7 @@ jobs:
 
           /* 3) arrival notification with Call / WhatsApp / SMS buttons */
           try{LN.requestPermissions()}catch(e){}
-          try{LN.createChannel({id:"arrive",name:"Arrival",description:"Arrival alerts",importance:5,visibility:1,vibration:true})}catch(e){}
+          try{LN.createChannel({id:"arrive2",name:"Arrival",description:"Arrival alerts",importance:5,visibility:1,vibration:true})}catch(e){}
           try{LN.registerActionTypes({types:[{id:"ARRIVE",actions:[
            {id:"call",title:"\u0627\u062a\u0635\u0627\u0644",foreground:true},
            {id:"wa",title:"\u0648\u0627\u062a\u0633\u0627\u0628",foreground:true},
@@ -106,8 +112,28 @@ jobs:
           var chOk=false;
           function ensureCh(){
            if(chOk)return Promise.resolve();
-           return LN.createChannel({id:"arrive",name:"Arrival",description:"Arrival alerts",importance:5,visibility:1,vibration:true}).then(function(){chOk=true},function(){chOk=true});
+           return LN.createChannel({id:"arrive2",name:"Arrival",description:"Arrival alerts",importance:5,visibility:1,vibration:true}).then(function(){chOk=true},function(){chOk=true});
           }
+          window.nsTestNotif=function(){
+           try{
+            LN.checkPermissions().then(function(r){
+             if(!r||r.display!=="granted")return LN.requestPermissions();
+             return r;
+            }).then(function(r){
+             if(r&&r.display&&r.display!=="granted")throw new Error("NOPERM");
+             return ensureCh();
+            }).then(function(){
+             return LN.schedule({notifications:[{
+              id:Math.floor(Date.now()%2000000000),
+              title:"NextStop",body:"\u2705 \u0627\u0644\u0625\u0634\u0639\u0627\u0631 \u064a\u0634\u062a\u063a\u0644",
+              channelId:"arrive2",
+              schedule:{at:new Date(Date.now()+10000),allowWhileIdle:true}
+             }]});
+            }).then(function(){try{st(t("tnW"))}catch(e){}}).catch(function(e){
+             try{st("\u26a0\ufe0f "+String(e&&e.message||e))}catch(x){}
+            });
+           }catch(e){}
+          };
           window.notify=function(title,body,i){
            try{
             LN.checkPermissions().then(function(r){
@@ -120,7 +146,7 @@ jobs:
              return LN.schedule({notifications:[{
               id:Math.floor(Date.now()%2000000000),
               title:title,body:body||"",
-              channelId:"arrive",
+              channelId:"arrive2",
               actionTypeId:"ARRIVE",
               extra:{i:i}
              }]});
