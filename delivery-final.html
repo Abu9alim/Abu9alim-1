@@ -568,6 +568,7 @@ function refreshBg(){
  var h=0;try{h=+localStorage.getItem("ns_bgh")||0}catch(e){}
  if(h){var d=new Date(h);var hh=("0"+d.getHours()).slice(-2)+":"+("0"+d.getMinutes()).slice(-2);x.push(ar?"وصلك موقع وأنت خارج التطبيق: "+hh+" ✅":"Location received while outside the app: "+hh+" ✅")}
  else x.push(ar?"لسا ما وصل موقع وأنت خارج التطبيق ❌":"No location received while outside the app yet ❌");
+ if(window.__nsNatDbg)x.push((ar?"آخر قراءة رابط: ":"Last link read: ")+String(window.__nsNatDbg).replace(/</g,"&lt;"));
  G("bgst").innerHTML=x.join("<br>");
 }
 window.testNotif=function(){if(window.nsTestNotif)window.nsTestNotif();else st(t("tnX"))};
