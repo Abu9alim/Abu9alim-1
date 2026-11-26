@@ -1,618 +1,464 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0f1115">
-<title>NextStop</title>
-<link rel="manifest" href="manifest.json">
-<link rel="icon" href="icon-192.png">
-<link rel="apple-touch-icon" href="icon-192.png">
-<style>
-:root{--bg:#f4f5f7;--card:#fff;--tx:#14181f;--mut:#6b7280;--pri:#0f766e;--bd:#e5e7eb;--ok:#16a34a;--red:#dc2626;--sheet:#26272d;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1115;--card:#1a1d24;--tx:#f1f3f6;--mut:#9aa3b2;--pri:#2dd4bf;--bd:#2a2f3a}}
-:root[data-theme="dark"]{--bg:#0f1115;--card:#1a1d24;--tx:#f1f3f6;--mut:#9aa3b2;--pri:#2dd4bf;--bd:#2a2f3a}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;padding:10px;max-width:560px;margin-inline:auto}
-.hd{position:sticky;top:0;z-index:5;background:var(--bg);padding:6px 0 6px;border-bottom:1px solid var(--bd)}
-.tl{display:flex;align-items:baseline;gap:8px;margin-bottom:6px;padding-inline-end:52px;min-height:28px}
-#gear{position:fixed;top:0;inset-inline-end:0;z-index:6;width:46px;height:42px;padding:0;font-size:22px;border:1px solid var(--bd);border-top:0;border-radius:0 0 14px 14px;background:var(--card);color:var(--tx)}#ov{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:flex-end;justify-content:center;z-index:12}#ov.on{display:flex}#tz{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));width:calc(100% - 24px);max-width:520px;background:#1f2937;color:#f1f3f6;border-radius:16px;padding:12px 14px 15px;display:none;z-index:15;box-shadow:0 8px 24px rgba(0,0,0,.4);overflow:hidden}#tz.on{display:block}#tz .row{display:flex;align-items:center;gap:10px;justify-content:space-between}#tz span{font-size:16px}#tz button{flex:none;padding:10px 16px;font-size:16px;font-weight:700;border:0;border-radius:12px;background:var(--pri);color:#04201d}#tz i{position:absolute;left:0;bottom:0;height:4px;background:var(--pri);width:100%;transform-origin:left}@keyframes tzb{from{transform:scaleX(1)}to{transform:scaleX(0)}}#tz i.run{animation:tzb 10s linear forwards}#gate{position:fixed;inset:0;background:var(--bg);z-index:30;display:none;align-items:center;justify-content:center;padding:24px;text-align:center}#gate.on{display:flex}#gate .gb{max-width:380px}#gate .ic{font-size:64px}#gate h2{margin:10px 0 8px;font-size:22px}#gate p{color:var(--mut);line-height:1.7;margin:0 0 18px;font-size:16px}#gate button{width:100%;padding:16px;font-size:18px;font-weight:700;border:0;border-radius:14px;background:var(--pri);color:#04201d}#gate .dn{color:#f59e0b;font-weight:700;margin-top:14px;display:none}#pn{background:var(--card);color:var(--tx);width:100%;max-width:560px;max-height:90vh;overflow:auto;border-radius:24px 24px 0 0;padding:16px 16px calc(18px + env(safe-area-inset-bottom,0px))}#pn h2{margin:0 0 12px;font-size:20px}#pn .sec{margin:14px 0}#pn .sec>label,#pn .sec>.lb{display:block;font-weight:700;margin-bottom:6px;font-size:15px}#pn select{width:100%;padding:11px;font-size:16px;border:1px solid var(--bd);border-radius:12px;background:var(--bg);color:var(--tx)}#pn .seg{display:flex;gap:8px}#pn .seg button{flex:1;padding:12px 6px;font-size:15px;border:1px solid var(--bd);border-radius:12px;background:var(--bg);color:var(--tx)}#pn .seg button.on{background:var(--pri);color:#04201d;border-color:var(--pri);font-weight:700}#pn input[type=range]{width:100%;direction:ltr}#pn .zv{text-align:center;font-weight:700;margin-top:4px;direction:ltr}#pn .ab{font-size:14px;line-height:1.7;color:var(--mut)}#pn .ab b{color:var(--tx)}#pn .cl{width:100%;margin-top:6px;padding:13px;font-size:16px;border-radius:12px;border:0;background:var(--pri);color:#04201d;font-weight:700}
-#sh a b{font-weight:400}
-h1{font-size:18px;margin:0}
-.mut{color:var(--mut);font-size:13px}
-.st{font-size:12px;color:var(--mut);margin:4px 0}
-#sb{position:relative;margin:8px 0 6px}#sb input{margin:0;padding:11px 40px 11px 12px;border:1px solid var(--bd)}#sb .sbi{position:absolute;inset-inline-end:12px;top:50%;transform:translateY(-50%);font-size:18px;pointer-events:none}.add{background:var(--card);border:2px solid var(--pri);border-radius:14px;padding:8px;margin-top:4px}
-.beta{background:#f59e0b;color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;letter-spacing:.5px;direction:ltr;unicode-bidi:isolate}.add input{margin-top:0;padding:10px}.inf{display:inline-flex;width:18px;height:18px;border-radius:50%;border:1.5px solid var(--mut);color:var(--mut);font-size:11px;font-style:normal;font-weight:700;align-items:center;justify-content:center;margin-inline-start:6px;cursor:pointer;vertical-align:middle}.ih{display:none;font-size:12.5px;line-height:1.7;color:var(--mut);background:var(--bg);border-radius:10px;padding:8px 10px;margin-top:6px}.ih.show{display:block}.acc{display:flex;gap:14px;margin-top:8px}.acc button{width:38px;height:38px;border-radius:50%;padding:0;border:3px solid transparent;box-shadow:none}.acc button.on{border-color:var(--tx)}#ap,#sq,#al{unicode-bidi:plaintext}
-.arow{display:flex;gap:6px;margin-top:6px}
-.arow input{flex:1;min-width:0;width:auto}
-.arow button{flex:none;padding:10px 12px}
-.card{background:var(--card);border:2px solid var(--bd);border-radius:14px;padding:10px;margin-bottom:8px}
-.card.arr{border-color:var(--ok)}
-.card.late{border-style:dashed;opacity:.85}.card.uns{border-color:#ef4444}.card.uns .nm{color:#ef4444;font-weight:700}.rt{width:100%;margin-top:6px;background:#ef4444;color:#fff;padding:11px;font-size:15px}.ei{margin-top:8px}.ei input{display:block;width:100%;margin-bottom:6px;padding:10px}.ew{color:#ef4444;font-size:13px;margin-top:6px}
-.top{display:flex;align-items:center;gap:8px}
-.n{background:var(--pri);color:#fff;border-radius:50%;width:26px;height:26px;display:inline-flex;align-items:center;justify-content:center;font-size:13px;flex:none}
-.empty .n{background:var(--bd);color:var(--mut)}
-.nm{flex:1;font-weight:700}
-.dist{direction:ltr;unicode-bidi:isolate;font-weight:700;color:var(--pri);font-size:14px}
-.arr .dist{color:var(--ok)}
-input{width:100%;padding:11px;margin-top:8px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--tx);font-size:16px}
-button,a.b{border:0;border-radius:10px;padding:10px 8px;font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;color:#fff;background:var(--pri);display:inline-block;text-align:center}
-.g{background:#64748b}.r{background:var(--red)}.o{background:#d97706}.warn{color:#d97706;font-size:13px;font-weight:600;margin-top:6px}
-.row{display:flex;gap:6px;margin-top:8px}.row>*{flex:1}
-.top2{display:flex;gap:6px}.top2>*{flex:1;padding:11px 8px;font-size:15px}.top2>.o2{flex:0 0 auto;background:#475569;color:#fff}
-.ph{width:100%;margin-top:8px;padding:14px;font-size:20px;letter-spacing:1px;background:var(--bg);color:var(--tx);border:1px dashed var(--pri);border-radius:12px;direction:ltr;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
-.arr .ph{background:var(--ok);color:#fff;border:0;animation:p 1.2s infinite}
-@keyframes p{50%{opacity:.7}}
-#bk{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:flex-end;justify-content:center;z-index:20}
-#bk.on{display:flex}
-#sh{background:var(--sheet);color:#f1f3f6;width:100%;max-width:560px;border-radius:26px 26px 0 0;padding:14px 10px calc(14px + env(safe-area-inset-bottom,0px))}
-#sh .t{text-align:center;direction:ltr;color:#9aa3b2;margin-bottom:6px;font-size:15px}
-#sh a{display:flex;align-items:center;gap:16px;padding:18px 20px;color:#f1f3f6;text-decoration:none;font-size:19px}
-#sh a span{font-size:28px;width:34px;text-align:center}
-#sh4.cpd{background:#16a34a!important;color:#fff!important}#sh4.cpd b,#sh4.cpd span{color:#fff!important}
-#sb.has .sbi{display:none}.bsm{width:100%;padding:11px;margin-top:8px;border:1px solid var(--bd);border-radius:12px;background:var(--card);color:var(--tx);font-size:14px}
-</style>
-</head>
-<body>
-<div class="hd">
-<button id="gear" onclick="openSet()" aria-label="Settings">⚙️</button>
-<div class="tl"><h1 data-t="title"></h1><span class="beta">BETA</span><span class="mut" id="cnt"></span></div>
-<div class="top2"><button onclick="locate()" data-t="loc"></button><button class="o" onclick="refreshList()" data-t="refresh"></button><button class="o2" id="fl" onclick="flipOrder()"></button></div>
-<div class="st" id="gps"></div>
-<div class="add"><input id="al" data-ph="phLink" inputmode="url" oninput="updCancel()"><div class="arow"><input id="ap" data-ph="phPhone" inputmode="tel" oninput="updCancel()"><button id="asv" onclick="addTop()"></button><button id="acn" class="g" style="display:none" onclick="cancelTop()" data-t="cancel"></button></div><div class="warn" id="aw"></div></div>
-</div>
-<div id="sb"><span class="sbi">&#128269;</span><input id="sq" type="search" inputmode="search" autocomplete="off" data-ph="phSearch" oninput="applySearch()"></div>
-<div id="list"></div>
-<div id="gate"><div class="gb"><div class="ic">🔔</div><h2 data-t="gateT"></h2><p data-t="gateP"></p><button onclick="askNotif()" data-t="gateB"></button><div class="dn" id="gdn" data-t="gateD"></div></div></div>
-<div id="tz"><div class="row"><span id="tzm"></span><button onclick="undoDone()" data-t="undo"></button></div><i id="tzi"></i></div>
-<div id="ov" onclick="if(event.target===this)closeSet()"><div id="pn">
-<h2 data-t="settings"></h2>
-<div class="sec"><label for="lang" data-t="language"></label><select id="lang" onchange="setLang(this.value)"><option value="ar">العربية</option><option value="en">English</option></select></div>
-<div class="sec"><div class="lb"><span data-t="mode"></span><i class="inf" onclick="tgI('mode')">i</i></div><div class="seg"><button id="mo1" onclick="setMode('auto')" data-t="mAuto"></button><button id="mo2" onclick="setMode('light')" data-t="mLight"></button><button id="mo3" onclick="setMode('dark')" data-t="mDark"></button></div><div class="ih" id="ih_mode" data-t="info_mode"></div></div>
-<div class="sec"><div class="lb"><span data-t="accent"></span><i class="inf" onclick="tgI('color')">i</i></div><div class="acc" id="acc"></div><div class="ih" id="ih_color" data-t="info_color"></div></div>
-<div class="sec"><div class="lb"><span data-t="upd"></span><i class="inf" onclick="tgI('upd')">i</i></div><div class="seg"><button id="au1" onclick="setAuto(1)" data-t="uAuto"></button><button id="au2" onclick="setAuto(0)" data-t="uMan"></button></div><div class="ih" id="ih_upd" data-t="info_upd"></div></div>
-<div class="sec"><div class="lb" data-t="units"></div><div class="seg"><button id="u1" onclick="setUnits('m')" data-t="metric"></button><button id="u2" onclick="setUnits('i')" data-t="imperial"></button></div></div>
-<div class="sec"><div class="lb" data-t="size"></div><input type="range" id="zr" min="80" max="150" step="10" oninput="setZoom(this.value)"><div class="zv" id="zv"></div></div>
-<div class="sec"><div class="lb"><span data-t="snd"></span><i class="inf" onclick="tgI('snd')">i</i></div><div class="ih" id="ih_snd" data-t="info_snd"></div><div class="seg"><button id="s1" onclick="setSnd(1)" data-t="sndOn"></button><button id="s2" onclick="setSnd(0)" data-t="sndOff"></button></div></div>
-<div class="sec"><div class="lb"><span data-t="wapp"></span><i class="inf" onclick="tgI('wapp')">i</i></div><div class="ih" id="ih_wapp" data-t="info_wapp"></div><div class="seg"><button id="wa3" onclick="setWapp('a')" data-t="waA"></button><button id="wa1" onclick="setWapp('r')" data-t="waR"></button><button id="wa2" onclick="setWapp('b')" data-t="waB"></button></div></div>
-<div class="sec"><div class="lb"><span data-t="wl"></span><i class="inf" onclick="tgI('wl')">i</i></div><div class="ih" id="ih_wl" data-t="info_wl"></div><div class="seg"><button id="w1" onclick="setWake(1)" data-t="wlOn"></button><button id="w2" onclick="setWake(0)" data-t="wlOff"></button></div></div>
-<div class="sec" id="bgsec" style="display:none"><div class="lb" data-t="bgT"></div><div class="ab" id="bgst" style="font-size:13px;line-height:1.7"></div><button class="bsm" onclick="testNotif()" data-t="tnB"></button></div>
-<div class="sec"><button class="bsm" onclick="exportLog()" data-t="logB"></button></div>
-<div class="sec"><div class="lb" data-t="about"></div><div class="ab"><b>NextStop</b> · v1.2 BETA<br><span data-t="aboutTxt"></span><br><span data-t="credit"></span></div></div>
-<div class="sec" id="statsec"><div class="ab" style="font-size:12px;opacity:.75" data-t="statNote"></div></div>
-<button class="cl" onclick="saveSet()" data-t="setDone"></button>
-</div></div>
-<div id="bk"><div id="sh"><div class="t" id="shn"></div><a id="sh1"><span>📞</span><b data-t="call"></b></a><a id="sh2"><span><svg width="30" height="30" viewBox="0 0 24 24"><path d="M12 3C7 3 3 6.8 3 11.5c0 2 .8 3.8 2 5.2L4 21l4.5-1.4c1 .3 2.2.5 3.5.5 5 0 9-3.8 9-8.5S17 3 12 3z" fill="#25d366"/><circle cx="8.5" cy="11.5" r="1.2" fill="#fff"/><circle cx="12" cy="11.5" r="1.2" fill="#fff"/><circle cx="15.5" cy="11.5" r="1.2" fill="#fff"/></svg></span><b data-t="wa"></b></a><a id="sh3"><span>✉️</span><b data-t="sms"></b></a><a id="sh4"><span><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="3"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg></span><b id="cpl" data-t="copy"></b></a></div></div>
-<div id="sa" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:20;align-items:center;justify-content:center"><div style="background:var(--card);color:var(--tx);border-radius:18px;padding:20px;width:min(86vw,360px);text-align:center"><div style="font-size:17px;font-weight:700;margin-bottom:16px" data-t="saQ"></div><div style="display:flex;gap:10px"><button onclick="saveSet()" style="flex:1;padding:12px;border:0;border-radius:12px;background:var(--pri);color:#fff;font-size:16px" data-t="saY"></button><button onclick="discardSet()" style="flex:1;padding:12px;border:1px solid var(--bd);border-radius:12px;background:var(--bg);color:var(--tx);font-size:16px" data-t="saN"></button></div></div></div>
-<div id="up" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:99999;align-items:center;justify-content:center"><div style="background:var(--card);color:var(--tx);border-radius:18px;padding:20px;width:min(88vw,380px);text-align:center"><div id="upT" style="font-size:19px;font-weight:700;margin-bottom:10px"></div><div id="upM" style="font-size:15px;line-height:1.7;margin-bottom:14px"></div><div id="upN" style="display:none;background:#fee2e2;color:#b91c1c;border-radius:12px;padding:10px;font-size:13.5px;line-height:1.6;margin-bottom:14px"></div><div style="display:flex;gap:10px"><button onclick="upOk()" style="flex:1;padding:12px;border:0;border-radius:12px;background:var(--pri);color:#fff;font-size:16px" data-t="updOk"></button><button id="upS" onclick="upSkip()" style="flex:1;padding:12px;border:1px solid var(--bd);border-radius:12px;background:var(--bg);color:var(--tx);font-size:16px" data-t="updSk"></button></div></div></div>
-<script>
-var LANG="ar";try{LANG=localStorage.getItem("lang")||"ar"}catch(e){}
-var D={
-ar:{title:"📍 NextStop",loc:"📍 حدّد موقعي",refresh:"🔄 تحديث",nearBtn:"⬇️ الأقرب",farBtn:"⬆️ الأبعد",farFirst:"⬆️ الترتيب: من الأبعد للأقرب",nearFirst:"⬇️ الترتيب: من الأقرب للأبعد",hint:"اضغط «حدّد موقعي» أول، وبعدها «تحديث» لترتيب الطرق",phLink:"الصق رابط قوقل ماب أو الإحداثيات",phPhone:"رقم الزبون",nofound:"ما فيه نتيجة",phSearch:"ابحث بأي أرقام من رقم الزبون",save:"➕ حفظ",saveEdit:"💾 حفظ التعديل",saveAnyway:"حفظ رغم التكرار",cancel:"✖ إلغاء",call:"اتصال",wa:"رسالة واتساب",wapp:"تطبيق الواتساب",waA:"تلقائي",waR:"واتساب",waB:"واتساب بزنس",sms:"رسالة نصية",copy:"نسخ الرقم",mode:"المظهر",mAuto:"تلقائي",mLight:"فاتح",mDark:"داكن",accent:"اللون",upd:"تحديث الترتيب",uAuto:"تلقائي",uMan:"يدوي",info_mode:"تلقائي: يتبع إعداد جوالك، فاتح بالنهار وداكن بالليل. أو اختر فاتح أو داكن دايماً.",info_color:"اللون الأساسي للأزرار والأرقام. الألوان اللي لها معنى (الأخضر عند الوصول، والأحمر لزر تم) ما تتغير.",info_upd:"تلقائي: التطبيق يعيد ترتيب المشاوير من الأقرب للأبعد بنفسه لما تتحرك أو تضيف مشوار، فما تحتاج تضغط تحديث. يدوي: الترتيب يبقى ثابت ويظهر زر تحديث، وتحدّثه أنت متى ما تبغى.",info_snd:"صوت قصير ينبهك لما توصل لموقع زبون.",info_wapp:"تلقائي: يفتح واتساب الافتراضي في جوالك. أو اختر العادي أو Business حسب اللي تستخدمه مع الزبائن.",info_wl:"يخلي الشاشة شغالة وأنت تستخدم التطبيق، عشان الموقع ما ينقطع.",copied:"تم النسخ ✓",statNote:"ℹ️ يرسل التطبيق لصاحبه اسمك (إن كتبته) ومدة الاستخدام وعدد المشاوير المضافة فقط. أرقام الزبائن والمواقع تبقى في جوالك ولا تُرسل أبداً.",pausedT:"التطبيق متوقف مؤقتاً",pausedM:"أوقفه المطوّر مؤقتاً. بياناتك ومشاويرك محفوظة في جوالك ولن تُحذف، وترجع كما هي أول ما يشتغل التطبيق.",retry:"🔄 إعادة المحاولة",nameQ:"وش اسمك؟",nameHint:"يظهر الاسم لصاحب التطبيق فقط، ليعرف من يجرّب. اختياري.",nameOk:"حفظ",nameSkip:"تخطّي",savedAt:"✅ انحفظ في الخانة ",setDone:"✔ تم / حفظ",saQ:"حفظ تغييرات الإعدادات؟",saY:"حفظ",saN:"تجاهل",navCp:"📋 اننسخ رقم الزبون",updT:"تحديث جديد متوفر",updM:"نزّل النسخة الجديدة من قناة NextStop على تيليجرام.",updOk:"موافق",updSk:"تخطي",reqT:"التحديث مطلوب",reqM:"لازم تحدّث التطبيق عشان تكمل.",reqN:"لا تخاف: ما راح ينحذف أي شيء من مشاويرك. التحديث بس يجيب الميزات الجديدة.",bgT:"🛰️ التتبع والإشعار",tnB:"🔔 اختبار الإشعار (بعد 10 ثواني)",tnW:"🔔 اطلع من التطبيق، يجي الإشعار بعد 10 ثواني",tnX:"هذي الميزة داخل التطبيق فقط",logB:"📤 نسخ سجل المشاوير",logOk:"✅ اننسخ السجل، الصقه وأرسله",logNo:"السجل فاضي لسا",
- nonum:"بدون رقم",nav:"🧭 وديني",restore:"⬆️ رجّعه",noans2:"⬇️ ما رد",done:"✔ تم",empty:"ما فيه مشاوير. أضف أول واحد من الخانة فوق.",
- arrived:"🟢 وصلت",noans:"📵 ما رد",short:"⚠️ رابط قصير",cust:"زبون",m:"m",km:"km",snd:"صوت الوصول",sndOn:"🔔 شغّال",sndOff:"🔕 مغلق",fixing:"📡 جاري تحديث موقعك…",hint2:"📡 تم تحديث موقعك",wl:"الشاشة",wlOn:"تبقى مضيئة",wlOff:"عادية",gateT:"الإشعارات مطلوبة",gateP:"NextStop يحتاج الإشعارات عشان ينبّهك لما توصل لموقع الزبون. فعّلها للمتابعة.",gateB:"🔔 تفعيل الإشعارات",gateD:"الإشعارات محظورة. افتح إعدادات المتصفح أو التطبيق ← الإشعارات ← سماح، ثم ارجع هنا.",undo:"↩ تراجع",doneMsg:"تم إنهاء المشوار",mi:"mi",ft:"ft",settings:"⚙️ الإعدادات",language:"اللغة",units:"وحدة المسافة",metric:"km / m",imperial:"mi / ft",size:"حجم التطبيق",about:"عن التطبيق",aboutTxt:"يرتّب مشاوير التوصيل من الأقرب للأبعد حسب مسافة الطريق. بياناتك تُحفظ على جهازك فقط.",credit:"الخرائط والطرق: © مساهمو OpenStreetMap",close:"تم",min:"min",hr:"h",
- dupPhone:"نفس رقم التلفون في المشوار ",dupLoc:"الموقع قريب جداً من المشوار ",dupLink:"نفس الرابط في المشوار ",
- enter:"اكتب الرابط أو الرقم أول",badLink:"هذا رقم تليفون، حطه في خانة الرقم تحت",badPhone:"خانة الرقم لازم فيها رقم تليفون فقط",reading:"⏳ أقرأ الموقع...",full1:"⚠️ القائمة ممتلئة (",full2:" مشوار). احذف مشوار بزر ✔ تم",
- noread:"⚠️ ما قدرت أقرأ إحداثيات الرابط، انحفظ بدون ترتيب",retry:"🔄 حاول مرة ثانية",retryOk:"✅ انقرأ الموقع وترتّب",retryNo:"⚠️ لسا ما انقرأ الرابط، جرّب بعد شوي",saved:"✅ تمت الإضافة",
- okRoad:"📡 تم الترتيب حسب مسافة الطريق",okLine:"📡 تم الترتيب (تقريبي بخط مستقيم)",permErr:"⚠️ فعّل إذن الموقع للمتصفح",nogeo:"الجهاز ما يدعم الموقع",
- locating:"⏳ أحدد موقعك بالضبط...",roads:"⏳ أحسب مسافات الطرق...",acc1:"📍 دقة موقعك ",acc2:" م — ",byRoad:"الترتيب حسب مسافة الطريق",byLine:"الترتيب بخط مستقيم (تعذّر حساب الطريق)",
- locErr:"⚠️ ما قدرت أحدد موقعك. اسمح بالموقع للمتصفح من الإعدادات",sortedRoad:"🛣 تم الترتيب حسب مسافة الطريق (الأقرب أول)",sortedLine:"⚠️ ما قدرت أحسب مسافة الطريق، الترتيب بخط مستقيم تقريبي",needLoc:"⚠️ حدّد موقعك أول بزر «حدّد موقعي»",updating:"⏳ أحدّث الترتيب..."},
-en:{title:"📍 NextStop",loc:"📍 My location",refresh:"🔄 Refresh",nearBtn:"⬇️ Nearest",farBtn:"⬆️ Farthest",farFirst:"⬆️ Order: farthest first",nearFirst:"⬇️ Order: nearest first",hint:"Tap “My location” first, then “Refresh” to sort by road distance",phLink:"Paste Google Maps link or coordinates",phPhone:"Customer phone",nofound:"No match",phSearch:"Search by any digits of the phone",save:"➕ Save",saveEdit:"💾 Save edit",saveAnyway:"Save anyway",cancel:"✖ Cancel",call:"Call",wa:"WhatsApp",wapp:"WhatsApp app",waA:"Auto",waR:"WhatsApp",waB:"WhatsApp Business",sms:"Text message",copy:"Copy number",mode:"Appearance",mAuto:"Auto",mLight:"Light",mDark:"Dark",accent:"Color",upd:"Order update",uAuto:"Auto",uMan:"Manual",info_mode:"Auto follows your phone setting: light by day, dark at night. Or pick light or dark always.",info_color:"The main color for buttons and numbers. Meaningful colors (green on arrival, red for Done) never change.",info_upd:"Auto: the app re-sorts your stops from nearest to farthest by itself when you move or add a stop, so there is no Refresh button. Manual: the order stays fixed and a Refresh button appears; you update it when you want.",info_snd:"A short sound that alerts you when you reach a customer location.",info_wapp:"Auto opens your phone default WhatsApp. Or choose Regular or Business, whichever you use with customers.",info_wl:"Keeps the screen on while you use the app so your location does not drop.",copied:"Copied ✓",statNote:"ℹ️ The app sends the owner only your name (if you gave one), time used and number of stops added. Customer numbers and locations stay on your phone and are never sent.",pausedT:"App temporarily paused",pausedM:"The developer paused it for now. Your data and stops are safe on your phone and will not be deleted; everything returns as it was when the app is back.",retry:"🔄 Try again",nameQ:"What is your name?",nameHint:"Only the app owner sees this name, to know who is testing. Optional.",nameOk:"Save",nameSkip:"Skip",savedAt:"✅ Saved at position ",setDone:"✔ Done / Save",saQ:"Save settings changes?",saY:"Save",saN:"Discard",navCp:"📋 Customer number copied",updT:"New update available",updM:"Download the new version from the NextStop Telegram channel.",updOk:"OK",updSk:"Skip",reqT:"Update required",reqM:"You must update the app to continue.",reqN:"Don't worry: none of your stops will be deleted. The update only brings the new features.",bgT:"🛰️ Tracking and notification",tnB:"🔔 Test notification (in 10 seconds)",tnW:"🔔 Leave the app, the notification comes in 10 seconds",tnX:"This feature works inside the app only",logB:"📤 Copy trip log",logOk:"✅ Log copied, paste and send it",logNo:"The log is empty",
- nonum:"No number",nav:"🧭 Navigate",restore:"⬆️ Restore",noans2:"⬇️ No answer",done:"✔ Done",empty:"No stops yet. Add the first one in the box above.",
- arrived:"🟢 Arrived",noans:"📵 No answer",short:"⚠️ Short link",cust:"Customer",m:"m",km:"km",snd:"Arrival sound",sndOn:"🔔 On",sndOff:"🔕 Off",fixing:"📡 Updating your location…",hint2:"📡 Location updated",wl:"Screen",wlOn:"Stay awake",wlOff:"Normal",gateT:"Notifications required",gateP:"NextStop needs notifications to alert you when you reach a customer. Enable them to continue.",gateB:"🔔 Enable notifications",gateD:"Notifications are blocked. Open browser/app settings → Notifications → Allow, then come back.",undo:"↩ Undo",doneMsg:"Stop completed",mi:"mi",ft:"ft",settings:"⚙️ Settings",language:"Language",units:"Distance unit",metric:"Kilometers / meters",imperial:"Miles / feet",size:"App size",about:"About",aboutTxt:"Sorts delivery stops from nearest to farthest by road distance. Your data stays on your device only.",credit:"Maps & routing: © OpenStreetMap contributors",close:"Done",min:"min",hr:"h",
- dupPhone:"Same phone number as stop ",dupLoc:"Location is very close to stop ",dupLink:"Same link as stop ",
- enter:"Enter a link or a number first",badLink:"That looks like a phone number. Put it in the phone box below",badPhone:"The phone box must contain a phone number only",reading:"⏳ Reading location...",full1:"⚠️ List is full (",full2:" stops). Remove one with ✔ Done",
- noread:"⚠️ Couldn't read coordinates from the link; saved without sorting",retry:"🔄 Try again",retryOk:"✅ Location read and sorted",retryNo:"⚠️ Link still can't be read, try again shortly",saved:"✅ Added",
- okRoad:"📡 Sorted by road distance",okLine:"📡 Sorted (approximate, straight line)",permErr:"⚠️ Allow location access for the browser",nogeo:"This device doesn't support location",
- locating:"⏳ Finding your exact location...",roads:"⏳ Calculating road distances...",acc1:"📍 Your location accuracy: ",acc2:" m — ",byRoad:"sorted by road distance",byLine:"sorted by straight line (road calculation failed)",
- locErr:"⚠️ Couldn't get your location. Allow location in browser settings",sortedRoad:"🛣 Sorted by road distance (nearest first)",sortedLine:"⚠️ Couldn't calculate road distance, sorted by approximate straight line",needLoc:"⚠️ Tap “My location” first",updating:"⏳ Updating order..."}
-};
-function t(k){return (D[LANG]&&D[LANG][k])||D.ar[k]||k}
-function applyLang(){
- var h=document.documentElement;h.lang=LANG;h.dir=LANG==="ar"?"rtl":"ltr";document.title="NextStop";
- document.querySelectorAll("[data-t]").forEach(function(e){e.textContent=t(e.getAttribute("data-t"))});
- document.querySelectorAll("[data-ph]").forEach(function(e){e.placeholder=t(e.getAttribute("data-ph"))});
- F("lang").value=LANG;
- F("asv").textContent=editI!=null?t("saveEdit"):t("save");
- F("fl").textContent=t(rev?"farBtn":"nearBtn");
-}
-function setLang(v){LANG=v==="en"?"en":"ar";try{localStorage.setItem("lang",LANG)}catch(e){}applyLang();F("aw").textContent="";warnedTop="";st(t("hint"));render()}
-var RESOLVER="https://still-firefly-143f.sosona3011.workers.dev/"; // الصق هنا رابط قارئ الروابط بين علامتي التنصيص
-var ROUTER="https://router.project-osrm.org",road={},editI=null,warnedTop="",N=100,rev=(function(){try{return localStorage.getItem("rev")==="1"}catch(e){return false}})(),KEY="slots_v2",slots=[],me=null,arrived={},order=[],watching=false;
-try{slots=JSON.parse(localStorage.getItem(KEY)||"[]")}catch(e){}
-if(!Array.isArray(slots))slots=[];
-while(slots.length<N)slots.push(null);
-function save(){try{localStorage.setItem(KEY,JSON.stringify(slots))}catch(e){}}
-function norm(t){return String(t||"").replace(/[\u0660-\u0669]/g,function(c){return c.charCodeAt(0)-1632}).replace(/[\u06F0-\u06F9]/g,function(c){return c.charCodeAt(0)-1776}).replace(/\u066B/g,".").replace(/[\u060C\u066C]/g,",").replace(/\u00A0/g," ")}
-function dmsPart(m,o){var v=+m[o]+(m[o+1]?+m[o+1]/60:0)+(m[o+2]?+m[o+2]/3600:0),h=m[o+3].toUpperCase();return(h==="S"||h==="W")?-v:v}
-function parseDMS(t){
- t=t.replace(/[\u2032\u2019\u2018`\u00B4]/g,"'").replace(/[\u2033\u201C\u201D]/g,'"').replace(/''/g,'"').replace(/[\u00BA\u02DA\u2218]/g,"\u00B0");
- var P='(\\d{1,3}(?:\\.\\d+)?)\\s*\\u00B0?\\s*(?:(\\d{1,2}(?:\\.\\d+)?)\\s*\'\\s*(?:(\\d{1,2}(?:\\.\\d+)?)\\s*"?\\s*)?)?([NSEWnsew])';
- var re=new RegExp(P+'[\\s,;/]*'+P),m=t.match(re);if(!m)return null;
- var a=dmsPart(m,1),b=dmsPart(m,5),h1=m[4].toUpperCase(),h2=m[8].toUpperCase();
- if((h1==="N"||h1==="S")&&(h2==="E"||h2==="W"))return{lat:a,lng:b};
- if((h1==="E"||h1==="W")&&(h2==="N"||h2==="S"))return{lat:b,lng:a};
- return null}
-function parse(t){t=t||"";try{t=decodeURIComponent(t)}catch(e){}t=norm(t);
- var dm=parseDMS(t);if(dm&&Math.abs(dm.lat)<=90&&Math.abs(dm.lng)<=180)return dm;
- var r=[/@(-?\d+\.\d+),(-?\d+\.\d+)/,/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/,/[?&](?:q|query|ll|destination|daddr)=\s*(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)/,/^\s*(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)\s*$/];
- for(var i=0;i<r.length;i++){var m=t.match(r[i]);if(m)return{lat:+m[1],lng:+m[2]}}return plusParse(t)}
-var OA="23456789CFGHJMPQRVWX",OR=[20,1,0.05,0.0025,0.000125];
-function olcDec(c){c=c.replace("+","").toUpperCase();var la=-90,lo=-180,i;
- for(i=0;i<5&&i*2<c.length;i++){la+=OA.indexOf(c.charAt(i*2))*OR[i];lo+=OA.indexOf(c.charAt(i*2+1))*OR[i]}
- var h=Math.min(5,Math.floor(c.length/2)),cell=OR[h-1],cl=cell,cg=cell;
- if(c.length>10){var d=OA.indexOf(c.charAt(10));cl=cell/5;cg=cell/4;la+=Math.floor(d/4)*cl;lo+=(d%4)*cg}
- return{lat:la+cl/2,lng:lo+cg/2}}
-function olcEnc(lat,lng,n){lat+=90;lng+=180;var s="";for(var i=0;i<n/2;i++){var r=OR[i],a=Math.floor(lat/r+1e-9),b=Math.floor(lng/r+1e-9);lat-=a*r;lng-=b*r;s+=OA.charAt(a)+OA.charAt(b)}return s}
-function plusParse(t){
- var m=String(t||"").toUpperCase().match(/(?:^|[^23456789CFGHJMPQRVWX])([23456789CFGHJMPQRVWX]{2,8}\+[23456789CFGHJMPQRVWX]{2,3})(?![23456789CFGHJMPQRVWX])/);
- if(!m)return null;var c=m[1],ix=c.indexOf("+"),a;
- if(ix>=8)a=olcDec(c);
- else{if(ix%2)return null;var pad=8-ix,ref=(typeof me!=="undefined"&&me)?me:{lat:23.6,lng:58.5};
-  var res=Math.pow(20,2-pad/2),half=res/2;a=olcDec(olcEnc(ref.lat,ref.lng,pad)+c);
-  if(a.lat-ref.lat>half&&a.lat-res>=-90)a.lat-=res;else if(a.lat-ref.lat<-half&&a.lat+res<=90)a.lat+=res;
-  if(a.lng-ref.lng>half)a.lng-=res;else if(a.lng-ref.lng<-half)a.lng+=res}
- if(!(Math.abs(a.lat)<=90&&Math.abs(a.lng)<=180))return null;
- return{lat:Math.round(a.lat*1e6)/1e6,lng:Math.round(a.lng*1e6)/1e6}}
+name: Build NextStop APK
 
-function fix(p){var d=norm(p||"").replace(/[^\d]/g,"").replace(/^00/,"");if(d.length===8)d="968"+d;return d}
-function dist(a,b){var R=6371,t=Math.PI/180,x=Math.sin((b.lat-a.lat)*t/2)**2+Math.cos(a.lat*t)*Math.cos(b.lat*t)*Math.sin((b.lng-a.lng)*t/2)**2;return 2*R*Math.asin(Math.sqrt(x))}
-function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
-var UN=(function(){try{return localStorage.getItem("units")==="i"?"i":"m"}catch(e){return "m"}})(),ZM=(function(){try{var z=parseInt(localStorage.getItem("zoom"),10);return z>=80&&z<=150?z:100}catch(e){return 100}})();
-function fmtT(sec){var m=Math.max(1,Math.round(sec/60));if(m<60)return m+" "+t("min");var h=Math.floor(m/60),r=m%60;return h+" "+t("hr")+(r?" "+r+" "+t("min"):"")}
-function fmt(d){if(UN==="i"){var mi=d*0.621371;return mi<0.1?Math.round(d*3280.84)+" "+t("ft"):mi.toFixed(1)+" "+t("mi")}return d<1?Math.round(d*1000)+" "+t("m"):d.toFixed(1)+" "+t("km")}
-var SND=(function(){try{return localStorage.getItem("snd")!=="0"}catch(e){return true}})(),ac=null;
-function initAudio(){try{if(!ac){var C=window.AudioContext||window.webkitAudioContext;if(C)ac=new C()}if(ac&&ac.state==="suspended")ac.resume()}catch(e){}}
-function beep(){
- if(!SND||!ac)return;initAudio();
- try{var t0=ac.currentTime;[0,0.22,0.44].forEach(function(d,k){var o=ac.createOscillator(),g=ac.createGain();o.type="sine";o.frequency.value=k===2?1175:880;g.gain.setValueAtTime(0.0001,t0+d);g.gain.exponentialRampToValueAtTime(0.6,t0+d+0.02);g.gain.exponentialRampToValueAtTime(0.0001,t0+d+0.18);o.connect(g);g.connect(ac.destination);o.start(t0+d);o.stop(t0+d+0.2)})}catch(e){}
-}
-var WAPP=(function(){try{var v=localStorage.getItem("wapp");return v==="b"||v==="r"?v:"a"}catch(e){return"a"}})();
-function setWapp(v){WAPP=v;try{localStorage.setItem("wapp",v)}catch(e){}syncSet()}
-function setSnd(v){SND=!!v;try{localStorage.setItem("snd",v?"1":"0")}catch(e){}syncSet();if(SND){initAudio();beep()}}
-var swReg=null,WL=(function(){try{return localStorage.getItem("wl")!=="0"}catch(e){return true}})(),wlk=null;
-function notify(title,body,i){
- if(!("Notification" in window)||Notification.permission!=="granted")return;
- var ph="";try{ph=fix(slots[i].phone||"")}catch(e){}
- var o={body:body,icon:"icon-192.png",badge:"icon-192.png",vibrate:[200,100,200],silent:false,tag:"arr",renotify:true,requireInteraction:true,data:{i:i,p:ph,w:WAPP}};
- if(ph)o.actions=[{action:"call",title:t("call")},{action:"wa",title:t("wa")},{action:"sms",title:t("sms")}];
- try{if(swReg)swReg.showNotification(title,o);else new Notification(title,o)}catch(e){}
-}
-function checkGate(){
- var g=F("gate");
- if(!("Notification" in window)||Notification.permission==="granted"){g.className="";return}
- g.className="on";F("gdn").style.display=Notification.permission==="denied"?"block":"none";
-}
-function askNotif(){try{var r=Notification.requestPermission(function(){checkGate()});if(r&&r.then)r.then(checkGate)}catch(e){}setTimeout(checkGate,400)}
-function wake(){if(!WL||!navigator.wakeLock||document.visibilityState!=="visible"||wlk)return;try{navigator.wakeLock.request("screen").then(function(l){wlk=l;l.addEventListener("release",function(){if(wlk===l)wlk=null})}).catch(function(){})}catch(e){}}
-function unwake(){if(wlk){try{wlk.release()}catch(e){}wlk=null}}
-function setWake(v){WL=!!v;try{localStorage.setItem("wl",v?"1":"0")}catch(e){}if(WL)wake();else unwake();syncSet()}
-document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible"){wake();checkGate();wakeUp()}});window.addEventListener("pageshow",function(){wakeUp()});window.addEventListener("focus",function(){if(Date.now()-gpsAt>4000)wakeUp()});
-document.addEventListener("click",function(){wake();initAudio()});document.addEventListener("touchstart",function(){initAudio()},{passive:true});
-function openFromNotif(i){i=parseInt(i,10);if(!isNaN(i)&&slots[i]&&slots[i].phone)openSheet(i)}
-try{if("serviceWorker" in navigator)navigator.serviceWorker.addEventListener("message",function(e){if(e.data&&e.data.open!=null)openFromNotif(e.data.open)})}catch(e){}
-try{if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").then(function(){return navigator.serviceWorker.ready}).then(function(r){swReg=r}).catch(function(){})}catch(e){}
-function syncSet(){F("wa3").className=WAPP==="a"?"on":"";F("wa1").className=WAPP==="r"?"on":"";F("wa2").className=WAPP==="b"?"on":"";F("s1").className=SND?"on":"";F("s2").className=SND?"":"on";F("w1").className=WL?"on":"";F("w2").className=WL?"":"on";F("u1").className=UN==="m"?"on":"";F("u2").className=UN==="i"?"on":"";F("zr").value=ZM;F("zv").textContent=ZM+"%"}
-function setUnits(v){UN=v==="i"?"i":"m";try{localStorage.setItem("units",UN)}catch(e){}syncSet();render()}
-function setZoom(v){ZM=parseInt(v,10)||100;try{localStorage.setItem("zoom",ZM)}catch(e){}document.body.style.zoom=ZM/100;F("zv").textContent=ZM+"%"}
-function openSet(){syncSet();F("ov").className="on"}
-function closeSet(){F("ov").className=""}
-function st(t){document.getElementById("gps").textContent=t}
-function typing(){var a=document.activeElement;return a&&a.tagName==="INPUT"}
-function dd(i){var s=slots[i];if(!(me&&s.lat!=null))return 1e9;var r=road[i];return r?r.d:dist(me,s)*1400}
-var rq=0;
-function loadRoads(done){lastAP=me?{lat:me.lat,lng:me.lng}:null;lastAT=Date.now();
- if(!me||!ROUTER){road={};done(false);return}
- var idx=[];slots.forEach(function(s,i){if(s&&s.lat!=null)idx.push(i)});
- if(!idx.length){road={};done(true);return}
- var id=++rq,tries=0,ch=[];for(var a=0;a<idx.length;a+=90)ch.push(idx.slice(a,a+90));
- function one(ids){
-  var co=[me.lng+","+me.lat].concat(ids.map(function(i){return slots[i].lng+","+slots[i].lat})).join(";");
-  var ac=typeof AbortController!=="undefined"?new AbortController():null,tm=setTimeout(function(){if(ac)ac.abort()},12000);
-  return fetch(ROUTER+"/table/v1/driving/"+co+"?sources=0&annotations=distance,duration",ac?{signal:ac.signal}:undefined).then(function(r){clearTimeout(tm);return r.json()}).then(function(j){
-   if(j.code!=="Ok"||!j.distances)throw 0;
-   var o={};ids.forEach(function(i,k){var d=j.distances[0][k+1],t=j.durations&&j.durations[0][k+1];if(d!=null)o[i]={d:d,t:t}});return o});
- }
- function attempt(){
-  Promise.all(ch.map(one)).then(function(parts){
-   if(id!==rq)return;
-   var nr={};parts.forEach(function(o){for(var k in o)nr[k]=o[k]});
-   road=nr;done(Object.keys(nr).length>0);
-  }).catch(function(){
-   if(id!==rq)return;
-   if(++tries<3){setTimeout(function(){if(id===rq)attempt()},tries*1500)}else{road={};done(false)}
-  });
- }
- attempt();
-}
-var ordF=[];try{ordF=JSON.parse(localStorage.getItem("ord")||"[]")}catch(x){ordF=[]}
-function calc(force){
- var f=[],e=[];
- slots.forEach(function(s,i){if(s)f.push(i);else e.push(i)});
- var prev=ordF.filter(function(i){return slots[i]});
- if(AUTO||force||!prev.length){
-  f.sort(function(a,b){var A=slots[a],B=slots[b];if(!!A.late!==!!B.late)return A.late?1:-1;return dd(a)-dd(b)});
-  if(rev){var a=f.filter(function(i){return !slots[i].late}),b=f.filter(function(i){return slots[i].late});f=a.reverse().concat(b)}
- }else{
-  var inP={};prev.forEach(function(i){inP[i]=1});
-  var nl=prev.filter(function(i){return !slots[i].late}),lt=prev.filter(function(i){return slots[i].late});
-  f.filter(function(i){return !inP[i]}).sort(function(a,b){return dd(a)-dd(b)}).forEach(function(n){
-   var L=slots[n].late?lt:nl,pos=L.length;
-   for(var k=0;k<L.length;k++){if(rev?dd(L[k])<dd(n):dd(L[k])>dd(n)){pos=k;break}}
-   L.splice(pos,0,n);
-  });
-  f=nl.concat(lt);
- }
- ordF=f.slice();order=f.concat(e);
- try{localStorage.setItem("ord",JSON.stringify(ordF))}catch(x){}
-}
-function flipOrder(){rev=!rev;try{localStorage.setItem("rev",rev?"1":"0")}catch(e){}calc(true);render();F("fl").textContent=t(rev?"farBtn":"nearBtn");st(t(rev?"farFirst":"nearFirst"))}
-function F(id){return document.getElementById(id)}
-function applySearch(){
- var q=(F("sq").value||"").replace(/[\u0660-\u0669]/g,function(c){return c.charCodeAt(0)-1632}).replace(/\D/g,"");
- var qs=[];if(q){qs.push(q);var r=q.replace(/^00/,"").replace(/^968/,"").replace(/^0+/,"");if(r&&r!==q)qs.push(r)}
- var any=false;
- slots.forEach(function(s,i){if(!s)return;var c=F("c"+i);if(!c)return;
-  var p=String(s.phone||"").replace(/[\u0660-\u0669]/g,function(x){return x.charCodeAt(0)-1632}).replace(/\D/g,"");
-  var ok=!qs.length||qs.some(function(x){return p.indexOf(x)>-1});
-  c.style.display=ok?"":"none";if(ok)any=true});
- var nf=F("nf");if(nf)nf.remove();
- if(q&&!any){var d=document.createElement("div");d.id="nf";d.className="mut";d.style.cssText="text-align:center;padding:24px";d.textContent=t("nofound");F("list").appendChild(d)}
-}
-var editInl=null;
-function render(){
- if(editInl!=null){try{paint()}catch(e){}return}
- if(order.length!==N)calc();
- var h="",n=0;
- order.forEach(function(i){
-  var s=slots[i];if(!s)return;n++;
-  var nav=s.lat!=null?"https://www.google.com/maps/dir/?api=1&destination="+s.lat+","+s.lng+"&travelmode=driving":s.link;
-  var uns=s.lat==null&&/^https?:/i.test(s.link||"");
-  h+='<div class="card'+(uns?' uns':'')+'" id="c'+i+'"><div class="top"><span class="n">'+n+'</span><span class="nm" id="nm'+i+'"></span><span class="dist" id="d'+i+'"></span></div>'+
-  '<button class="ph" data-i="'+i+'">'+esc(s.phone||t("nonum"))+'</button>'+
-  '<div class="row"><a class="b" data-i="'+i+'" target="_blank" rel="noopener" href="'+esc(nav)+'">'+t("nav")+'</a><button class="g" onclick="ed('+i+')">✏️</button><button class="g" onclick="lt('+i+')">'+(s.late?t("restore"):t("noans2"))+'</button><button class="r" onclick="done('+i+')">'+t("done")+'</button></div>'+(uns?'<button class="r rt" onclick="retry('+i+')">'+t("retry")+'</button>':'')+'</div>';
- });
- F("list").innerHTML=h||'<div class="mut" style="text-align:center;padding:24px">'+t("empty")+'</div>';
- F("cnt").textContent=n+"/"+N;
- applySearch();
- paint();
-}
-function paint(){
- slots.forEach(function(s,i){
-  if(!s)return;
-  var c=document.getElementById("c"+i);if(!c)return;
-  var d=(me&&s.lat!=null)?dist(me,s):null,arr=d!=null&&d<0.1&&(!gpsAcc||gpsAcc<=60);
-  c.classList.toggle("arr",arr);c.classList.toggle("late",!!s.late&&!arr);
-  document.getElementById("nm"+i).textContent=arr?t("arrived"):(s.late?t("noans"):(s.lat==null?t("short"):t("cust")));
-  var r=road[i];document.getElementById("d"+i).textContent=r?(fmt(r.d/1000)+(r.t!=null?" • "+fmtT(r.t):"")):(d!=null?"~"+fmt(d):"");
-  if(arr&&!arrived[i]){arrived[i]=1;try{navigator.vibrate&&navigator.vibrate([700,150,700,150,700,150,1200])}catch(e){}beep();notify(t("arrived")+" #"+rk(i),s.phone||"",i)}
-  if(!arr)delete arrived[i];
- });
-}
-function rk(j){var k=order.indexOf(j);return k<0?j+1:k+1}
-function pkey(p){var d=fix(p);return d.length>=8?d.slice(-8):""}
-function dupMsg(i,l,p,c){var m=[],k=pkey(p);
- slots.forEach(function(s,j){if(!s||j===i)return;
-  if(k&&s.phone&&pkey(s.phone)===k)m.push(t("dupPhone")+rk(j));
-  if(c&&s.lat!=null&&dist(c,s)<0.03)m.push(t("dupLoc")+rk(j));
-  else if(l&&s.link&&s.link.trim()===l.trim())m.push(t("dupLink")+rk(j));
- });return m}
-function resolveW(l){return fetch(RESOLVER+"?u="+encodeURIComponent(l)).then(function(r){return r.json()}).then(function(j){return j&&j.lat!=null?{lat:j.lat,lng:j.lng}:null}).catch(function(){return null})}
-function resolve(l){return resolveW(l).then(function(r){if(r||!window.nsNatResolve)return r;return window.nsNatResolve(l).then(function(c){return c&&!(me&&dist(me,c)>500)?c:null})})}
-function resetTop(){F("al").value="";F("ap").value="";F("aw").textContent="";F("asv").textContent=t("save");editI=null;warnedTop="";updCancel()}
-function updCancel(){F("acn").style.display=(editI!=null||F("al").value||F("ap").value||F("aw").textContent)?"":"none"}
-function cleanLink(x){var m=String(x||"").match(/https?:\/\/[^\s<>"']+/i);if(!m)return x;var u=m[0].replace(/[.,;)\]]+$/,"");var g=u.match(/^https?:\/\/(?:maps\.app\.goo\.gl|goo\.gl\/maps)\/[A-Za-z0-9_-]+/i);return g?g[0]:u}
-function digitsOnly(x){return norm(x||"").replace(/\D/g,"")}
-function phoneLike(x){var v=norm(x||"").trim();if(!v||/https?:|[a-zA-Z]/.test(v))return false;if(!/^[+\d\s().\-]+$/.test(v))return false;var n=digitsOnly(v);return n.length>=7&&n.length<=15}
-function normPhone(x){var v=norm(x||"").trim().replace(/\s+/g," ");var d=digitsOnly(v).replace(/^00/,"");if(d.length===11&&d.indexOf("968")===0)d=d.slice(3);if(d.length===8)return "+968 "+d.slice(0,4)+" "+d.slice(4);return v}
-function addTop(){
- var l0=F("al").value.trim(),l=cleanLink(l0),p=F("ap").value.trim();if(l!==l0)F("al").value=l;
- if(!l&&!p){F("aw").textContent=t("enter");return}
- if(l&&phoneLike(l)&&!parse(l)){F("aw").textContent="⚠️ "+t("badLink");updCancel();return}
- if(p&&!phoneLike(p)){F("aw").textContent="⚠️ "+t("badPhone");updCancel();return}
- if(p){p=normPhone(p);F("ap").value=p}
- var c=parse(l);
- if(!c&&RESOLVER&&/^https?:\/\//i.test(l)){
-  var b=F("asv");b.textContent=t("reading");b.disabled=true;
-  resolve(l).then(function(r){b.disabled=false;b.textContent=editI!=null?t("saveEdit"):t("save");saveTop(r,true)});return}
- saveTop(c,false);
-}
-function saveTop(c,tried){
- var l=F("al").value.trim(),p=F("ap").value.trim();
- var i=editI!=null?editI:slots.indexOf(null);
- if(i<0){F("aw").textContent=t("full1")+N+t("full2");return}
- var m=dupMsg(i,l,p,c),sig=m.join("|");
- if(m.length&&warnedTop!==sig){warnedTop=sig;F("aw").textContent="⚠️ "+m.join(" • ");F("asv").textContent=t("saveAnyway");return}
- var old=slots[i];
- slots[i]={link:l,phone:p,lat:c?c.lat:null,lng:c?c.lng:null,late:!!(old&&old.late)};
- delete road[i];save();editInl=null;resetTop();calc();render();
- if(!c&&/^https?:/i.test(l)){try{navigator.vibrate&&navigator.vibrate(80)}catch(e){}}
- var sm=(tried&&!c&&l)?t("noread"):t("savedAt")+rk(i);st(sm);
- if(me&&c)loadRoads(function(){calc();render();if(F("gps").textContent===sm)st(t("savedAt")+rk(i))});
-}
-function ed(i){var s=slots[i];if(!s)return;if(editInl!=null){editInl=null;render()}var c=F("c"+i);if(!c)return;editInl=i;
- ["ph","row","rt"].forEach(function(k){var e=c.querySelector("."+k);if(e)e.style.display="none"});
- var d=document.createElement("div");d.className="ei";d.id="ei"+i;
- d.innerHTML='<input id="eil" inputmode="url" placeholder="'+esc(t("phLink"))+'"><input id="eip" inputmode="tel" placeholder="'+esc(t("phPhone"))+'"><div class="arow"><button class="g" id="eis" style="flex:1" onclick="saveIn('+i+')">'+t("saveEdit")+'</button><button class="g" onclick="cancelIn()">'+t("cancel")+'</button></div><div class="ew" id="eiw"></div>';
- c.appendChild(d);F("eil").value=s.link||"";F("eip").value=s.phone||"";F("eil").focus()}
-function cancelIn(){editInl=null;render()}
-function saveIn(i){var s=slots[i];if(!s)return;var l0=F("eil").value.trim(),l=cleanLink(l0),p=F("eip").value.trim(),w=F("eiw");
- if(!l&&!p){w.textContent=t("enter");return}
- if(l&&phoneLike(l)&&!parse(l)){w.textContent="⚠️ "+t("badLink");return}
- if(p&&!phoneLike(p)){w.textContent="⚠️ "+t("badPhone");return}
- if(p)p=normPhone(p);
- var changed=l!==(s.link||"");
- var fin=function(c){slots[i]={link:l,phone:p,lat:c?c.lat:(changed?null:s.lat),lng:c?c.lng:(changed?null:s.lng),late:!!s.late};delete road[i];save();editInl=null;render();
-  if(!slots[i].lat&&/^https?:/i.test(l)){try{navigator.vibrate&&navigator.vibrate(80)}catch(e){}st(t("noread"))}else st(t("saved"));
-  if(me&&slots[i]&&slots[i].lat!=null)loadRoads(function(){render()})};
- var c=parse(l);
- if(c||!l||!RESOLVER||!/^https?:\/\//i.test(l)){fin(c)}else{var b=F("eis");b.disabled=true;b.textContent=t("reading");resolve(l).then(function(r){fin(r)})}}
-function retry(i){var s=slots[i];if(!s)return;editInl=null;
- var fin=function(r){if(r&&r.lat!=null){s.lat=r.lat;s.lng=r.lng;delete road[i];save();calc();render();st(t("retryOk"));try{navigator.vibrate&&navigator.vibrate(60)}catch(e){}if(me)loadRoads(function(){calc();render()})}else{st(t("retryNo"));try{navigator.vibrate&&navigator.vibrate([80,60,80])}catch(e){}}};
- var c=parse(s.link);if(c)fin(c);else if(RESOLVER)resolve(s.link).then(fin);else fin(null)}
-function cancelTop(){resetTop()}
-var undoS=null,undoT=null;
-function hideToast(){F("tz").className="";F("tzi").className="";if(undoT){clearTimeout(undoT);undoT=null}}
-function done(i){var s=slots[i];if(!s)return;editInl=null;var n=rk(i);undoS={i:i,s:s,a:arrived[i]};slots[i]=null;delete road[i];delete arrived[i];save();calc();render();
- F("tzm").textContent=t("doneMsg")+" #"+n;F("tz").className="on";var b=F("tzi");b.className="";void b.offsetWidth;b.className="run";
- if(undoT)clearTimeout(undoT);undoT=setTimeout(function(){undoS=null;hideToast()},10000)}
-function undoDone(){editInl=null;var u=undoS;hideToast();undoS=null;if(!u)return;var i=slots[u.i]===null||slots[u.i]===undefined?u.i:slots.indexOf(null);if(i<0)return;slots[i]=u.s;if(u.a)arrived[i]=u.a;save();calc();render();st(t("saved"));if(me&&u.s.lat!=null)loadRoads(function(){calc();render()});}
-function lt(i){editInl=null;slots[i].late=!slots[i].late;save();calc();render()}
-var CPI='<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="3"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>';
-var shP="",shR="";
-function shGo(u){document.getElementById("bk").classList.remove("on");setTimeout(function(){try{window.location.href=u}catch(e){}},60)}
-function waIntent(pkg){return "intent://send/?phone="+shP+"#Intent;scheme=whatsapp;package="+pkg+";end"}
-function openSheet(i){
- var s=slots[i];if(!s||!s.phone)return;var p=fix(s.phone);
- document.getElementById("shn").textContent=s.phone;
- shP=p;shR=(function(x){var d=String(x||"").replace(/[\u0660-\u0669]/g,function(c){return c.charCodeAt(0)-1632}).replace(/\D/g,"").replace(/^00/,"");if(d.length>8&&d.indexOf("968")===0)d=d.slice(3);return d})(s.phone);
- var c4=document.getElementById("sh4");if(c4){c4.classList.remove("cpd");document.getElementById("cpl").textContent=t("copy")}
- document.getElementById("bk").classList.add("on");
-}
-["sh1","sh2","sh3"].forEach(function(id){var a=document.getElementById(id);a.setAttribute("href","#");a.addEventListener("click",function(e){e.preventDefault();e.stopPropagation();if(!shP)return;shGo(id==="sh1"?"tel:+"+shP:id==="sh2"?(WAPP==="a"?"whatsapp://send?phone="+shP:waIntent(WAPP==="b"?"com.whatsapp.w4b":"com.whatsapp")):"sms:+"+shP)})});
-(function(){var a=document.getElementById("sh4");a.setAttribute("href","#");a.addEventListener("click",function(e){e.preventDefault();e.stopPropagation();if(!shR)return;var b=document.getElementById("cpl");
- copyTxt(String(shR),function(){b.textContent=t("copied");a.classList.add("cpd")})})})();
-var L=document.getElementById("list");
-function copyTxt(tx,done){function fb(){try{var x=document.createElement("textarea");x.value=tx;x.style.position="fixed";x.style.opacity="0";document.body.appendChild(x);x.select();document.execCommand("copy");document.body.removeChild(x);done()}catch(err){}}
- try{if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(tx).then(done,fb)}else fb()}catch(err){fb()}}
-L.addEventListener("click",function(e){var b=e.target.closest(".ph");if(b)openSheet(+b.dataset.i)});
-L.addEventListener("contextmenu",function(e){var b=e.target.closest(".ph");if(b){e.preventDefault();openSheet(+b.dataset.i)}});
-document.getElementById("bk").addEventListener("click",function(e){if(e.target.id==="bk")this.classList.remove("on")});
-var wid=null,gpsAt=0,gpsAcc=0,lastAP=null,lastAT=0;
-function onPos(p){
- var first=!me;
- me={lat:p.coords.latitude,lng:p.coords.longitude};gpsAt=Date.now();gpsAcc=p.coords.accuracy||0;
- if(first){loadRoads(function(ok){calc();render();st(ok?t("okRoad"):t("okLine"))})}else if(AUTO&&lastAP&&dist(me,lastAP)>0.3&&Date.now()-lastAT>45000){loadRoads(function(ok){calc();render()})}else{paint()}
-}
-function startWatch(){
- if(watching||!navigator.geolocation)return;watching=true;
- wid=navigator.geolocation.watchPosition(onPos,function(e){if(e&&e.code===1){watching=false;wid=null;st(t("permErr"))}else{st(t("fixing"));setTimeout(restartWatch,3000)}},{enableHighAccuracy:true,maximumAge:2000,timeout:30000});
-}
-function restartWatch(){try{if(wid!=null)navigator.geolocation.clearWatch(wid)}catch(e){}wid=null;watching=false;startWatch()}
-function wakeUp(){
- if(!navigator.geolocation||!me)return;
- if(Date.now()-gpsAt>4000)st(t("fixing"));
- restartWatch();
- navigator.geolocation.getCurrentPosition(function(p){onPos(p);st(t("hint2"))},function(){},{enableHighAccuracy:true,maximumAge:0,timeout:10000});
-}
-function locate(){
- if(!navigator.geolocation){st(t("nogeo"));return}
- st(t("locating"));
- navigator.geolocation.getCurrentPosition(function(p){
-  me={lat:p.coords.latitude,lng:p.coords.longitude};
-  var acc=Math.round(p.coords.accuracy);st(t("roads"));loadRoads(function(ok){calc(true);render();st(t("acc1")+acc+t("acc2")+(ok?t("byRoad"):t("byLine")))});startWatch();
- },function(){st(t("locErr"))},{enableHighAccuracy:true,maximumAge:0,timeout:20000});
-}
-function refreshList(){
- function go(){st(t("roads"));loadRoads(function(ok){calc(true);render();st(me?(ok?t("sortedRoad"):t("sortedLine")):t("needLoc"))})}
- if(!navigator.geolocation){go();return}
- st(t("updating"));
- navigator.geolocation.getCurrentPosition(function(p){me={lat:p.coords.latitude,lng:p.coords.longitude};go();startWatch()},function(){go()},{enableHighAccuracy:true,maximumAge:15000,timeout:8000});
-}
+on:
+  workflow_dispatch:
 
-var MODE="auto",ACC="purple",AUTO=true;
-try{MODE=localStorage.getItem("mode")||"auto";ACC=localStorage.getItem("acc")||"purple";AUTO=localStorage.getItem("auto")!=="0"}catch(e){}
-var ACCS={purple:["#4c1d95","#8b5cf6"],blue:["#2563eb","#3b82f6"],teal:["#0f766e","#14b8a6"],navy:["#1e3a5f","#4a7ab8"],slate:["#374151","#7c8594"]};
-function isDark(){return MODE==="dark"||(MODE==="auto"&&window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches)}
-function applyTheme(){
- var r=document.documentElement;if(MODE==="auto")r.removeAttribute("data-theme");else r.setAttribute("data-theme",MODE);
- var a=ACCS[ACC]||ACCS.purple;r.style.setProperty("--pri",a[isDark()?1:0]);
- var m=document.querySelector('meta[name="theme-color"]');if(m)m.content=isDark()?"#0f1115":a[0];
- syncSet();
-}
-function setMode(v){MODE=v;try{localStorage.setItem("mode",v)}catch(e){}applyTheme()}
-function setAcc(k){ACC=k;try{localStorage.setItem("acc",k)}catch(e){}applyTheme()}
-function setAuto(v){AUTO=!!v;try{localStorage.setItem("auto",v?"1":"0")}catch(e){}applyAuto();if(!AUTO){calc(true)}else{calc()}render();syncSet()}
-function applyAuto(){var b=document.querySelector(".top2 .o");if(b)b.style.display=AUTO?"none":""}
-function tgI(k){var e=F("ih_"+k);if(e)e.classList.toggle("show")}
-(function(){
- var h="";Object.keys(ACCS).forEach(function(k){h+='<button id="ac_'+k+'" onclick="setAcc(\''+k+'\')" aria-label="'+k+'"></button>'});
- F("acc").innerHTML=h;
- var _ss=syncSet;syncSet=function(){_ss();
-  F("mo1").className=MODE==="auto"?"on":"";F("mo2").className=MODE==="light"?"on":"";F("mo3").className=MODE==="dark"?"on":"";
-  F("au1").className=AUTO?"on":"";F("au2").className=AUTO?"":"on";
-  Object.keys(ACCS).forEach(function(k){var b=F("ac_"+k);b.style.background=ACCS[k][isDark()?1:0];b.className=k===ACC?"on":""});
- };
- try{var mq=matchMedia("(prefers-color-scheme: dark)");if(mq.addEventListener)mq.addEventListener("change",applyTheme)}catch(e){}
-})();
-applyTheme();applyAuto();document.body.style.zoom=ZM/100;applyLang();syncSet();checkGate();wake();try{var qo=new URLSearchParams(location.search).get("open");if(qo!=null){openFromNotif(qo);history.replaceState(null,"",location.pathname)}}catch(e){}st(t("hint"));calc();render();startWatch();
+env:
+  NS_VERSION: "1.2"   # change this number for every update: 1.1, 1.2, 1.3 ...
 
-/* ===== usage panel (name + stop count + minutes; no customer data) ===== */
-var PANEL_URL="https://nextstop-panel.sosona3011.workers.dev/ping";
-(function(){
- var id,who="",asked=false,adds=0,lastN=-1,lastP=0,busy=false;
- try{
-  id=localStorage.getItem("nsid");if(!id){id=Math.random().toString(36).slice(2,10)+Math.random().toString(36).slice(2,6);localStorage.setItem("nsid",id)}
-  who=localStorage.getItem("nswho")||"";asked=localStorage.getItem("nsask")==="1";
- }catch(e){id="x"+Math.random().toString(36).slice(2,8)}
- function cnt(){var n=0;for(var i=0;i<slots.length;i++)if(slots[i])n++;return n}
- function ov(html){var o=document.getElementById("nsov");if(!o){o=document.createElement("div");o.id="nsov";o.style.cssText="position:fixed;inset:0;z-index:99999;background:rgba(15,10,30,.92);display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;color:#fff;font-family:inherit";document.body.appendChild(o)}o.innerHTML=html;o.style.display="flex"}
- function hide(){var o=document.getElementById("nsov");if(o)o.style.display="none"}
- function paused(){ov('<div style="max-width:340px"><div style="font-size:44px">⏸️</div><div style="font-size:20px;font-weight:700;margin:10px 0">'+t("pausedT")+'</div><div style="opacity:.85;line-height:1.7;margin-bottom:16px">'+t("pausedM")+'</div><button id="nsretry" style="padding:12px 22px;border:0;border-radius:12px;background:#8b5cf6;color:#fff;font-size:16px">'+t("retry")+'</button></div>');document.getElementById("nsretry").onclick=function(){ping(true)}}
- function ping(force){
-  if(busy)return;var now=Date.now();if(!force&&now-lastP<60000)return;
-  var n=cnt();if(lastN>=0&&n>lastN)adds+=n-lastN;lastN=n;var a=adds;busy=true;lastP=now;
-  fetch(PANEL_URL,{method:"POST",headers:{"Content-Type":"text/plain"},body:JSON.stringify({id:id,name:who,added:a})})
-   .then(function(r){return r.json()})
-   .then(function(j){adds-=a;if(j&&j.enabled===false)paused();else if(document.getElementById("nsov")&&!document.getElementById("nsask"))hide()})
-   .catch(function(){}).then(function(){busy=false});
- }
- function askName(){
-  ov('<div style="max-width:340px"><div style="font-size:20px;font-weight:700;margin-bottom:8px">'+t("nameQ")+'</div><div style="opacity:.85;line-height:1.7;margin-bottom:14px;font-size:14px">'+t("nameHint")+'</div><input id="nsask" maxlength="24" style="width:100%;box-sizing:border-box;padding:12px;border-radius:10px;border:0;font-size:16px;text-align:center;margin-bottom:12px"><div><button id="nsok" style="padding:12px 22px;border:0;border-radius:12px;background:#8b5cf6;color:#fff;font-size:16px;margin:4px">'+t("nameOk")+'</button><button id="nsno" style="padding:12px 18px;border:0;border-radius:12px;background:transparent;color:#fff;font-size:15px;margin:4px;opacity:.8">'+t("nameSkip")+'</button></div></div>');
-  function done(v){who=v;try{localStorage.setItem("nswho",who);localStorage.setItem("nsask","1")}catch(e){}asked=true;hide();var el=document.getElementById("nsask");if(el)el.id="";ping(true)}
-  document.getElementById("nsok").onclick=function(){done((document.getElementById("nsask").value||"").trim().slice(0,24))};
-  document.getElementById("nsno").onclick=function(){done("")};
- }
- if(!asked)askName();else ping(true);
- setInterval(function(){if(document.visibilityState==="visible"&&asked)ping(true)},300000);
- document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible"&&asked)ping(false)});
-})();
-</script>
-<script id="v12">
-(function(){
-var APPV="1.2";
-function G(id){return document.getElementById(id)}
-function isNative(){try{return !!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform())}catch(e){return false}}
-/* ===== staged settings: nothing changes until "Done / Save" ===== */
-var PD=null;
-function has(){return !!PD&&Object.keys(PD).length>0}
-function stg(k,v){if(!PD)PD={};PD[k]=v;syncSet()}
-var oLang=setLang,oMode=setMode,oAcc=setAcc,oAuto=setAuto,oUn=setUnits,oSnd=setSnd,oWapp=setWapp,oWake=setWake,oOpen=openSet,_sy=syncSet;
-setLang=function(v){stg("lang",v==="en"?"en":"ar")};
-setMode=function(v){stg("mode",v)};
-setAcc=function(k){stg("acc",k)};
-setAuto=function(v){stg("auto",!!v)};
-setUnits=function(v){stg("un",v==="i"?"i":"m")};
-setZoom=function(v){stg("zm",parseInt(v,10)||100)};
-setSnd=function(v){stg("snd",!!v)};
-setWapp=function(v){stg("wapp",v)};
-setWake=function(v){stg("wl",!!v)};
-syncSet=function(){
- if(!has()){_sy();return}
- var sv={LANG:LANG,MODE:MODE,ACC:ACC,AUTO:AUTO,UN:UN,ZM:ZM,SND:SND,WAPP:WAPP,WL:WL},p=PD;
- if(p.lang!==undefined)LANG=p.lang;if(p.mode!==undefined)MODE=p.mode;if(p.acc!==undefined)ACC=p.acc;if(p.auto!==undefined)AUTO=p.auto;
- if(p.un!==undefined)UN=p.un;if(p.zm!==undefined)ZM=p.zm;if(p.snd!==undefined)SND=p.snd;if(p.wapp!==undefined)WAPP=p.wapp;if(p.wl!==undefined)WL=p.wl;
- try{_sy()}finally{LANG=sv.LANG;MODE=sv.MODE;ACC=sv.ACC;AUTO=sv.AUTO;UN=sv.UN;ZM=sv.ZM;SND=sv.SND;WAPP=sv.WAPP;WL=sv.WL}
- if(p.lang!==undefined)G("lang").value=p.lang;
-};
-window.saveSet=function(){
- var p=PD;PD=null;
- if(p){
-  if(p.mode!==undefined)oMode(p.mode);
-  if(p.acc!==undefined)oAcc(p.acc);
-  if(p.un!==undefined)oUn(p.un);
-  if(p.zm!==undefined){ZM=p.zm;try{localStorage.setItem("zoom",ZM)}catch(e){}document.body.style.zoom=ZM/100}
-  if(p.snd!==undefined)oSnd(p.snd);
-  if(p.wapp!==undefined)oWapp(p.wapp);
-  if(p.wl!==undefined)oWake(p.wl);
-  if(p.auto!==undefined)oAuto(p.auto);
-  if(p.lang!==undefined)oLang(p.lang);
- }
- G("sa").style.display="none";G("ov").className="";syncSet();
-};
-window.discardSet=function(){PD=null;G("sa").style.display="none";G("ov").className="";G("lang").value=LANG;syncSet()};
-closeSet=function(){if(has()){G("sa").style.display="flex";return}G("ov").className=""};
-openSet=function(){PD=null;G("sa").style.display="none";G("lang").value=LANG;oOpen();refreshBg()};
-/* ===== search: icon hides while typing, only the clear (X) stays ===== */
-var oas=applySearch;
-applySearch=function(){oas();try{G("sb").classList.toggle("has",!!G("sq").value)}catch(e){}};
-/* ===== navigate button copies the customer number ===== */
-function cleanNum(x){var d=String(x||"").replace(/[٠-٩]/g,function(c){return c.charCodeAt(0)-1632}).replace(/\D/g,"").replace(/^00/,"");if(d.length>8&&d.indexOf("968")===0)d=d.slice(3);return d}
-G("list").addEventListener("click",function(e){
- var a=e.target.closest&&e.target.closest("a.b");if(!a||a.dataset.i==null)return;
- var s=slots[+a.dataset.i];if(!s||!s.phone)return;
- var n=cleanNum(s.phone);if(!n)return;
- copyTxt(n,function(){try{st(t("navCp"))}catch(x){}});
-},true);
-/* ===== copy sheet closes by itself when you come back from another app ===== */
-var shLeft=false;
-document.addEventListener("visibilitychange",function(){
- var bk=G("bk");
- if(document.hidden){if(bk&&bk.classList.contains("on"))shLeft=true}
- else if(shLeft){shLeft=false;if(bk)bk.classList.remove("on")}
-});
-/* ===== trip log (for the accuracy study) ===== */
-var LOGK="ns_log";
-function lg(o){try{var a=JSON.parse(localStorage.getItem(LOGK)||"[]");a.push(o);if(a.length>800)a=a.slice(-800);localStorage.setItem(LOGK,JSON.stringify(a))}catch(e){}}
-function liveList(){return order.filter(function(j){return slots[j]})}
-function r4(x){return x==null?"":Math.round(x*10000)/10000}
-var op=paint;
-paint=function(){
- var before={};for(var k in arrived)before[k]=1;
- op();
- for(var k2 in arrived){if(!before[k2]&&slots[k2]){var L=liveList();
-  lg({t:Date.now(),k:"arr",r:L.indexOf(+k2)+1,n:L.length,d:Math.round(dd(+k2)),d1:L.length?Math.round(dd(L[0])):"",ml:me?r4(me.lat):"",mg:me?r4(me.lng):"",sl:r4(slots[k2].lat),sg:r4(slots[k2].lng),bg:document.hidden?1:0})}}
-};
-var od=done;
-done=function(i){
- try{var s=slots[i];if(s){var L=liveList();
-  lg({t:Date.now(),k:"done",r:L.indexOf(i)+1,n:L.length,d:Math.round(dd(i)),d1:L.length?Math.round(dd(L[0])):"",ml:me?r4(me.lat):"",mg:me?r4(me.lng):"",sl:r4(s.lat),sg:r4(s.lng),bg:document.hidden?1:0})}}catch(e){}
- od(i);
-};
-window.exportLog=function(){
- var a=[];try{a=JSON.parse(localStorage.getItem(LOGK)||"[]")}catch(e){}
- if(!a.length){st(t("logNo"));return}
- var off=new Date().getTimezoneOffset()*60000;
- var rows=["time,type,rank,total,dist_m,dist1_m,me_lat,me_lng,stop_lat,stop_lng,bg"];
- a.forEach(function(x){rows.push([new Date(x.t-off).toISOString().slice(0,19),x.k,x.r,x.n,x.d,x.d1,x.ml,x.mg,x.sl,x.sg,x.bg].join(","))});
- copyTxt(rows.join("\n"),function(){st(t("logOk"))});
-};
-/* ===== background tracking status + notification test (native app only) ===== */
-function refreshBg(){
- var sec=G("bgsec");if(!sec)return;
- if(!isNative()){sec.style.display="none";return}
- sec.style.display="";
- var ar=LANG==="ar",x=[];
- if(window.__nsBgAt){var sc=Math.round((Date.now()-window.__nsBgAt)/1000);x.push(ar?"آخر موقع من الخدمة: قبل "+sc+" ث":"Last fix from the service: "+sc+" s ago")}
- else x.push(ar?"الخدمة لسا ما أرسلت موقع":"The service has not sent a location yet");
- var h=0;try{h=+localStorage.getItem("ns_bgh")||0}catch(e){}
- if(h){var d=new Date(h);var hh=("0"+d.getHours()).slice(-2)+":"+("0"+d.getMinutes()).slice(-2);x.push(ar?"وصلك موقع وأنت خارج التطبيق: "+hh+" ✅":"Location received while outside the app: "+hh+" ✅")}
- else x.push(ar?"لسا ما وصل موقع وأنت خارج التطبيق ❌":"No location received while outside the app yet ❌");
- if(window.__nsNatDbg)x.push((ar?"آخر قراءة رابط: ":"Last link read: ")+String(window.__nsNatDbg).replace(/</g,"&lt;"));
- G("bgst").innerHTML=x.join("<br>");
-}
-window.testNotif=function(){if(window.nsTestNotif)window.nsTestNotif();else st(t("tnX"))};
-/* ===== in-app update prompt ===== */
-var UPK="ns_skip",UPT=0,upState=null;
-function vnum(s){return String(s||"").split(".").map(function(x){return parseInt(x,10)||0})}
-function newer(a,b){var x=vnum(a),y=vnum(b);for(var i=0;i<4;i++){if((x[i]||0)!==(y[i]||0))return (x[i]||0)>(y[i]||0)}return false}
-function skipN(v){try{var d=JSON.parse(localStorage.getItem(UPK)||"{}");return d.v===v?(d.n||0):0}catch(e){return 0}}
-function showUp(v){
- var blk=skipN(v)>=3;
- G("upT").textContent=t(blk?"reqT":"updT");
- G("upM").textContent=t(blk?"reqM":"updM")+" (v"+v+")";
- G("upN").textContent=t("reqN");G("upN").style.display=blk?"block":"none";
- G("upS").style.display=blk?"none":"";
- G("up").style.display="flex";upState={v:v,blk:blk};
-}
-window.upOk=function(){try{window.location.href="https://t.me/NextStopAPK"}catch(e){}};
-window.upSkip=function(){if(!upState)return;try{localStorage.setItem(UPK,JSON.stringify({v:upState.v,n:skipN(upState.v)+1}))}catch(e){}G("up").style.display="none";upState=null};
-function checkUpd(){
- if(!isNative())return;
- UPT=Date.now();
- var ctl=window.AbortController?new AbortController():null,to=setTimeout(function(){try{if(ctl)ctl.abort()}catch(e){}},8000);
- fetch("https://api.github.com/repos/Abu9alim/Abu9alim-1/releases/latest",{cache:"no-store",signal:ctl?ctl.signal:undefined})
- .then(function(r){return r.ok?r.json():null})
- .then(function(j){clearTimeout(to);if(!j)return;
-  var m=String((j.name||"")+" "+(j.tag_name||"")).match(/v?(\d+(?:\.\d+)+)/);if(!m)return;
-  var v=m[1];
-  if(newer(v,APPV)){if(!(upState&&upState.v===v))showUp(v)}
-  else{G("up").style.display="none";upState=null}
- }).catch(function(){});
-}
-setTimeout(checkUpd,2500);
-document.addEventListener("visibilitychange",function(){if(!document.hidden&&Date.now()-UPT>600000)checkUpd();else if(!document.hidden&&upState&&upState.blk)checkUpd()});
-applyLang();
-})();
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Get the files from the repo
+        uses: actions/checkout@v4
 
-</script>
-<script>
-(function(){var K="ns_scr",tm=null;function sv(){try{localStorage.setItem(K,String(Math.round(window.scrollY)))}catch(e){}}
- window.addEventListener("scroll",function(){clearTimeout(tm);tm=setTimeout(sv,250)},{passive:true});
- document.addEventListener("visibilitychange",function(){if(document.hidden)sv()});window.addEventListener("pagehide",sv);
- var y=0;try{y=+localStorage.getItem(K)||0}catch(e){}
- if(y>0){var n=0,iv=setInterval(function(){n++;if(document.documentElement.scrollHeight>y+window.innerHeight||n>20){window.scrollTo(0,y);clearInterval(iv)}},150)}
-})();
-</script>
-</body>
-</html>
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Prepare the app project
+        run: |
+          mkdir -p app/www
+          cd app
+          cat > package.json <<'EOF'
+          {
+            "name": "nextstop",
+            "version": "1.0.0",
+            "private": true,
+            "dependencies": {
+              "@capacitor/android": "^6.2.0",
+              "@capacitor/cli": "^6.2.0",
+              "@capacitor/core": "^6.2.0",
+              "@capacitor/clipboard": "^6.0.0",
+              "@capacitor/local-notifications": "^6.1.0",
+              "@capacitor-community/background-geolocation": "^1.2.20"
+            }
+          }
+          EOF
+          cat > capacitor.config.json <<'EOF'
+          {
+            "appId": "com.abu9alim.nextstop",
+            "appName": "NextStop",
+            "webDir": "www",
+            "server": { "androidScheme": "https" }
+          }
+          EOF
+          cp ../delivery-final.html www/index.html
+          sed -i "s/v[0-9.]* BETA/v${NS_VERSION} BETA/" www/index.html
+          sed -i "s/var APPV=\"[0-9.]*\"/var APPV=\"${NS_VERSION}\"/" www/index.html
+          grep -c "APPV=\"${NS_VERSION}\"" www/index.html
+          cp ../manifest.json www/manifest.json || true
+          cp ../sw.js www/sw.js || true
+          cp ../icon-192.png www/ || true
+          cp ../icon-512.png www/ || true
+          cat > www/native.js <<'EOF'
+          /* NextStop - native Android layer. Runs only inside the Android app, never in the browser. */
+          (function(){
+          var C=window.Capacitor;
+          if(!C||!C.isNativePlatform||!C.isNativePlatform())return;
+          var BG=C.registerPlugin("BackgroundGeolocation");
+          var LN=C.registerPlugin("LocalNotifications");
+          var bgId=null;
+
+          /* 1) no browser-notification gate inside the app */
+          window.checkGate=function(){var g=document.getElementById("gate");if(g)g.className=""};
+          try{window.checkGate()}catch(e){}
+
+          /* 2) background location: keeps running with the screen off or another app open */
+          window.startWatch=function(){
+           if(bgId!==null)return;
+           bgId="pending";
+           try{
+            BG.addWatcher({
+             backgroundTitle:"NextStop",
+             backgroundMessage:"\u064a\u062a\u0627\u0628\u0639 \u0645\u0648\u0642\u0639\u0643 \u0644\u062a\u0646\u0628\u064a\u0647 \u0627\u0644\u0648\u0635\u0648\u0644",
+             requestPermissions:true,
+             stale:false,
+             distanceFilter:5
+            },function(loc,err){
+             if(err){
+              if(err.code==="NOT_AUTHORIZED"){try{st(t("permErr"))}catch(e){}try{BG.openSettings()}catch(e){}}
+              return;
+             }
+             if(loc){
+              window.__nsBgAt=Date.now();
+              if(document.hidden){try{localStorage.setItem("ns_bgh",String(Date.now()))}catch(e){}}
+              onPos({coords:{latitude:loc.latitude,longitude:loc.longitude}});
+             }
+            }).then(function(id){bgId=id}).catch(function(){bgId=null});
+           }catch(e){bgId=null}
+          };
+          window.restartWatch=function(){};
+          window.wakeUp=function(){};
+
+          /* 3) arrival notification with Call / WhatsApp / SMS buttons */
+          try{LN.requestPermissions()}catch(e){}
+          try{LN.createChannel({id:"arrive2",name:"Arrival",description:"Arrival alerts",importance:5,visibility:1,vibration:true})}catch(e){}
+          try{LN.registerActionTypes({types:[{id:"ARRIVE",actions:[
+           {id:"call",title:"\u0627\u062a\u0635\u0627\u0644",foreground:true},
+           {id:"wa",title:"\u0648\u0627\u062a\u0633\u0627\u0628",foreground:true},
+           {id:"sms",title:"\u0631\u0633\u0627\u0644\u0629",foreground:true}
+          ]}]})}catch(e){}
+          var chOk=false;
+          function ensureCh(){
+           if(chOk)return Promise.resolve();
+           return LN.createChannel({id:"arrive2",name:"Arrival",description:"Arrival alerts",importance:5,visibility:1,vibration:true}).then(function(){chOk=true},function(){chOk=true});
+          }
+          window.nsNatResolve=function(l){
+           function okc(c){
+            if(!c||isNaN(c.lat)||isNaN(c.lng)||Math.abs(c.lat)>90||Math.abs(c.lng)>180)return false;
+            try{if(me&&dist(me,c)>500)return false}catch(e){}
+            return true;
+           }
+           try{
+            var H=C.registerPlugin("CapacitorHttp");
+            return H.get({url:l,headers:{
+             "User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+             "Accept-Language":"ar,en;q=0.8",
+             "Cookie":"CONSENT=YES+cb; SOCS=CAI"
+            }}).then(function(r){
+             var fu=String((r&&r.url)||""),d=(r&&typeof r.data==="string")?r.data:"",why="";
+             var cands=[];
+             try{cands.push(["url",parse(fu)])}catch(e){}
+             var tm=d.match(/<title>([^<]*)<\/title>/i)||d.match(/property="og:title" content="([^"]*)"/i);
+             if(tm){try{cands.push(["title",parse(tm[1])])}catch(e){}}
+             var m=d.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/);if(m)cands.push(["3d4d",{lat:+m[1],lng:+m[2]}]);
+             var weak=[];
+             m=d.match(/center=(-?\d+\.\d+)(?:%2C|%252C|,)(-?\d+\.\d+)/);if(m)weak.push("center="+m[1]+","+m[2]);
+             m=d.match(/APP_INITIALIZATION_STATE=\[\[\[[\d.]+,(-?\d+\.\d+),(-?\d+\.\d+)\]/);if(m)weak.push("appinit="+m[2]+","+m[1]);
+             var got=null;
+             for(var k=0;k<cands.length;k++){if(okc(cands[k][1])){got=cands[k][1];why=cands[k][0];break}}
+             window.__nsNatDbg="HTTP "+(r&&r.status)+" | "+d.length+" | "+(got?("OK "+why):("NO "+cands.filter(function(x){return x[1]}).map(function(x){return x[0]}).join(",")))+" | "+weak.join(" ")+" | "+fu.slice(0,60);
+             return got;
+            }).catch(function(e){window.__nsNatDbg="ERR "+String(e&&e.message||e).slice(0,80);return null});
+           }catch(e){window.__nsNatDbg="EXC "+String(e);return Promise.resolve(null)}
+          };
+          window.nsTestNotif=function(){
+           try{
+            LN.checkPermissions().then(function(r){
+             if(!r||r.display!=="granted")return LN.requestPermissions();
+             return r;
+            }).then(function(r){
+             if(r&&r.display&&r.display!=="granted")throw new Error("NOPERM");
+             return ensureCh();
+            }).then(function(){
+             return LN.schedule({notifications:[{
+              id:Math.floor(Date.now()%2000000000),
+              title:"NextStop",body:"\u2705 \u0627\u0644\u0625\u0634\u0639\u0627\u0631 \u064a\u0634\u062a\u063a\u0644",
+              channelId:"arrive2",
+              schedule:{at:new Date(Date.now()+10000),allowWhileIdle:true}
+             }]});
+            }).then(function(){try{st(t("tnW"))}catch(e){}}).catch(function(e){
+             try{st("\u26a0\ufe0f "+String(e&&e.message||e))}catch(x){}
+            });
+           }catch(e){}
+          };
+          window.notify=function(title,body,i){
+           try{
+            LN.checkPermissions().then(function(r){
+             if(!r||r.display!=="granted")return LN.requestPermissions();
+             return r;
+            }).then(function(r){
+             if(r&&r.display&&r.display!=="granted")throw new Error("NOPERM");
+             return ensureCh();
+            }).then(function(){
+             return LN.schedule({notifications:[{
+              id:Math.floor(Date.now()%2000000000),
+              title:title,body:body||"",
+              channelId:"arrive2",
+              actionTypeId:"ARRIVE",
+              extra:{i:i}
+             }]});
+            }).catch(function(e){
+             window.__nsNErr=String(e&&e.message||e);
+             try{st("\u26a0\ufe0f \u062a\u0639\u0630\u0651\u0631 \u0627\u0644\u0625\u0634\u0639\u0627\u0631: "+window.__nsNErr)}catch(x){}
+            });
+           }catch(e){window.__nsNErr=String(e)}
+          };
+          try{
+           LN.addListener("localNotificationActionPerformed",function(ev){
+            var i=ev&&ev.notification&&ev.notification.extra?ev.notification.extra.i:null;
+            var s=(i!=null)?slots[i]:null;
+            if(!s)return;
+            var p="";try{p=fix(s.phone||"")}catch(e){}
+            var a=ev.actionId;
+            if(p&&a==="call"){window.location.href="tel:+"+p}
+            else if(p&&a==="sms"){window.location.href="sms:+"+p}
+            else if(p&&a==="wa"){window.location.href="whatsapp://send?phone="+p}
+            else{openFromNotif(i)}
+           });
+          }catch(e){}
+
+          /* 4) inside the app WhatsApp opens through the system (Android decides which app) */
+          window.waIntent=function(){return "whatsapp://send?phone="+shP};
+
+          })();
+
+          EOF
+          cat > www/share.js <<'EOF'
+          (function(){
+          var C=window.Capacitor;
+          /* location shared from Google Maps: fill the link once, then the phone from the clipboard */
+          window.__nsLast=0;
+          window.nsShareSet=function(id,T){
+           if(!T||id<=window.__nsLast)return "skip";
+           var al=document.getElementById("al"),ap=document.getElementById("ap");
+           if(!al||!ap)return "noInputs";
+           window.__nsLast=id;
+           var m=T.match(/https?:\/\/\S+/);
+           al.value=m?m[0]:T.trim();
+           try{al.dispatchEvent(new Event("input",{bubbles:true}))}catch(e){}
+           try{updCancel()}catch(e){}
+           var CB=null;try{CB=C.registerPlugin("Clipboard")}catch(e){}
+           var tries=0;
+           var phoneOk=function(v){var n=(v||"").replace(/\D/g,"");return n.length>=7&&n.length<=15&&!/https?:|[a-zA-Z]/.test(v)};
+           var isOld=function(v){
+            try{var fv=fix(v);for(var q=0;q<slots.length;q++){var sx=slots[q];if(sx&&sx.phone&&fix(sx.phone)===fv)return true}}catch(e){}
+            return false;
+           };
+           var delays=[500,1200,2200,3500,5000,7000];
+           var next=function(){
+            if(tries<delays.length){setTimeout(tryClip,delays[tries]-(tries?delays[tries-1]:0))}
+            else{try{ap.focus()}catch(e){}}
+           };
+           var tryClip=function(){
+            tries++;
+            if(ap.value.trim()!==""){return}
+            var done=function(v){
+             v=(v||"").trim();
+             if(phoneOk(v)){
+              if(isOld(v)){try{ap.focus()}catch(e){}return}
+              ap.value=v;
+              try{ap.dispatchEvent(new Event("input",{bubbles:true}))}catch(e){}
+              try{updCancel()}catch(e){}
+              return;
+             }
+             next();
+            };
+            var fail=function(){next()};
+            try{
+             if(CB){CB.read().then(function(r){done(r&&r.value)}).catch(fail)}
+             else if(navigator.clipboard&&navigator.clipboard.readText){navigator.clipboard.readText().then(done).catch(fail)}
+             else{next()}
+            }catch(e){fail()}
+           };
+           try{ap.focus()}catch(e){}
+           setTimeout(tryClip,delays[0]);
+           try{window.scrollTo(0,0)}catch(e){}
+           return "ok";
+          };
+          window.nsClip=function(id,v){
+           try{
+            if(id!==window.__nsLast)return "old";
+            var ap=document.getElementById("ap");
+            if(!ap||ap.value.trim()!=="")return "full";
+            v=(v||"").trim();
+            var n=v.replace(/\D/g,"");
+            if(!(n.length>=7&&n.length<=15&&!/https?:|[a-zA-Z]/.test(v)))return "notphone";
+            var fv=fix(v);
+            for(var q=0;q<slots.length;q++){var sx=slots[q];if(sx&&sx.phone&&fix(sx.phone)===fv)return "same"}
+            ap.value=v;
+            try{ap.dispatchEvent(new Event("input",{bubbles:true}))}catch(e){}
+            try{updCancel()}catch(e){}
+            return "ok";
+           }catch(e){return "err"}
+          };
+          })();
+          EOF
+          sed -i 's#</body>#<script>window.addEventListener("error",function(e){window.__nsErr=(window.__nsErr||"")+e.message+"@"+e.filename+":"+e.lineno+"|"})</script><script src="native.js"></script><script src="share.js"></script></body>#' www/index.html
+          tail -c 400 www/index.html
+          grep -c 'native.js' www/index.html
+
+      - name: Install and create the Android project
+        working-directory: app
+        run: |
+          npm install
+          npx cap add android
+          npx cap sync android
+
+      - name: Add permissions and app icon
+        working-directory: app
+        run: |
+          python3 - <<'EOF'
+          import re
+          p = "android/app/src/main/AndroidManifest.xml"
+          s = open(p, encoding="utf-8").read()
+          perms = [
+            "ACCESS_FINE_LOCATION","ACCESS_COARSE_LOCATION","ACCESS_BACKGROUND_LOCATION",
+            "FOREGROUND_SERVICE","FOREGROUND_SERVICE_LOCATION","POST_NOTIFICATIONS",
+            "WAKE_LOCK","VIBRATE","INTERNET"
+          ]
+          add = ""
+          for x in perms:
+              line = '<uses-permission android:name="android.permission.' + x + '" />'
+              if line not in s:
+                  add += "    " + line + "\n"
+          s = s.replace("<application", add + "    <application", 1)
+          share = ("        <intent-filter>\n"
+                   "            <action android:name=\"android.intent.action.SEND\" />\n"
+                   "            <category android:name=\"android.intent.category.DEFAULT\" />\n"
+                   "            <data android:mimeType=\"text/plain\" />\n"
+                   "        </intent-filter>\n")
+          if "android.intent.action.SEND" not in s:
+              s = s.replace("</activity>", share + "    </activity>", 1)
+          open(p, "w", encoding="utf-8").write(s)
+          EOF
+          R=android/app/src/main/res
+          rm -rf $R/mipmap-anydpi-v26
+          for d in mdpi hdpi xhdpi xxhdpi xxxhdpi; do
+            cp ../icon-512.png $R/mipmap-$d/ic_launcher.png
+            cp ../icon-512.png $R/mipmap-$d/ic_launcher_round.png
+            rm -f $R/mipmap-$d/ic_launcher_foreground.png
+          done
+
+      - name: Add the share receiver
+        working-directory: app
+        run: |
+          D=android/app/src/main/java/com/abu9alim/nextstop
+          mkdir -p $D
+          cat > $D/MainActivity.java <<'EOF'
+          package com.abu9alim.nextstop;
+
+          import android.content.ClipData;
+          import android.content.ClipboardManager;
+          import android.content.Context;
+          import android.content.Intent;
+          import android.os.Bundle;
+          import android.os.Handler;
+          import android.os.Looper;
+          import com.getcapacitor.BridgeActivity;
+          import org.json.JSONObject;
+
+          public class MainActivity extends BridgeActivity {
+              private int shareId = 0;
+
+              @Override
+              public void onCreate(Bundle savedInstanceState) {
+                  super.onCreate(savedInstanceState);
+                  Intent in = getIntent();
+                  boolean fromHistory = in != null && (in.getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) != 0;
+                  if (savedInstanceState == null && !fromHistory) {
+                      sendShare(in);
+                  }
+                  setIntent(new Intent(Intent.ACTION_MAIN));
+              }
+
+              @Override
+              protected void onNewIntent(Intent intent) {
+                  super.onNewIntent(intent);
+                  sendShare(intent);
+                  setIntent(new Intent(Intent.ACTION_MAIN));
+              }
+
+              private void sendShare(Intent intent) {
+                  if (intent == null) return;
+                  if (!Intent.ACTION_SEND.equals(intent.getAction())) return;
+                  String t = intent.getStringExtra(Intent.EXTRA_TEXT);
+                  if (t == null || t.length() == 0) return;
+                  shareId++;
+                  final String js = "(window.nsShareSet?window.nsShareSet(" + shareId + "," + JSONObject.quote(t) + "):\"NOFUNC\")";
+                  final int sid = shareId;
+                  int[] cd = {600, 1500, 2800, 4500, 7000, 10000};
+                  for (int d : cd) {
+                      new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                          @Override
+                          public void run() {
+                              try {
+                                  if (!hasWindowFocus()) return;
+                                  ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                                  ClipData cl = cm.getPrimaryClip();
+                                  if (cl == null || cl.getItemCount() == 0) return;
+                                  CharSequence cs = cl.getItemAt(0).coerceToText(MainActivity.this);
+                                  if (cs == null) return;
+                                  String c = cs.toString();
+                                  getBridge().getWebView().evaluateJavascript("(window.nsClip?window.nsClip(" + sid + "," + JSONObject.quote(c) + "):\"NOFUNC\")", null);
+                              } catch (Exception e) {}
+                          }
+                      }, d);
+                  }
+                  int[] delays = {300, 800, 1500, 2500, 4000, 6000, 9000};
+                  for (int d : delays) {
+                      new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                          @Override
+                          public void run() {
+                              try {
+                                  getBridge().getWebView().evaluateJavascript(js, null);
+                              } catch (Exception e) {}
+                          }
+                      }, d);
+                  }
+              }
+          }
+          EOF
+          echo "share receiver written"
+
+      - name: Use the fixed signing key
+        env:
+          KS: ${{ secrets.NS_KEYSTORE_B64 }}
+        run: |
+          if [ -z "$KS" ]; then
+            echo "ERROR: secret NS_KEYSTORE_B64 is empty or missing"
+            exit 1
+          fi
+          mkdir -p ~/.android
+          echo "$KS" | base64 -d > "$GITHUB_WORKSPACE/ns.keystore"
+          cp "$GITHUB_WORKSPACE/ns.keystore" ~/.android/debug.keystore
+          keytool -list -keystore "$GITHUB_WORKSPACE/ns.keystore" -storepass android | grep -i "fingerprint"
+          cd app/android/app
+          python3 - <<'EOF'
+          import os
+          p = "build.gradle"
+          s = open(p, encoding="utf-8").read()
+          ks = os.environ["GITHUB_WORKSPACE"] + "/ns.keystore"
+          block = ("    signingConfigs {\n"
+                   "        debug {\n"
+                   "            storeFile file('" + ks + "')\n"
+                   "            storePassword 'android'\n"
+                   "            keyAlias 'androiddebugkey'\n"
+                   "            keyPassword 'android'\n"
+                   "        }\n"
+                   "    }\n")
+          import re
+          s = re.sub(r"versionCode \d+", "versionCode " + os.environ["GITHUB_RUN_NUMBER"], s)
+          s = re.sub(r'versionName "[^"]*"', 'versionName "' + os.environ["NS_VERSION"] + '"', s)
+          if "signingConfigs" not in s:
+              s = s.replace("    buildTypes {", block + "    buildTypes {", 1)
+          open(p, "w", encoding="utf-8").write(s)
+          print("signing config added:", "signingConfigs" in s)
+          EOF
+
+      - name: Build the APK
+        working-directory: app/android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug
+
+      - name: Show the APK signature
+        run: |
+          keytool -printcert -jarfile app/android/app/build/outputs/apk/debug/app-debug.apk | grep -i "SHA256"
+          echo "Expected: DB:89:B7:4D:06:C5:EC:B7:6E:51:29:73:7B:46:5E:19:6B:1D:1D:DA:6D:4F:FE:47:1D:36:95:ED:A5:80:76:10"
+
+      - name: Save the APK so you can download it
+        uses: actions/upload-artifact@v4
+        with:
+          name: NextStop-APK
+          path: app/android/app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Publish the direct download link
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp app/android/app/build/outputs/apk/debug/app-debug.apk NextStop.apk
+          gh release delete latest --yes --cleanup-tag || true
+          gh release create latest NextStop.apk --title "NextStop v${NS_VERSION}" --notes "NextStop v${NS_VERSION}" --latest
+          echo "Direct link: https://github.com/${GITHUB_REPOSITORY}/releases/latest/download/NextStop.apk"
