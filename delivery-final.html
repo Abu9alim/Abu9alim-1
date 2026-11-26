@@ -50,6 +50,7 @@ button,a.b{border:0;border-radius:10px;padding:10px 8px;font-size:14px;font-weig
 #sh a{display:flex;align-items:center;gap:16px;padding:18px 20px;color:#f1f3f6;text-decoration:none;font-size:19px}
 #sh a span{font-size:28px;width:34px;text-align:center}
 #sh4.cpd{background:#16a34a!important;color:#fff!important}#sh4.cpd b,#sh4.cpd span{color:#fff!important}
+#sb.has .sbi{display:none}.bsm{width:100%;padding:11px;margin-top:8px;border:1px solid var(--bd);border-radius:12px;background:var(--card);color:var(--tx);font-size:14px}
 </style>
 </head>
 <body>
@@ -75,15 +76,19 @@ button,a.b{border:0;border-radius:10px;padding:10px 8px;font-size:14px;font-weig
 <div class="sec"><div class="lb"><span data-t="snd"></span><i class="inf" onclick="tgI('snd')">i</i></div><div class="ih" id="ih_snd" data-t="info_snd"></div><div class="seg"><button id="s1" onclick="setSnd(1)" data-t="sndOn"></button><button id="s2" onclick="setSnd(0)" data-t="sndOff"></button></div></div>
 <div class="sec"><div class="lb"><span data-t="wapp"></span><i class="inf" onclick="tgI('wapp')">i</i></div><div class="ih" id="ih_wapp" data-t="info_wapp"></div><div class="seg"><button id="wa3" onclick="setWapp('a')" data-t="waA"></button><button id="wa1" onclick="setWapp('r')" data-t="waR"></button><button id="wa2" onclick="setWapp('b')" data-t="waB"></button></div></div>
 <div class="sec"><div class="lb"><span data-t="wl"></span><i class="inf" onclick="tgI('wl')">i</i></div><div class="ih" id="ih_wl" data-t="info_wl"></div><div class="seg"><button id="w1" onclick="setWake(1)" data-t="wlOn"></button><button id="w2" onclick="setWake(0)" data-t="wlOff"></button></div></div>
-<div class="sec"><div class="lb" data-t="about"></div><div class="ab"><b>NextStop</b> · v1.1 BETA<br><span data-t="aboutTxt"></span><br><span data-t="credit"></span></div></div>
+<div class="sec" id="bgsec" style="display:none"><div class="lb" data-t="bgT"></div><div class="ab" id="bgst" style="font-size:13px;line-height:1.7"></div><button class="bsm" onclick="testNotif()" data-t="tnB"></button></div>
+<div class="sec"><button class="bsm" onclick="exportLog()" data-t="logB"></button></div>
+<div class="sec"><div class="lb" data-t="about"></div><div class="ab"><b>NextStop</b> · v1.2 BETA<br><span data-t="aboutTxt"></span><br><span data-t="credit"></span></div></div>
 <div class="sec" id="statsec"><div class="ab" style="font-size:12px;opacity:.75" data-t="statNote"></div></div>
-<button class="cl" onclick="closeSet()" data-t="close"></button>
+<button class="cl" onclick="saveSet()" data-t="setDone"></button>
 </div></div>
 <div id="bk"><div id="sh"><div class="t" id="shn"></div><a id="sh1"><span>📞</span><b data-t="call"></b></a><a id="sh2"><span><svg width="30" height="30" viewBox="0 0 24 24"><path d="M12 3C7 3 3 6.8 3 11.5c0 2 .8 3.8 2 5.2L4 21l4.5-1.4c1 .3 2.2.5 3.5.5 5 0 9-3.8 9-8.5S17 3 12 3z" fill="#25d366"/><circle cx="8.5" cy="11.5" r="1.2" fill="#fff"/><circle cx="12" cy="11.5" r="1.2" fill="#fff"/><circle cx="15.5" cy="11.5" r="1.2" fill="#fff"/></svg></span><b data-t="wa"></b></a><a id="sh3"><span>✉️</span><b data-t="sms"></b></a><a id="sh4"><span><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="3"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg></span><b id="cpl" data-t="copy"></b></a></div></div>
+<div id="sa" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:20;align-items:center;justify-content:center"><div style="background:var(--card);color:var(--tx);border-radius:18px;padding:20px;width:min(86vw,360px);text-align:center"><div style="font-size:17px;font-weight:700;margin-bottom:16px" data-t="saQ"></div><div style="display:flex;gap:10px"><button onclick="saveSet()" style="flex:1;padding:12px;border:0;border-radius:12px;background:var(--pri);color:#fff;font-size:16px" data-t="saY"></button><button onclick="discardSet()" style="flex:1;padding:12px;border:1px solid var(--bd);border-radius:12px;background:var(--bg);color:var(--tx);font-size:16px" data-t="saN"></button></div></div></div>
+<div id="up" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:99999;align-items:center;justify-content:center"><div style="background:var(--card);color:var(--tx);border-radius:18px;padding:20px;width:min(88vw,380px);text-align:center"><div id="upT" style="font-size:19px;font-weight:700;margin-bottom:10px"></div><div id="upM" style="font-size:15px;line-height:1.7;margin-bottom:14px"></div><div id="upN" style="display:none;background:#fee2e2;color:#b91c1c;border-radius:12px;padding:10px;font-size:13.5px;line-height:1.6;margin-bottom:14px"></div><div style="display:flex;gap:10px"><button onclick="upOk()" style="flex:1;padding:12px;border:0;border-radius:12px;background:var(--pri);color:#fff;font-size:16px" data-t="updOk"></button><button id="upS" onclick="upSkip()" style="flex:1;padding:12px;border:1px solid var(--bd);border-radius:12px;background:var(--bg);color:var(--tx);font-size:16px" data-t="updSk"></button></div></div></div>
 <script>
 var LANG="ar";try{LANG=localStorage.getItem("lang")||"ar"}catch(e){}
 var D={
-ar:{title:"📍 NextStop",loc:"📍 حدّد موقعي",refresh:"🔄 تحديث",nearBtn:"⬇️ الأقرب",farBtn:"⬆️ الأبعد",farFirst:"⬆️ الترتيب: من الأبعد للأقرب",nearFirst:"⬇️ الترتيب: من الأقرب للأبعد",hint:"اضغط «حدّد موقعي» أول، وبعدها «تحديث» لترتيب الطرق",phLink:"الصق رابط قوقل ماب أو الإحداثيات",phPhone:"رقم الزبون",nofound:"ما فيه نتيجة",phSearch:"ابحث بأي أرقام من رقم الزبون",save:"➕ حفظ",saveEdit:"💾 حفظ التعديل",saveAnyway:"حفظ رغم التكرار",cancel:"✖ إلغاء",call:"اتصال",wa:"رسالة واتساب",wapp:"تطبيق الواتساب",waA:"تلقائي",waR:"واتساب",waB:"واتساب بزنس",sms:"رسالة نصية",copy:"نسخ الرقم",mode:"المظهر",mAuto:"تلقائي",mLight:"فاتح",mDark:"داكن",accent:"اللون",upd:"تحديث الترتيب",uAuto:"تلقائي",uMan:"يدوي",info_mode:"تلقائي: يتبع إعداد جوالك، فاتح بالنهار وداكن بالليل. أو اختر فاتح أو داكن دايماً.",info_color:"اللون الأساسي للأزرار والأرقام. الألوان اللي لها معنى (الأخضر عند الوصول، والأحمر لزر تم) ما تتغير.",info_upd:"تلقائي: التطبيق يعيد ترتيب المشاوير من الأقرب للأبعد بنفسه لما تتحرك أو تضيف مشوار، فما تحتاج تضغط تحديث. يدوي: الترتيب يبقى ثابت ويظهر زر تحديث، وتحدّثه أنت متى ما تبغى.",info_snd:"صوت قصير ينبهك لما توصل لموقع زبون.",info_wapp:"تلقائي: يفتح واتساب الافتراضي في جوالك. أو اختر العادي أو Business حسب اللي تستخدمه مع الزبائن.",info_wl:"يخلي الشاشة شغالة وأنت تستخدم التطبيق، عشان الموقع ما ينقطع.",copied:"تم النسخ ✓",statNote:"ℹ️ يرسل التطبيق لصاحبه اسمك (إن كتبته) ومدة الاستخدام وعدد المشاوير المضافة فقط. أرقام الزبائن والمواقع تبقى في جوالك ولا تُرسل أبداً.",pausedT:"التطبيق متوقف مؤقتاً",pausedM:"أوقفه المطوّر مؤقتاً. بياناتك ومشاويرك محفوظة في جوالك ولن تُحذف، وترجع كما هي أول ما يشتغل التطبيق.",retry:"🔄 إعادة المحاولة",nameQ:"وش اسمك؟",nameHint:"يظهر الاسم لصاحب التطبيق فقط، ليعرف من يجرّب. اختياري.",nameOk:"حفظ",nameSkip:"تخطّي",
+ar:{title:"📍 NextStop",loc:"📍 حدّد موقعي",refresh:"🔄 تحديث",nearBtn:"⬇️ الأقرب",farBtn:"⬆️ الأبعد",farFirst:"⬆️ الترتيب: من الأبعد للأقرب",nearFirst:"⬇️ الترتيب: من الأقرب للأبعد",hint:"اضغط «حدّد موقعي» أول، وبعدها «تحديث» لترتيب الطرق",phLink:"الصق رابط قوقل ماب أو الإحداثيات",phPhone:"رقم الزبون",nofound:"ما فيه نتيجة",phSearch:"ابحث بأي أرقام من رقم الزبون",save:"➕ حفظ",saveEdit:"💾 حفظ التعديل",saveAnyway:"حفظ رغم التكرار",cancel:"✖ إلغاء",call:"اتصال",wa:"رسالة واتساب",wapp:"تطبيق الواتساب",waA:"تلقائي",waR:"واتساب",waB:"واتساب بزنس",sms:"رسالة نصية",copy:"نسخ الرقم",mode:"المظهر",mAuto:"تلقائي",mLight:"فاتح",mDark:"داكن",accent:"اللون",upd:"تحديث الترتيب",uAuto:"تلقائي",uMan:"يدوي",info_mode:"تلقائي: يتبع إعداد جوالك، فاتح بالنهار وداكن بالليل. أو اختر فاتح أو داكن دايماً.",info_color:"اللون الأساسي للأزرار والأرقام. الألوان اللي لها معنى (الأخضر عند الوصول، والأحمر لزر تم) ما تتغير.",info_upd:"تلقائي: التطبيق يعيد ترتيب المشاوير من الأقرب للأبعد بنفسه لما تتحرك أو تضيف مشوار، فما تحتاج تضغط تحديث. يدوي: الترتيب يبقى ثابت ويظهر زر تحديث، وتحدّثه أنت متى ما تبغى.",info_snd:"صوت قصير ينبهك لما توصل لموقع زبون.",info_wapp:"تلقائي: يفتح واتساب الافتراضي في جوالك. أو اختر العادي أو Business حسب اللي تستخدمه مع الزبائن.",info_wl:"يخلي الشاشة شغالة وأنت تستخدم التطبيق، عشان الموقع ما ينقطع.",copied:"تم النسخ ✓",statNote:"ℹ️ يرسل التطبيق لصاحبه اسمك (إن كتبته) ومدة الاستخدام وعدد المشاوير المضافة فقط. أرقام الزبائن والمواقع تبقى في جوالك ولا تُرسل أبداً.",pausedT:"التطبيق متوقف مؤقتاً",pausedM:"أوقفه المطوّر مؤقتاً. بياناتك ومشاويرك محفوظة في جوالك ولن تُحذف، وترجع كما هي أول ما يشتغل التطبيق.",retry:"🔄 إعادة المحاولة",nameQ:"وش اسمك؟",nameHint:"يظهر الاسم لصاحب التطبيق فقط، ليعرف من يجرّب. اختياري.",nameOk:"حفظ",nameSkip:"تخطّي",savedAt:"✅ انحفظ في الخانة ",setDone:"✔ تم / حفظ",saQ:"حفظ تغييرات الإعدادات؟",saY:"حفظ",saN:"تجاهل",navCp:"📋 اننسخ رقم الزبون",updT:"تحديث جديد متوفر",updM:"نزّل النسخة الجديدة من قناة NextStop على تيليجرام.",updOk:"موافق",updSk:"تخطي",reqT:"التحديث مطلوب",reqM:"لازم تحدّث التطبيق عشان تكمل.",reqN:"لا تخاف: ما راح ينحذف أي شيء من مشاويرك. التحديث بس يجيب الميزات الجديدة.",bgT:"🛰️ التتبع والإشعار",tnB:"🔔 اختبار الإشعار (بعد 10 ثواني)",tnW:"🔔 اطلع من التطبيق، يجي الإشعار بعد 10 ثواني",tnX:"هذي الميزة داخل التطبيق فقط",logB:"📤 نسخ سجل المشاوير",logOk:"✅ اننسخ السجل، الصقه وأرسله",logNo:"السجل فاضي لسا",
  nonum:"بدون رقم",nav:"🧭 وديني",restore:"⬆️ رجّعه",noans2:"⬇️ ما رد",done:"✔ تم",empty:"ما فيه مشاوير. أضف أول واحد من الخانة فوق.",
  arrived:"🟢 وصلت",noans:"📵 ما رد",short:"⚠️ رابط قصير",cust:"زبون",m:"m",km:"km",snd:"صوت الوصول",sndOn:"🔔 شغّال",sndOff:"🔕 مغلق",fixing:"📡 جاري تحديث موقعك…",hint2:"📡 تم تحديث موقعك",wl:"الشاشة",wlOn:"تبقى مضيئة",wlOff:"عادية",gateT:"الإشعارات مطلوبة",gateP:"NextStop يحتاج الإشعارات عشان ينبّهك لما توصل لموقع الزبون. فعّلها للمتابعة.",gateB:"🔔 تفعيل الإشعارات",gateD:"الإشعارات محظورة. افتح إعدادات المتصفح أو التطبيق ← الإشعارات ← سماح، ثم ارجع هنا.",undo:"↩ تراجع",doneMsg:"تم إنهاء المشوار",mi:"mi",ft:"ft",settings:"⚙️ الإعدادات",language:"اللغة",units:"وحدة المسافة",metric:"km / m",imperial:"mi / ft",size:"حجم التطبيق",about:"عن التطبيق",aboutTxt:"يرتّب مشاوير التوصيل من الأقرب للأبعد حسب مسافة الطريق. بياناتك تُحفظ على جهازك فقط.",credit:"الخرائط والطرق: © مساهمو OpenStreetMap",close:"تم",min:"min",hr:"h",
  dupPhone:"نفس رقم التلفون في المشوار ",dupLoc:"الموقع قريب جداً من المشوار ",dupLink:"نفس الرابط في المشوار ",
@@ -92,7 +97,7 @@ ar:{title:"📍 NextStop",loc:"📍 حدّد موقعي",refresh:"🔄 تحدي�
  okRoad:"📡 تم الترتيب حسب مسافة الطريق",okLine:"📡 تم الترتيب (تقريبي بخط مستقيم)",permErr:"⚠️ فعّل إذن الموقع للمتصفح",nogeo:"الجهاز ما يدعم الموقع",
  locating:"⏳ أحدد موقعك بالضبط...",roads:"⏳ أحسب مسافات الطرق...",acc1:"📍 دقة موقعك ",acc2:" م — ",byRoad:"الترتيب حسب مسافة الطريق",byLine:"الترتيب بخط مستقيم (تعذّر حساب الطريق)",
  locErr:"⚠️ ما قدرت أحدد موقعك. اسمح بالموقع للمتصفح من الإعدادات",sortedRoad:"🛣 تم الترتيب حسب مسافة الطريق (الأقرب أول)",sortedLine:"⚠️ ما قدرت أحسب مسافة الطريق، الترتيب بخط مستقيم تقريبي",needLoc:"⚠️ حدّد موقعك أول بزر «حدّد موقعي»",updating:"⏳ أحدّث الترتيب..."},
-en:{title:"📍 NextStop",loc:"📍 My location",refresh:"🔄 Refresh",nearBtn:"⬇️ Nearest",farBtn:"⬆️ Farthest",farFirst:"⬆️ Order: farthest first",nearFirst:"⬇️ Order: nearest first",hint:"Tap “My location” first, then “Refresh” to sort by road distance",phLink:"Paste Google Maps link or coordinates",phPhone:"Customer phone",nofound:"No match",phSearch:"Search by any digits of the phone",save:"➕ Save",saveEdit:"💾 Save edit",saveAnyway:"Save anyway",cancel:"✖ Cancel",call:"Call",wa:"WhatsApp",wapp:"WhatsApp app",waA:"Auto",waR:"WhatsApp",waB:"WhatsApp Business",sms:"Text message",copy:"Copy number",mode:"Appearance",mAuto:"Auto",mLight:"Light",mDark:"Dark",accent:"Color",upd:"Order update",uAuto:"Auto",uMan:"Manual",info_mode:"Auto follows your phone setting: light by day, dark at night. Or pick light or dark always.",info_color:"The main color for buttons and numbers. Meaningful colors (green on arrival, red for Done) never change.",info_upd:"Auto: the app re-sorts your stops from nearest to farthest by itself when you move or add a stop, so there is no Refresh button. Manual: the order stays fixed and a Refresh button appears; you update it when you want.",info_snd:"A short sound that alerts you when you reach a customer location.",info_wapp:"Auto opens your phone default WhatsApp. Or choose Regular or Business, whichever you use with customers.",info_wl:"Keeps the screen on while you use the app so your location does not drop.",copied:"Copied ✓",statNote:"ℹ️ The app sends the owner only your name (if you gave one), time used and number of stops added. Customer numbers and locations stay on your phone and are never sent.",pausedT:"App temporarily paused",pausedM:"The developer paused it for now. Your data and stops are safe on your phone and will not be deleted; everything returns as it was when the app is back.",retry:"🔄 Try again",nameQ:"What is your name?",nameHint:"Only the app owner sees this name, to know who is testing. Optional.",nameOk:"Save",nameSkip:"Skip",
+en:{title:"📍 NextStop",loc:"📍 My location",refresh:"🔄 Refresh",nearBtn:"⬇️ Nearest",farBtn:"⬆️ Farthest",farFirst:"⬆️ Order: farthest first",nearFirst:"⬇️ Order: nearest first",hint:"Tap “My location” first, then “Refresh” to sort by road distance",phLink:"Paste Google Maps link or coordinates",phPhone:"Customer phone",nofound:"No match",phSearch:"Search by any digits of the phone",save:"➕ Save",saveEdit:"💾 Save edit",saveAnyway:"Save anyway",cancel:"✖ Cancel",call:"Call",wa:"WhatsApp",wapp:"WhatsApp app",waA:"Auto",waR:"WhatsApp",waB:"WhatsApp Business",sms:"Text message",copy:"Copy number",mode:"Appearance",mAuto:"Auto",mLight:"Light",mDark:"Dark",accent:"Color",upd:"Order update",uAuto:"Auto",uMan:"Manual",info_mode:"Auto follows your phone setting: light by day, dark at night. Or pick light or dark always.",info_color:"The main color for buttons and numbers. Meaningful colors (green on arrival, red for Done) never change.",info_upd:"Auto: the app re-sorts your stops from nearest to farthest by itself when you move or add a stop, so there is no Refresh button. Manual: the order stays fixed and a Refresh button appears; you update it when you want.",info_snd:"A short sound that alerts you when you reach a customer location.",info_wapp:"Auto opens your phone default WhatsApp. Or choose Regular or Business, whichever you use with customers.",info_wl:"Keeps the screen on while you use the app so your location does not drop.",copied:"Copied ✓",statNote:"ℹ️ The app sends the owner only your name (if you gave one), time used and number of stops added. Customer numbers and locations stay on your phone and are never sent.",pausedT:"App temporarily paused",pausedM:"The developer paused it for now. Your data and stops are safe on your phone and will not be deleted; everything returns as it was when the app is back.",retry:"🔄 Try again",nameQ:"What is your name?",nameHint:"Only the app owner sees this name, to know who is testing. Optional.",nameOk:"Save",nameSkip:"Skip",savedAt:"✅ Saved at position ",setDone:"✔ Done / Save",saQ:"Save settings changes?",saY:"Save",saN:"Discard",navCp:"📋 Customer number copied",updT:"New update available",updM:"Download the new version from the NextStop Telegram channel.",updOk:"OK",updSk:"Skip",reqT:"Update required",reqM:"You must update the app to continue.",reqN:"Don't worry: none of your stops will be deleted. The update only brings the new features.",bgT:"🛰️ Tracking and notification",tnB:"🔔 Test notification (in 10 seconds)",tnW:"🔔 Leave the app, the notification comes in 10 seconds",tnX:"This feature works inside the app only",logB:"📤 Copy trip log",logOk:"✅ Log copied, paste and send it",logNo:"The log is empty",
  nonum:"No number",nav:"🧭 Navigate",restore:"⬆️ Restore",noans2:"⬇️ No answer",done:"✔ Done",empty:"No stops yet. Add the first one in the box above.",
  arrived:"🟢 Arrived",noans:"📵 No answer",short:"⚠️ Short link",cust:"Customer",m:"m",km:"km",snd:"Arrival sound",sndOn:"🔔 On",sndOff:"🔕 Off",fixing:"📡 Updating your location…",hint2:"📡 Location updated",wl:"Screen",wlOn:"Stay awake",wlOff:"Normal",gateT:"Notifications required",gateP:"NextStop needs notifications to alert you when you reach a customer. Enable them to continue.",gateB:"🔔 Enable notifications",gateD:"Notifications are blocked. Open browser/app settings → Notifications → Allow, then come back.",undo:"↩ Undo",doneMsg:"Stop completed",mi:"mi",ft:"ft",settings:"⚙️ Settings",language:"Language",units:"Distance unit",metric:"Kilometers / meters",imperial:"Miles / feet",size:"App size",about:"About",aboutTxt:"Sorts delivery stops from nearest to farthest by road distance. Your data stays on your device only.",credit:"Maps & routing: © OpenStreetMap contributors",close:"Done",min:"min",hr:"h",
  dupPhone:"Same phone number as stop ",dupLoc:"Location is very close to stop ",dupLink:"Same link as stop ",
@@ -247,7 +252,7 @@ function render(){
   var uns=s.lat==null&&/^https?:/i.test(s.link||"");
   h+='<div class="card'+(uns?' uns':'')+'" id="c'+i+'"><div class="top"><span class="n">'+n+'</span><span class="nm" id="nm'+i+'"></span><span class="dist" id="d'+i+'"></span></div>'+
   '<button class="ph" data-i="'+i+'">'+esc(s.phone||t("nonum"))+'</button>'+
-  '<div class="row"><a class="b" target="_blank" rel="noopener" href="'+esc(nav)+'">'+t("nav")+'</a><button class="g" onclick="ed('+i+')">✏️</button><button class="g" onclick="lt('+i+')">'+(s.late?t("restore"):t("noans2"))+'</button><button class="r" onclick="done('+i+')">'+t("done")+'</button></div>'+(uns?'<button class="r rt" onclick="retry('+i+')">'+t("retry")+'</button>':'')+'</div>';
+  '<div class="row"><a class="b" data-i="'+i+'" target="_blank" rel="noopener" href="'+esc(nav)+'">'+t("nav")+'</a><button class="g" onclick="ed('+i+')">✏️</button><button class="g" onclick="lt('+i+')">'+(s.late?t("restore"):t("noans2"))+'</button><button class="r" onclick="done('+i+')">'+t("done")+'</button></div>'+(uns?'<button class="r rt" onclick="retry('+i+')">'+t("retry")+'</button>':'')+'</div>';
  });
  F("list").innerHTML=h||'<div class="mut" style="text-align:center;padding:24px">'+t("empty")+'</div>';
  F("cnt").textContent=n+"/"+N;
@@ -303,8 +308,8 @@ function saveTop(c,tried){
  slots[i]={link:l,phone:p,lat:c?c.lat:null,lng:c?c.lng:null,late:!!(old&&old.late)};
  delete road[i];save();editInl=null;resetTop();calc();render();
  if(!c&&/^https?:/i.test(l)){try{navigator.vibrate&&navigator.vibrate(80)}catch(e){}}
- st(tried&&!c&&l?t("noread"):t("saved"));
- if(me&&c)loadRoads(function(){calc();render()});
+ var sm=(tried&&!c&&l)?t("noread"):t("savedAt")+rk(i);st(sm);
+ if(me&&c)loadRoads(function(){calc();render();if(F("gps").textContent===sm)st(t("savedAt")+rk(i))});
 }
 function ed(i){var s=slots[i];if(!s)return;if(editInl!=null){editInl=null;render()}var c=F("c"+i);if(!c)return;editInl=i;
  ["ph","row","rt"].forEach(function(k){var e=c.querySelector("."+k);if(e)e.style.display="none"});
@@ -443,6 +448,143 @@ var PANEL_URL="https://nextstop-panel.sosona3011.workers.dev/ping";
  setInterval(function(){if(document.visibilityState==="visible"&&asked)ping(true)},300000);
  document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible"&&asked)ping(false)});
 })();
+</script>
+<script id="v12">
+(function(){
+var APPV="1.2";
+function G(id){return document.getElementById(id)}
+function isNative(){try{return !!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform())}catch(e){return false}}
+/* ===== staged settings: nothing changes until "Done / Save" ===== */
+var PD=null;
+function has(){return !!PD&&Object.keys(PD).length>0}
+function stg(k,v){if(!PD)PD={};PD[k]=v;syncSet()}
+var oLang=setLang,oMode=setMode,oAcc=setAcc,oAuto=setAuto,oUn=setUnits,oSnd=setSnd,oWapp=setWapp,oWake=setWake,oOpen=openSet,_sy=syncSet;
+setLang=function(v){stg("lang",v==="en"?"en":"ar")};
+setMode=function(v){stg("mode",v)};
+setAcc=function(k){stg("acc",k)};
+setAuto=function(v){stg("auto",!!v)};
+setUnits=function(v){stg("un",v==="i"?"i":"m")};
+setZoom=function(v){stg("zm",parseInt(v,10)||100)};
+setSnd=function(v){stg("snd",!!v)};
+setWapp=function(v){stg("wapp",v)};
+setWake=function(v){stg("wl",!!v)};
+syncSet=function(){
+ if(!has()){_sy();return}
+ var sv={LANG:LANG,MODE:MODE,ACC:ACC,AUTO:AUTO,UN:UN,ZM:ZM,SND:SND,WAPP:WAPP,WL:WL},p=PD;
+ if(p.lang!==undefined)LANG=p.lang;if(p.mode!==undefined)MODE=p.mode;if(p.acc!==undefined)ACC=p.acc;if(p.auto!==undefined)AUTO=p.auto;
+ if(p.un!==undefined)UN=p.un;if(p.zm!==undefined)ZM=p.zm;if(p.snd!==undefined)SND=p.snd;if(p.wapp!==undefined)WAPP=p.wapp;if(p.wl!==undefined)WL=p.wl;
+ try{_sy()}finally{LANG=sv.LANG;MODE=sv.MODE;ACC=sv.ACC;AUTO=sv.AUTO;UN=sv.UN;ZM=sv.ZM;SND=sv.SND;WAPP=sv.WAPP;WL=sv.WL}
+ if(p.lang!==undefined)G("lang").value=p.lang;
+};
+window.saveSet=function(){
+ var p=PD;PD=null;
+ if(p){
+  if(p.mode!==undefined)oMode(p.mode);
+  if(p.acc!==undefined)oAcc(p.acc);
+  if(p.un!==undefined)oUn(p.un);
+  if(p.zm!==undefined){ZM=p.zm;try{localStorage.setItem("zoom",ZM)}catch(e){}document.body.style.zoom=ZM/100}
+  if(p.snd!==undefined)oSnd(p.snd);
+  if(p.wapp!==undefined)oWapp(p.wapp);
+  if(p.wl!==undefined)oWake(p.wl);
+  if(p.auto!==undefined)oAuto(p.auto);
+  if(p.lang!==undefined)oLang(p.lang);
+ }
+ G("sa").style.display="none";G("ov").className="";syncSet();
+};
+window.discardSet=function(){PD=null;G("sa").style.display="none";G("ov").className="";G("lang").value=LANG;syncSet()};
+closeSet=function(){if(has()){G("sa").style.display="flex";return}G("ov").className=""};
+openSet=function(){PD=null;G("sa").style.display="none";G("lang").value=LANG;oOpen();refreshBg()};
+/* ===== search: icon hides while typing, only the clear (X) stays ===== */
+var oas=applySearch;
+applySearch=function(){oas();try{G("sb").classList.toggle("has",!!G("sq").value)}catch(e){}};
+/* ===== navigate button copies the customer number ===== */
+function cleanNum(x){var d=String(x||"").replace(/[٠-٩]/g,function(c){return c.charCodeAt(0)-1632}).replace(/\D/g,"").replace(/^00/,"");if(d.length>8&&d.indexOf("968")===0)d=d.slice(3);return d}
+G("list").addEventListener("click",function(e){
+ var a=e.target.closest&&e.target.closest("a.b");if(!a||a.dataset.i==null)return;
+ var s=slots[+a.dataset.i];if(!s||!s.phone)return;
+ var n=cleanNum(s.phone);if(!n)return;
+ copyTxt(n,function(){try{st(t("navCp"))}catch(x){}});
+},true);
+/* ===== copy sheet closes by itself when you come back from another app ===== */
+var shLeft=false;
+document.addEventListener("visibilitychange",function(){
+ var bk=G("bk");
+ if(document.hidden){if(bk&&bk.classList.contains("on"))shLeft=true}
+ else if(shLeft){shLeft=false;if(bk)bk.classList.remove("on")}
+});
+/* ===== trip log (for the accuracy study) ===== */
+var LOGK="ns_log";
+function lg(o){try{var a=JSON.parse(localStorage.getItem(LOGK)||"[]");a.push(o);if(a.length>800)a=a.slice(-800);localStorage.setItem(LOGK,JSON.stringify(a))}catch(e){}}
+function liveList(){return order.filter(function(j){return slots[j]})}
+function r4(x){return x==null?"":Math.round(x*10000)/10000}
+var op=paint;
+paint=function(){
+ var before={};for(var k in arrived)before[k]=1;
+ op();
+ for(var k2 in arrived){if(!before[k2]&&slots[k2]){var L=liveList();
+  lg({t:Date.now(),k:"arr",r:L.indexOf(+k2)+1,n:L.length,d:Math.round(dd(+k2)),d1:L.length?Math.round(dd(L[0])):"",ml:me?r4(me.lat):"",mg:me?r4(me.lng):"",sl:r4(slots[k2].lat),sg:r4(slots[k2].lng),bg:document.hidden?1:0})}}
+};
+var od=done;
+done=function(i){
+ try{var s=slots[i];if(s){var L=liveList();
+  lg({t:Date.now(),k:"done",r:L.indexOf(i)+1,n:L.length,d:Math.round(dd(i)),d1:L.length?Math.round(dd(L[0])):"",ml:me?r4(me.lat):"",mg:me?r4(me.lng):"",sl:r4(s.lat),sg:r4(s.lng),bg:document.hidden?1:0})}}catch(e){}
+ od(i);
+};
+window.exportLog=function(){
+ var a=[];try{a=JSON.parse(localStorage.getItem(LOGK)||"[]")}catch(e){}
+ if(!a.length){st(t("logNo"));return}
+ var off=new Date().getTimezoneOffset()*60000;
+ var rows=["time,type,rank,total,dist_m,dist1_m,me_lat,me_lng,stop_lat,stop_lng,bg"];
+ a.forEach(function(x){rows.push([new Date(x.t-off).toISOString().slice(0,19),x.k,x.r,x.n,x.d,x.d1,x.ml,x.mg,x.sl,x.sg,x.bg].join(","))});
+ copyTxt(rows.join("\n"),function(){st(t("logOk"))});
+};
+/* ===== background tracking status + notification test (native app only) ===== */
+function refreshBg(){
+ var sec=G("bgsec");if(!sec)return;
+ if(!isNative()){sec.style.display="none";return}
+ sec.style.display="";
+ var ar=LANG==="ar",x=[];
+ if(window.__nsBgAt){var sc=Math.round((Date.now()-window.__nsBgAt)/1000);x.push(ar?"آخر موقع من الخدمة: قبل "+sc+" ث":"Last fix from the service: "+sc+" s ago")}
+ else x.push(ar?"الخدمة لسا ما أرسلت موقع":"The service has not sent a location yet");
+ var h=0;try{h=+localStorage.getItem("ns_bgh")||0}catch(e){}
+ if(h){var d=new Date(h);var hh=("0"+d.getHours()).slice(-2)+":"+("0"+d.getMinutes()).slice(-2);x.push(ar?"وصلك موقع وأنت خارج التطبيق: "+hh+" ✅":"Location received while outside the app: "+hh+" ✅")}
+ else x.push(ar?"لسا ما وصل موقع وأنت خارج التطبيق ❌":"No location received while outside the app yet ❌");
+ G("bgst").innerHTML=x.join("<br>");
+}
+window.testNotif=function(){if(window.nsTestNotif)window.nsTestNotif();else st(t("tnX"))};
+/* ===== in-app update prompt ===== */
+var UPK="ns_skip",UPT=0,upState=null;
+function vnum(s){return String(s||"").split(".").map(function(x){return parseInt(x,10)||0})}
+function newer(a,b){var x=vnum(a),y=vnum(b);for(var i=0;i<4;i++){if((x[i]||0)!==(y[i]||0))return (x[i]||0)>(y[i]||0)}return false}
+function skipN(v){try{var d=JSON.parse(localStorage.getItem(UPK)||"{}");return d.v===v?(d.n||0):0}catch(e){return 0}}
+function showUp(v){
+ var blk=skipN(v)>=3;
+ G("upT").textContent=t(blk?"reqT":"updT");
+ G("upM").textContent=t(blk?"reqM":"updM")+" (v"+v+")";
+ G("upN").textContent=t("reqN");G("upN").style.display=blk?"block":"none";
+ G("upS").style.display=blk?"none":"";
+ G("up").style.display="flex";upState={v:v,blk:blk};
+}
+window.upOk=function(){try{window.location.href="https://t.me/NextStopAPK"}catch(e){}};
+window.upSkip=function(){if(!upState)return;try{localStorage.setItem(UPK,JSON.stringify({v:upState.v,n:skipN(upState.v)+1}))}catch(e){}G("up").style.display="none";upState=null};
+function checkUpd(){
+ if(!isNative())return;
+ UPT=Date.now();
+ var ctl=window.AbortController?new AbortController():null,to=setTimeout(function(){try{if(ctl)ctl.abort()}catch(e){}},8000);
+ fetch("https://api.github.com/repos/Abu9alim/Abu9alim-1/releases/latest",{cache:"no-store",signal:ctl?ctl.signal:undefined})
+ .then(function(r){return r.ok?r.json():null})
+ .then(function(j){clearTimeout(to);if(!j)return;
+  var m=String((j.name||"")+" "+(j.tag_name||"")).match(/v?(\d+(?:\.\d+)+)/);if(!m)return;
+  var v=m[1];
+  if(newer(v,APPV)){if(!(upState&&upState.v===v))showUp(v)}
+  else{G("up").style.display="none";upState=null}
+ }).catch(function(){});
+}
+setTimeout(checkUpd,2500);
+document.addEventListener("visibilitychange",function(){if(!document.hidden&&Date.now()-UPT>600000)checkUpd();else if(!document.hidden&&upState&&upState.blk)checkUpd()});
+applyLang();
+})();
+
 </script>
 <script>
 (function(){var K="ns_scr",tm=null;function sv(){try{localStorage.setItem(K,String(Math.round(window.scrollY)))}catch(e){}}
